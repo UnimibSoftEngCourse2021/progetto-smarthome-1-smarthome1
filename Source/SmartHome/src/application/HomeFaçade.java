@@ -2,7 +2,13 @@ package application;
 
 import java.util.ArrayList;
 
+import domain.Scenario;
+import domain.Statistic;
+
 public class HomeFaçade {
+	
+	private Statistic statistic;
+	private Scenario scenario;
 
 	/**
 	 * 

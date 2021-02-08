@@ -1,8 +1,14 @@
 package domain;
 
 import java.io.File;
+import java.util.List;
 
 public class Config {
+	
+	private DataDescription dataDescription;
+	private List<Object> objects;
+	private List<Room> rooms;
+	private AutomaticControl automaticControl;
 
 	/**
 	 * 

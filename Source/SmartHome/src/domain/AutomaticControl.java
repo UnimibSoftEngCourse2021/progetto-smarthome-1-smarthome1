@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.List;
+
 public class AutomaticControl {
 
 	private int userMatrix7x24;
@@ -8,6 +10,11 @@ public class AutomaticControl {
 	private boolean atHome = true;
 	private boolean homeLightControl = false;
 	private boolean homeAirControl = false;
+	
+	private List<Scenario> scenarios;
+	private List<Sensor> sensors;
+	private ConflictHandler handler;
+	private Config config;
 
 	/**
 	 * 

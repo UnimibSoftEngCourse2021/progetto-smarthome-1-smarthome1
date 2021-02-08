@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.List;
+
 public class Room {
 
 	private String name;
@@ -10,6 +12,10 @@ public class Room {
 	private short windowsNum;
 	private boolean lightControl = false;
 	private boolean airControl = false;
+	
+	private List<Sensor> sensors;
+	private List<Object> objects;
+	private Config config;
 
 	/**
 	 * 

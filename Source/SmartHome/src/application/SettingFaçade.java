@@ -1,6 +1,12 @@
 package application;
 
+import domain.AutomaticControl;
+import domain.DataDescription;
+
 public class SettingFaçade {
+	
+	private AutomaticControl automaticControl;
+	private DataDescription dataDescription;
 
 	/**
 	 * 

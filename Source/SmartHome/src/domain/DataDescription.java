@@ -6,6 +6,8 @@ public class DataDescription {
 
 	private File fileHomeConfig;
 	private File fileHeatSystemConfig;
+	
+	private Config config;
 
 	/**
 	 * 

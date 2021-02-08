@@ -1,14 +1,22 @@
 package domain;
 
+import service.DatabaseCommunicationSystem;
+import service.SensorCommunicationAdapter;
+
 public class Sensor {
 
 	private String name;
 	private double value;
-	private String type;
-	private String category;
 	private String communicationType;
 	private Object[] publisherList;
-
+	private enum Category {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE}
+	private enum Type {BOOLEAN, DOUBLE}
+	
+	private AutomaticControl automaticControl;
+	private DatabaseCommunicationSystem database;
+	private SensorCommunicationAdapter adapter;
+	private Room room;
+	
 	/**
 	 * 
 	 * @param object

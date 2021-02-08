@@ -1,6 +1,10 @@
 package domain;
 
+import service.DatabaseCommunicationSystem;
+
 public class Statistic {
+	
+	private DatabaseCommunicationSystem database;
 
 	/**
 	 * 

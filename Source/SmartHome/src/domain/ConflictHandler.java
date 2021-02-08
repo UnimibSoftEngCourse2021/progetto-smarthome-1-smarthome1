@@ -1,6 +1,14 @@
 package domain;
 
+import java.util.List;
+import service.ObjectCommunicationAdapter;
+
 public class ConflictHandler {
+	
+	private AutomaticControl automaticControl;
+	private List<Object> objects;
+	private List<Scenario> scenario;
+	private ObjectCommunicationAdapter adapter;
 
 	/**
 	 * 

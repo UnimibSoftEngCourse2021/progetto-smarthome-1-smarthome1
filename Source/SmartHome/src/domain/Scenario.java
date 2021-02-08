@@ -9,6 +9,9 @@ public class Scenario {
 	private boolean state = false;
 	private ArrayList actionLIst;
 	private String[] roomsIDs;
+	
+	private ConflictHandler handler;
+	private AutomaticControl automaticControl;
 
 	public void deleteScenario() {
 		// TODO - implement Scenario.deleteScenario
