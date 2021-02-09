@@ -5,7 +5,7 @@ import java.util.List;
 public abstract class Object {
 
 	private String name;
-	private boolean state; //considerare cambio nome
+	private boolean active; // nome cambiato da state per incongruenza con setter
 	private String objectID;
 	private enum Type {ALARM, DOOR, HEATER, LIGHT, WINDOW}
 	private Type type;
@@ -30,12 +30,12 @@ public abstract class Object {
 		this.name = name;
 	}
 
-	public boolean isState() {
-		return state;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setState(boolean state) {
-		this.state = state;
+	public void setActive(boolean state) {
+		this.active = state;
 	}
 
 	public String getObjectID() {

@@ -3,7 +3,7 @@ package domain;
 public class Alarm extends Object {
 
 	private boolean armed;
-	private boolean mode; // considerare cambio nome
+	private boolean active; // cambiato nome da mode per incongruenza con getter
 	
 	public boolean isArmed() {
 		return armed;
@@ -11,11 +11,11 @@ public class Alarm extends Object {
 	public void setArmed(boolean armed) {
 		this.armed = armed;
 	}
-	public boolean isMode() {
-		return mode;
+	public boolean isActive() {
+		return active;
 	}
-	public void setMode(boolean mode) {
-		this.mode = mode;
+	public void setActive(boolean mode) {
+		this.active = mode;
 	}
 	
 }

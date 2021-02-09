@@ -3,12 +3,11 @@ package domain;
 import java.util.List;
 
 import domain.Sensor.Category;
-import service.TimerOP;
 
 public class AutomaticControl {
 
-	private List<double[]> userMatrix7x24; //mettere a posto per farle diventare matrici
-	private List<double[]> standardMatrix7x24;
+	private static double[][] userMatrix = new double[8][24];
+	private static double[][] standardMatrix = new double[8][24];
 	private boolean matrixFlag = false;
 	private boolean atHome = true;
 	private boolean homeLightControl = false;
@@ -20,6 +19,28 @@ public class AutomaticControl {
 	private Config config;
 	private TimerOP[] timers;
 
+	public void userMatrixInitialize(double[][] userMatrix) {
+		for(int i = 1; i <= 7; i++) {
+			for(int j = 0; j <= 23; j++) {
+				// inizializzare matrice con valori presi da utente
+			}
+		}
+	}
+	
+	public void standardMatrixInitialize(double[][] standardMatrix) {
+		for(int i = 1; i <= 7; i++) {
+			for(int j = 0; j <= 7; j++) {
+				standardMatrix[i][j] = 18.00;
+			}
+			for(int j = 8; j <= 20; j++) {
+				standardMatrix[i][j] = 20.00;
+			}
+			for(int j = 21; j <= 23; j++) {
+				standardMatrix[i][j] = 18.00;
+			}
+		}
+	}
+	
 	/**
 	 * 
 	 * @param currentTemp
@@ -27,11 +48,13 @@ public class AutomaticControl {
 	 */
 	public void checkTempTresholds(double currentTemp, Heater[] publisherList) {
 		// TODO - implement AutomaticControl.checkTempTresholds
-		int i; // elemento i-mo selezionato della matrice
-		int j; // valore del j-mo sensore 
-		currentTemp = sensors.get(j).getValue();
-		if (userMatrix7x24.get(i) > currentTemp) { // capire come prendere il valore impostato nella matrice
-			handler.doAction(sensors.get(i).getPublisherList()[i].getObjectID());
+		int i; // inserire giorno della settimana corrente
+		int j; // inserire orario attuale 
+	
+		if (userMatrix[i][j] > currentTemp) { // dà errore perchè i, j non sono inizializzati
+			for(int k = 0; k < publisherList.length; k++) {
+				handler.doAction(publisherList[k].getObjectID());
+			}
 		}
 	}
 
@@ -41,13 +64,10 @@ public class AutomaticControl {
 	 * @param alarm
 	 */
 	public void checkAlarm(boolean returnValue, Alarm alarm) {
-		// TODO - implement AutomaticControl.checkAlarm
 		if (alarm.isArmed() == true) {
 			for(int i = 0; i < sensors.size(); i++) {
-				if(sensors.get(i).getCatergory() == (Category.MOVEMENT, Category.WINDOW, Category.DOOR)) { // capire come usare enum
-					if(alarm.getType() == Type.ALARM & sensors.get(i).getValue() == 1) { // 1 è acceso 0 è spento
+				if(sensors.get(i).getCatergory().equals(Category.MOVEMENT) || sensors.get(i).getCatergory().equals(Category.DOOR) || sensors.get(i).getCatergory().equals(Category.WINDOW)) {
 						handler.doAction(alarm.getObjectID());
-					}
 				}
 			}
 		}
@@ -58,7 +78,6 @@ public class AutomaticControl {
 	 * @param alarm
 	 */
 	public void isAway(Alarm alarm) {
-		// TODO - implement AutomaticControl.isAway
 		alarm.setArmed(true);
 	}
 
@@ -67,13 +86,11 @@ public class AutomaticControl {
 	 * @param code
 	 * @param alarm
 	 */
-	public void isHome(String code, Alarm alarm) {
+	public void isHome(String code, Alarm alarm, Door door) { // ho dovuto aggiungere l'oggetto door come attributo per avere il codice (controllare)
 		// TODO - implement AutomaticControl.isHome
-		String insertCode;
 		int i = 0;
 		do {
-			// inserire codice tramite UI
-			if (insertCode.equals(code)) {
+			if (code.equals(door.getCode())) {
 				alarm.setArmed(false);
 			}
 			else {
@@ -83,6 +100,7 @@ public class AutomaticControl {
 		} while (i < 5);
 		if (i >= 5) {
 			System.out.println("Numero massimo di tentativi superato. Chiamare l'assistenza");
+			// non richiedere più il codice
 		}
 	}
 
@@ -93,10 +111,9 @@ public class AutomaticControl {
 	 * @param airState
 	 */
 	public void checkAirPollution(double currentPollutionValue, Room room, String airState) {
-		// TODO - implement AutomaticControl.checkAirPollution
 		if(currentPollutionValue > 50.00) {
 			for(int i = 0; i < room.getWindowsNum(); i++) {
-				handler.doAction(room.getObjectList(Type.WINDOW)[i]), airState); // capire come prendere gli oggetti di tipo window dalla lista
+				handler.doAction(room.getObjectList("window")[i].getObjectID(), airState);
 			}
 		}
 	}
@@ -133,8 +150,6 @@ public class AutomaticControl {
 		}
 	}
 	
-
-
 	public void handleDateEvent() {
 		// TODO - implement AutomaticControl.handleDateEvent
 		throw new UnsupportedOperationException();
