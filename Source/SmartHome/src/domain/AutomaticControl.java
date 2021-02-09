@@ -3,6 +3,7 @@ package domain;
 import java.util.List;
 
 import domain.Sensor.Category;
+import service.TimerOP;
 
 public class AutomaticControl {
 
@@ -17,6 +18,7 @@ public class AutomaticControl {
 	private List<Sensor> sensors;
 	private ConflictHandler handler;
 	private Config config;
+	private TimerOP[] timers;
 
 	/**
 	 * 
@@ -104,14 +106,34 @@ public class AutomaticControl {
 	 * @param movementValue
 	 * @param stanza
 	 */
-	public void checkLight(boolean movementValue, Room room) {
-		// TODO - implement AutomaticControl.checkLight
-		for(int i = 0; i < room.getLightsNum(); i++) {
-			if(room.getObjectList(Type.LIGHT).isState(true) && room.getObjectList(Type.MOVEMENT)) { // dire in qualche modo che il sensore di movimento non è attivo da tot minuti
-				handler.doAction(room.getObjectList(Type.LIGHT));
+	public void checkLight(boolean movementValue, Room room, boolean elapsedTimer) {
+		Object[] lights = room.getObjectList("light");
+		TimerOP timer = new TimerOP();
+		if(movementValue == true) {
+			for(int i = 0; i < room.getLightsNum(); i++) {
+				if(lights[i].isState() == false) 
+					handler.doAction(lights[i].getObjectID());
 			}
+			for(int i = 0; i < timers.length; i++) {
+				if(timers[i].getRoom().equals(room)) 
+					timers[i].resetTimer();	
+				
+			}
+		} else  {/* dire in qualche modo che il sensore di movimento non è attivo da tot minuti*/
+			for(int i = 0; i < timers.length; i++) 
+				if(timers[i].getRoom().equals(room))
+					timer = timers[i];
+			if(!timer.isWorking() && !elapsedTimer) 
+				timer.startTimer(room);
+			else if(!timer.isWorking() && elapsedTimer) //forse la prima cond non serve
+				for(int j = 0; j < room.getLightsNum(); j++) {
+					if(lights[j].isState() == true) 
+						handler.doAction(lights[j].getObjectID());
+				}
 		}
 	}
+	
+
 
 	public void handleDateEvent() {
 		// TODO - implement AutomaticControl.handleDateEvent
