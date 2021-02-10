@@ -24,7 +24,7 @@ public class ConflictHandler {
 	 * @param objectID
 	 * @param airState
 	 */
-	public void doAction(String objectID, String airState) {
+	public void doAction(String objectID, String airState) { //controllare metodo per vedere se è necessario aggiungere parametro changeState anche qua
 		// TODO - implement ConflictHandler.doAction
 		throw new UnsupportedOperationException();
 	}

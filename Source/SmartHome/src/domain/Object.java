@@ -9,28 +9,11 @@ public abstract class Object {
 	private String objectID;
 	private String referencedRoom;
 	public enum ObjectType {ALARM, DOOR, HEATER, LIGHT, WINDOW}
-	private ObjectType type;
+	private ObjectType objectType;
 	
 	private List<Sensor> sensors;
 	private ConflictHandler handler;
-	
-	public String getReferencedRoom() {
-		return referencedRoom;
-	}
-
-	public void setReferencedRoom(String referencedRoom) {
-		this.referencedRoom = referencedRoom;
-	}
-
 	private Config config;
-	
-	public ObjectType getType() {
-		return type;
-	}
-
-	public void setType(ObjectType type) {
-		this.type = type;
-	}
 
 	public String getName() {
 		return name;
@@ -56,6 +39,21 @@ public abstract class Object {
 		this.objectID = objectID;
 	}
 
+	public String getReferencedRoom() {
+		return referencedRoom;
+	}
+
+	public void setReferencedRoom(String referencedRoom) {
+		this.referencedRoom = referencedRoom;
+	}
+	
+	public ObjectType getObjectType() {
+		return objectType;
+	}
+
+	public void setObjectType(ObjectType objectType) {
+		this.objectType = objectType;
+	}
 	/**
 	 * 
 	 * @param newState

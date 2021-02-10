@@ -10,11 +10,11 @@ public class Sensor {
 	private String name;
 	private double value;
 	private String communicationType;
-	private Object[] publisherList;
+	private Object[] publisherList; //trasformare in arrayList ???
 	public enum Category {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE}
-	private Category catergory;
-	private enum Type {BOOLEAN, DOUBLE}
-	private Type type;
+	private Category category;
+	private enum SensorType {BOOLEAN, DOUBLE}
+	private SensorType sensorType;
 	
 	private AutomaticControl automaticControl;
 	private DatabaseCommunicationSystem database;
@@ -29,20 +29,20 @@ public class Sensor {
 		this.name = name;
 	}
 
-	public Category getCatergory() {
-		return catergory;
+	public Category getCategory() {
+		return category;
 	}
 
-	public void setCatergory(Category catergory) {
-		this.catergory = catergory;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
-	public Type getType() {
-		return type;
+	public SensorType getSensorType() {
+		return sensorType;
 	}
 
-	public void setType(Type type) {
-		this.type = type;
+	public void setSensorType(SensorType sensorType) {
+		this.sensorType = sensorType;
 	}
 
 	public Object[] getPublisherList() {

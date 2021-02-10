@@ -1,17 +1,22 @@
 package domain;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import domain.Sensor.Category;
 
 public class AutomaticControl {
 
-	private static double[][] userMatrix = new double[8][24];
-	private static double[][] standardMatrix = new double[8][24];
+	private double[][] userMatrix = new double[8][24];
+	private double[][] standardMatrix = new double[8][24];
+	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user
+	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
 	private boolean matrixFlag = false;
 	private boolean atHome = true;
 	private boolean homeLightControl = false;
 	private boolean homeAirControl = false;
+	public LocalDateTime currentTime = LocalDateTime.now();
 	
 	private List<Scenario> scenarios;
 	private List<Sensor> sensors;
@@ -47,13 +52,32 @@ public class AutomaticControl {
 	 * @param publisherList
 	 */
 	public void checkTempTresholds(double currentTemp, Heater[] publisherList) {
-		// TODO - implement AutomaticControl.checkTempTresholds
-		int i; // inserire giorno della settimana corrente
-		int j; // inserire orario attuale 
+		
+		int i = currentTime.getDayOfWeek().getValue(); // inserire giorno della settimana corrente
+		int j = currentTime.getHour(); // inserire orario attuale 
 	
-		if (userMatrix[i][j] > currentTemp) { // dà errore perchè i, j non sono inizializzati
-			for(int k = 0; k < publisherList.length; k++) {
-				handler.doAction(publisherList[k].getObjectID());
+		if(choosenMatrix.equals(ChoosenMatrix.USER)) {
+			if (userMatrix[i][j] > currentTemp) { // dà errore perchè i, j non sono inizializzati
+				for(int k = 0; k < publisherList.length; k++) {
+					handler.doAction(publisherList[k].getObjectID(), true);
+				}
+			}
+			else {
+				for(int k = 0; k < publisherList.length; k++) {
+					handler.doAction(publisherList[k].getObjectID(), false);
+				}
+			}
+		}
+		else {
+			if (standardMatrix[i][j] > currentTemp) { // dà errore perchè i, j non sono inizializzati
+				for(int k = 0; k < publisherList.length; k++) {
+					handler.doAction(publisherList[k].getObjectID(), true);
+				}
+			}
+			else {
+				for(int k = 0; k < publisherList.length; k++) {
+					handler.doAction(publisherList[k].getObjectID(), false);
+				}
 			}
 		}
 	}
@@ -67,7 +91,7 @@ public class AutomaticControl {
 		if (alarm.isArmed() == true) {
 			for(int i = 0; i < sensors.size(); i++) {
 				if(sensors.get(i).getCatergory().equals(Category.MOVEMENT) || sensors.get(i).getCatergory().equals(Category.DOOR) || sensors.get(i).getCatergory().equals(Category.WINDOW)) {
-						handler.doAction(alarm.getObjectID());
+						handler.doAction(alarm.getObjectID(), true);
 				}
 			}
 		}
@@ -78,6 +102,7 @@ public class AutomaticControl {
 	 * @param alarm
 	 */
 	public void isAway(Alarm alarm) {
+		atHome = false;
 		alarm.setArmed(true);
 	}
 
@@ -87,10 +112,10 @@ public class AutomaticControl {
 	 * @param alarm
 	 */
 	public void isHome(String code, Alarm alarm, Door door) { // ho dovuto aggiungere l'oggetto door come attributo per avere il codice (controllare)
-		// TODO - implement AutomaticControl.isHome
 		int i = 0;
 		do {
 			if (code.equals(door.getCode())) {
+				atHome = true;
 				alarm.setArmed(false);
 			}
 			else {
@@ -113,7 +138,7 @@ public class AutomaticControl {
 	public void checkAirPollution(double currentPollutionValue, Room room, String airState) {
 		if(currentPollutionValue > 50.00) {
 			for(int i = 0; i < room.getWindowsNum(); i++) {
-				handler.doAction(room.getObjectList("window")[i].getObjectID(), airState);
+				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState);
 			}
 		}
 	}
@@ -124,12 +149,12 @@ public class AutomaticControl {
 	 * @param stanza
 	 */
 	public void checkLight(boolean movementValue, Room room, boolean elapsedTimer) {
-		Object[] lights = room.getObjectList("light");
+		ArrayList<Object> lights = room.getObjectList("light");
 		TimerOP timer = new TimerOP();
 		if(movementValue == true) {
 			for(int i = 0; i < room.getLightsNum(); i++) {
-				if(lights[i].isActive() == false) 
-					handler.doAction(lights[i].getObjectID());
+				if(lights.get(i).isActive() == false) 
+					handler.doAction(lights.get(i).getObjectID(), true);
 			}
 			for(int i = 0; i < timers.length; i++) {
 				if(timers[i].getRoom().equals(room)) 
@@ -144,8 +169,8 @@ public class AutomaticControl {
 				timer.startTimer(room);
 			else if(!timer.isWorking() && elapsedTimer) //forse la prima cond non serve
 				for(int j = 0; j < room.getLightsNum(); j++) {
-					if(lights[j].isActive() == true) 
-						handler.doAction(lights[j].getObjectID());
+					if(lights.get(j).isActive() == true) 
+						handler.doAction(lights.get(j).getObjectID(), false);
 				}
 		}
 	}
