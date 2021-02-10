@@ -1,6 +1,9 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import domain.Object.ObjectType;
 
 public class Room {
 
@@ -81,36 +84,13 @@ public class Room {
 		this.airControl = airControl;
 	}
 
-	public List<Sensor> getSensors() {
-		return sensors;
-	}
-
-	public void setSensors(List<Sensor> sensors) {
-		this.sensors = sensors;
-	}
-
-	public List<Object> getObjects() {
-		return objects;
-	}
-
-	public void setObjects(List<Object> objects) {
-		this.objects = objects;
-	}
-
-	public Config getConfig() {
-		return config;
-	}
-
-	public void setConfig(Config config) {
-		this.config = config;
-	}
 
 	/**
 	 * 
 	 * @param sensorCategory
 	 */
 	public void instatiateSensor(String sensorCategory) {
-		// TODO - implement Room.instatiateSensor
+		///crea sensore associati a stanza 
 		throw new UnsupportedOperationException();
 	}
 
@@ -118,9 +98,16 @@ public class Room {
 	 * 
 	 * @param objectType
 	 */
-	public Object[] getObjectList(String objectType) {
-		// TODO - implement Room.getObjectList
-		throw new UnsupportedOperationException();
+	// provare con iterator
+	public ArrayList<Object> getObjectList(String objectType) {
+		ArrayList<Object> objectList = null;
+		
+			for(int i = 0; i < objects.size(); i++) 
+				if(objects.get(i).getType().toString().equals(objectType) && objects.get(i).getReferencedRoom().equals(name))
+					objectList.add(objects.get(i));
+			
+			return objectList;
+		
 	}
 
 }

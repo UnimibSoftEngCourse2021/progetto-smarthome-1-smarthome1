@@ -14,7 +14,7 @@ public class ConflictHandler {
 	 * 
 	 * @param objectID
 	 */
-	public void doAction(String objectID) {
+	public void doAction(String objectID, boolean changeState) {
 		// TODO - implement ConflictHandler.doAction
 		throw new UnsupportedOperationException();
 	}

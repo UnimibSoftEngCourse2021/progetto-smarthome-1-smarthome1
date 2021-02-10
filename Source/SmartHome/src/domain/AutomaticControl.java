@@ -128,7 +128,7 @@ public class AutomaticControl {
 		TimerOP timer = new TimerOP();
 		if(movementValue == true) {
 			for(int i = 0; i < room.getLightsNum(); i++) {
-				if(lights[i].isState() == false) 
+				if(lights[i].isActive() == false) 
 					handler.doAction(lights[i].getObjectID());
 			}
 			for(int i = 0; i < timers.length; i++) {
@@ -144,7 +144,7 @@ public class AutomaticControl {
 				timer.startTimer(room);
 			else if(!timer.isWorking() && elapsedTimer) //forse la prima cond non serve
 				for(int j = 0; j < room.getLightsNum(); j++) {
-					if(lights[j].isState() == true) 
+					if(lights[j].isActive() == true) 
 						handler.doAction(lights[j].getObjectID());
 				}
 		}
