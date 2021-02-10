@@ -24,8 +24,9 @@ public class ConflictHandler {
 	 * @param objectID
 	 * @param airState
 	 */
-	public void doAction(String objectID, String airState) { //controllare metodo per vedere se è necessario aggiungere parametro changeState anche qua
+	public void doAction(String objectID, String airState) { //non serve il parametro changeState perchè viene chiamato solo in modo automatico
 		// TODO - implement ConflictHandler.doAction
+		// a seconda di airState azione ha priorità diversa
 		throw new UnsupportedOperationException();
 	}
 

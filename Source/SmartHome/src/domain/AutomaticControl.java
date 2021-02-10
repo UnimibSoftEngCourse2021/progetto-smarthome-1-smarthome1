@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.Sensor.AirState;
 import domain.Sensor.Category;
 
 public class AutomaticControl {
@@ -12,11 +13,10 @@ public class AutomaticControl {
 	private double[][] standardMatrix = new double[8][24];
 	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user
 	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
-	private boolean matrixFlag = false;
 	private boolean atHome = true;
-	private boolean homeLightControl = false;
-	private boolean homeAirControl = false;
-	public LocalDateTime currentTime = LocalDateTime.now();
+	private boolean activeLightControl = false;
+	private boolean activeAirControl = false;
+	public LocalDateTime currentTime = LocalDateTime.now(); // forse dovrebbe stare in una classe "generale" perchè potrebbe servire a chiunque
 	
 	private List<Scenario> scenarios;
 	private List<Sensor> sensors;
@@ -32,6 +32,54 @@ public class AutomaticControl {
 		}
 	}
 	
+	public double[][] getUserMatrix() {
+		return userMatrix;
+	}
+
+	public void setUserMatrix(double[][] userMatrix) {
+		this.userMatrix = userMatrix;
+	}
+
+	public double[][] getStandardMatrix() {
+		return standardMatrix;
+	}
+
+	public void setStandardMatrix(double[][] standardMatrix) {
+		this.standardMatrix = standardMatrix;
+	}
+
+	public ChoosenMatrix getChoosenMatrix() {
+		return choosenMatrix;
+	}
+
+	public void setChoosenMatrix(ChoosenMatrix choosenMatrix) {
+		this.choosenMatrix = choosenMatrix;
+	}
+
+	public boolean isAtHome() {
+		return atHome;
+	}
+
+	public void setAtHome(boolean atHome) {
+		this.atHome = atHome;
+	}
+
+	public boolean isActiveLightControl() {
+		return activeLightControl;
+	}
+
+	public void setActiveLightControl(boolean activeLightControl) {
+		this.activeLightControl = activeLightControl;
+	}
+
+	public boolean isActiveAirControl() {
+		return activeAirControl;
+	}
+
+	public void setActiveAirControl(boolean activeAirControl) {
+		this.activeAirControl = activeAirControl;
+	}
+
 	public void standardMatrixInitialize(double[][] standardMatrix) {
 		for(int i = 1; i <= 7; i++) {
 			for(int j = 0; j <= 7; j++) {
@@ -52,12 +100,11 @@ public class AutomaticControl {
 	 * @param publisherList
 	 */
 	public void checkTempTresholds(double currentTemp, Heater[] publisherList) {
-		
-		int i = currentTime.getDayOfWeek().getValue(); // inserire giorno della settimana corrente
-		int j = currentTime.getHour(); // inserire orario attuale 
+		int i = currentTime.getDayOfWeek().getValue(); // giorno della settimana
+		int j = currentTime.getHour(); // ora attuale
 	
 		if(choosenMatrix.equals(ChoosenMatrix.USER)) {
-			if (userMatrix[i][j] > currentTemp) { // dà errore perchè i, j non sono inizializzati
+			if (userMatrix[i][j] > currentTemp) {
 				for(int k = 0; k < publisherList.length; k++) {
 					handler.doAction(publisherList[k].getObjectID(), true);
 				}
@@ -69,7 +116,7 @@ public class AutomaticControl {
 			}
 		}
 		else {
-			if (standardMatrix[i][j] > currentTemp) { // dà errore perchè i, j non sono inizializzati
+			if (standardMatrix[i][j] > currentTemp) {
 				for(int k = 0; k < publisherList.length; k++) {
 					handler.doAction(publisherList[k].getObjectID(), true);
 				}
@@ -90,7 +137,7 @@ public class AutomaticControl {
 	public void checkAlarm(boolean returnValue, Alarm alarm) {
 		if (alarm.isArmed() == true) {
 			for(int i = 0; i < sensors.size(); i++) {
-				if(sensors.get(i).getCatergory().equals(Category.MOVEMENT) || sensors.get(i).getCatergory().equals(Category.DOOR) || sensors.get(i).getCatergory().equals(Category.WINDOW)) {
+				if(sensors.get(i).getCategory().equals(Category.MOVEMENT) || sensors.get(i).getCategory().equals(Category.DOOR) || sensors.get(i).getCategory().equals(Category.WINDOW)) {
 						handler.doAction(alarm.getObjectID(), true);
 				}
 			}
@@ -119,13 +166,13 @@ public class AutomaticControl {
 				alarm.setArmed(false);
 			}
 			else {
-				//richiedere codice
+				//richiedere codice all'utente
 				i++; // contatore degli accessi errati
 			}
 		} while (i < 5);
 		if (i >= 5) {
 			System.out.println("Numero massimo di tentativi superato. Chiamare l'assistenza");
-			// non richiedere più il codice
+			// bloccare la richiesta di codice
 		}
 	}
 
@@ -136,11 +183,12 @@ public class AutomaticControl {
 	 * @param airState
 	 */
 	public void checkAirPollution(double currentPollutionValue, Room room, String airState) {
-		if(currentPollutionValue > 50.00) {
-			for(int i = 0; i < room.getWindowsNum(); i++) {
+		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION.toString()))
+			for(int i = 0; i < room.getWindowsNum(); i++)
 				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState);
-			}
-		}
+		else if (currentPollutionValue > 30.00)
+			for(int i = 0; i < room.getWindowsNum(); i++)
+				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState);
 	}
 
 	/**
@@ -159,7 +207,6 @@ public class AutomaticControl {
 			for(int i = 0; i < timers.length; i++) {
 				if(timers[i].getRoom().equals(room)) 
 					timers[i].resetTimer();	
-				
 			}
 		} else  {/* dire in qualche modo che il sensore di movimento non è attivo da tot minuti*/
 			for(int i = 0; i < timers.length; i++) 

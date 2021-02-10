@@ -13,8 +13,9 @@ public class Room {
 	private short doorsNum;
 	private short HeatersNum;
 	private short windowsNum;
-	private boolean lightControl = false;
-	private boolean airControl = false;
+	private boolean lightControlled = false;
+	private boolean airControlled = false;
+	private ArrayList<Object> objectList = null;
 	
 	private List<Sensor> sensors;
 	private List<Object> objects;
@@ -68,23 +69,24 @@ public class Room {
 		this.windowsNum = windowsNum;
 	}
 
-	public boolean isLightControl() {
-		return lightControl;
+	public boolean isLightControlled() {
+		return lightControlled;
 	}
 
-	public void setLightControl(boolean lightControl) {
-		this.lightControl = lightControl;
+	public void setLightControlled(boolean lightControlled) {
+		this.lightControlled = lightControlled;
 	}
 
 	public boolean isAirControl() {
-		return airControl;
+		return airControlled;
 	}
 
-	public void setAirControl(boolean airControl) {
-		this.airControl = airControl;
+	public void setAirControlled(boolean airControlled) {
+		this.airControlled = airControlled;
 	}
 
-
+	// non sono sicuro se vadano aggiunti getter/setter per objectList (il getter in teoria è già definito sotto)
+	
 	/**
 	 * 
 	 * @param sensorCategory
@@ -100,14 +102,10 @@ public class Room {
 	 */
 	// provare con iterator
 	public ArrayList<Object> getObjectList(String objectType) {
-		ArrayList<Object> objectList = null;
-		
 			for(int i = 0; i < objects.size(); i++) 
-				if(objects.get(i).getType().toString().equals(objectType) && objects.get(i).getReferencedRoom().equals(name))
-					objectList.add(objects.get(i));
-			
+				if(objects.get(i).getObjectType().toString().equals(objectType) && objects.get(i).getReferencedRoom().equals(name))
+					objectList.add(objects.get(i));	
 			return objectList;
-		
 	}
 
 }

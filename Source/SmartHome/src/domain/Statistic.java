@@ -6,6 +6,14 @@ public class Statistic {
 	
 	private DatabaseCommunicationSystem database;
 
+	public DatabaseCommunicationSystem getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(DatabaseCommunicationSystem database) {
+		this.database = database;
+	}
+
 	/**
 	 * 
 	 * @param timeRange
