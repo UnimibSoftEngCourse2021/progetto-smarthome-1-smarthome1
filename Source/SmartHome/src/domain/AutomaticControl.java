@@ -11,7 +11,7 @@ public class AutomaticControl {
 
 	private double[][] userMatrix = new double[8][24];
 	private double[][] standardMatrix = new double[8][24];
-	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user
+	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
 	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
 	private boolean atHome = true;
 	private boolean activeLightControl = false;
@@ -100,6 +100,10 @@ public class AutomaticControl {
 	 * @param publisherList
 	 */
 	public void checkTempTresholds(double currentTemp, Heater[] publisherList) {
+		/*
+		 *  forse non è necessario passare la publisherList perchè il metodo viene
+		 *  chiamato automaticamente per ogni calorifero in ascolto sul sensore di temperatura
+		 */
 		int i = currentTime.getDayOfWeek().getValue(); // giorno della settimana
 		int j = currentTime.getHour(); // ora attuale
 	

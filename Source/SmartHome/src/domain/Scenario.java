@@ -13,9 +13,13 @@ public class Scenario {
 	 * il problema della matrice è che sappiamo il numero di colonne ma non il numero di righe
 	 * sarebbe necessaria una struttura dati flessibile che contenga due tipi differenti di valori
 	 * String per l'objectID e boolean per lo stato "desiderato", cioè lo stato in cui si desidera sia l'oggetto una volta eseguita l'azione
+	 * si potrebbero usare due liste, una per l'ID e una per lo stato obiettivo, legate tra loro tramite l'indice
+	 * non è una soluzione molto elegante però è l'unica che mi viene in mente
+	 * oppure considerare l'indice della lista come l'ID e il suo valore come lo stato (partendo per esempio da numeri alti per differenziare
+	 * maggiormente gli ID
 	*/
-	private String[] roomsIDs;
 	
+	private String[] roomsIDs;
 	private ConflictHandler handler;
 	private AutomaticControl automaticControl;
 	
@@ -60,8 +64,10 @@ public class Scenario {
 	}
 	
 	public void deleteScenario() {
-		// TODO - implement Scenario.deleteScenario
-		throw new UnsupportedOperationException();
+		/*
+		 * dipende dalla struttura dati utilizzata per l'actionList
+		 * comunque basta eliminare tutti gli elementi contenuti
+		 */
 	}
 
 	/**
@@ -69,8 +75,9 @@ public class Scenario {
 	 * @param parametersToBeModified
 	 */
 	public void modifyScenario(int parametersToBeModified) {
-		// TODO - implement Scenario.modifyScenario
-		throw new UnsupportedOperationException();
+		/*
+		 * modifica tramite interfaccia
+		 */
 	}
 
 	public void activateScenario() {

@@ -14,6 +14,7 @@ public abstract class Object {
 	private List<Sensor> sensors;
 	private ConflictHandler handler;
 	private Config config;
+	private AutomaticControl automaticControl;
 
 	public String getName() {
 		return name;
@@ -58,9 +59,40 @@ public abstract class Object {
 	 * 
 	 * @param newState
 	 */
-	public void update(boolean newState) {
-		// TODO - implement Object.update
-		throw new UnsupportedOperationException();
+	public void update(double sensorValue) {
+		/*
+		 * potrebbe essere necessario aggiungere una gestione
+		 * delle eccezzioni per valori sballati dei sensori
+		 */
+		switch (objectType) {
+		case ALARM:
+			if(sensorValue == 0.00) 
+				active = false;
+			else if (sensorValue == 1.00)
+				active = true;
+			break;
+		case DOOR:
+			if(sensorValue == 0.00) 
+				active = false;
+			else if (sensorValue == 1.00)
+				active = true;
+			break;
+		case HEATER:
+			automaticControl.checkTempTresholds(sensorValue, null); // la pubList è necessaria? vedi dichiarazione di checkTempTreshholds
+			break;
+		case LIGHT:
+			if(sensorValue == 0.00) 
+				active = false;
+			else if (sensorValue == 1.00)
+				active = true;
+			break;
+		case WINDOW:
+			if(sensorValue == 0.00) 
+				active = false;
+			else if (sensorValue == 1.00)
+				active = true;
+			break;
+		}
 	}
 
 }

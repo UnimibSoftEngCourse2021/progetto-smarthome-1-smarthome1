@@ -1,6 +1,7 @@
 package domain;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import service.DatabaseCommunicationSystem;
 import service.SensorCommunicationAdapter;
@@ -18,6 +19,7 @@ public class Sensor {
 	public enum AirState {POLLUTION, GAS}
 	private AirState airState;
 	
+	private List<Object> objects;
 	private AutomaticControl automaticControl;
 	private DatabaseCommunicationSystem database;
 	private SensorCommunicationAdapter adapter;
@@ -84,8 +86,7 @@ public class Sensor {
 	 * @param object
 	 */
 	public void attach(Object object) {
-		// TODO - implement Sensor.attach
-		throw new UnsupportedOperationException();
+		publisherList.add(object);
 	}
 	
 	/**
@@ -93,12 +94,11 @@ public class Sensor {
 	 * @param object
 	 */
 	public void deattach(Object object) {
-		// TODO - implement Sensor.deattach
-		throw new UnsupportedOperationException();
+		publisherList.remove(object);
 	}
 
-	public void notifies() {
-		// TODO - implement Sensor.notify
-		throw new UnsupportedOperationException();
+	public void notifies(double value) { // ho dovuto aggiungere come parametro active perchè deve comunicare all'oggetto in quale stato andare
+		for(Object objects : publisherList)
+			objects.update(value);
 	}
 }
