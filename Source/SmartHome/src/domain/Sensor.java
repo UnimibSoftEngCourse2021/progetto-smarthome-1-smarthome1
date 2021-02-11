@@ -1,8 +1,8 @@
 package domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import domain.Object.ObjectType;
 import service.DatabaseCommunicationSystem;
 import service.SensorCommunicationAdapter;
 
@@ -11,15 +11,14 @@ public class Sensor {
 	private String name;
 	private double value;
 	private String communicationType;
-	private ArrayList<Object> publisherList;
-	public enum Category {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE}
+	private List<Object> publisherList;
+	public enum Category {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM}
 	private Category category;
 	private enum SensorType {BOOLEAN, DOUBLE}
 	private SensorType sensorType;
 	public enum AirState {POLLUTION, GAS}
 	private AirState airState;
 	
-	private List<Object> objects;
 	private AutomaticControl automaticControl;
 	private DatabaseCommunicationSystem database;
 	private SensorCommunicationAdapter adapter;
@@ -49,11 +48,11 @@ public class Sensor {
 		this.communicationType = communicationType;
 	}
 	
-	public ArrayList<Object> getPublisherList() {
+	public List<Object> getPublisherList() {
 		return publisherList;
 	}
 
-	public void setPublisherList(ArrayList<Object> publisherList) {
+	public void setPublisherList(List<Object> publisherList) {
 		this.publisherList = publisherList;
 	}
 	
@@ -98,7 +97,35 @@ public class Sensor {
 	}
 
 	public void notifies(double value) { // ho dovuto aggiungere come parametro active perchè deve comunicare all'oggetto in quale stato andare
-		for(Object objects : publisherList)
-			objects.update(value);
+		switch (category) {
+		case MOVEMENT:
+			if(value == 1.00) {
+				for (int i = 0; i < publisherList.size(); i++) {
+					if(publisherList.get(i).getObjectType().equals(ObjectType.ALARM))
+						automaticControl.checkAlarm((Alarm)publisherList.get(i));
+					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
+						automaticControl.checkLight(value, room, false);
+				}
+			}
+			else
+				for (int i = 0; i < publisherList.size(); i++)
+					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
+						automaticControl.checkLight(value, room, false);
+			break;
+		case AIR:
+			automaticControl.checkAirPollution(value, room, airState.toString());
+			break;
+		case LIGHT:
+		case WINDOW:
+		case DOOR:
+		case HEATER:
+		case ALARM:
+			publisherList.get(0).update(value);
+			break;
+		case TEMPERATURE:
+			automaticControl.checkTempTresholds(value, publisherList);
+			break;
+		// definire un case di default??
+		}
 	}
 }

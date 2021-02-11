@@ -16,9 +16,8 @@ public class AutomaticControl {
 	private boolean atHome = true;
 	private boolean activeLightControl = false;
 	private boolean activeAirControl = false;
-	public LocalDateTime currentTime = LocalDateTime.now(); // forse dovrebbe stare in una classe "generale" perchè potrebbe servire a chiunque
+	public static LocalDateTime currentTime = LocalDateTime.now(); // forse dovrebbe stare in una classe "generale" perchè potrebbe servire a chiunque
 	
-	private List<Scenario> scenarios;
 	private List<Sensor> sensors;
 	private ConflictHandler handler;
 	private Config config;
@@ -99,7 +98,7 @@ public class AutomaticControl {
 	 * @param currentTemp
 	 * @param publisherList
 	 */
-	public void checkTempTresholds(double currentTemp, Heater[] publisherList) {
+	public void checkTempTresholds(double currentTemp, List<Object> publisherList) {
 		/*
 		 *  forse non è necessario passare la publisherList perchè il metodo viene
 		 *  chiamato automaticamente per ogni calorifero in ascolto sul sensore di temperatura
@@ -109,25 +108,25 @@ public class AutomaticControl {
 	
 		if(choosenMatrix.equals(ChoosenMatrix.USER)) {
 			if (userMatrix[i][j] > currentTemp) {
-				for(int k = 0; k < publisherList.length; k++) {
-					handler.doAction(publisherList[k].getObjectID(), true);
+				for(int k = 0; k < publisherList.size(); k++) {
+					handler.doAction(publisherList.get(k).getObjectID(), true);
 				}
 			}
 			else {
-				for(int k = 0; k < publisherList.length; k++) {
-					handler.doAction(publisherList[k].getObjectID(), false);
+				for(int k = 0; k < publisherList.size(); k++) {
+					handler.doAction(publisherList.get(k).getObjectID(), false);
 				}
 			}
 		}
 		else {
 			if (standardMatrix[i][j] > currentTemp) {
-				for(int k = 0; k < publisherList.length; k++) {
-					handler.doAction(publisherList[k].getObjectID(), true);
+				for(int k = 0; k < publisherList.size(); k++) {
+					handler.doAction(publisherList.get(k).getObjectID(), true);
 				}
 			}
 			else {
-				for(int k = 0; k < publisherList.length; k++) {
-					handler.doAction(publisherList[k].getObjectID(), false);
+				for(int k = 0; k < publisherList.size(); k++) {
+					handler.doAction(publisherList.get(k).getObjectID(), false);
 				}
 			}
 		}
@@ -138,15 +137,18 @@ public class AutomaticControl {
 	 * @param returnValue
 	 * @param alarm
 	 */
-	public void checkAlarm(boolean returnValue, Alarm alarm) {
+	public void checkAlarm(Alarm alarm) { // boolean returnValue
 		if (alarm.isArmed() == true) {
-			for(int i = 0; i < sensors.size(); i++) {
-				if(sensors.get(i).getCategory().equals(Category.MOVEMENT) || sensors.get(i).getCategory().equals(Category.DOOR) || sensors.get(i).getCategory().equals(Category.WINDOW)) {
+			//for(int i = 0; i < sensors.size(); i++) {
+				//if(sensors.get(i).getCategory().equals(Category.MOVEMENT) || sensors.get(i).getCategory().equals(Category.DOOR) || sensors.get(i).getCategory().equals(Category.WINDOW)) {
 						handler.doAction(alarm.getObjectID(), true);
-				}
-			}
+				//}
+			//}
 		}
 	}
+	/*
+	 * il metodo viene chiamato solo se uno dei sensori interessati si attiva, quindi se l'allarme è armato deve attivarsi sempre
+	 */
 
 	/**
 	 * 
@@ -200,10 +202,10 @@ public class AutomaticControl {
 	 * @param movementValue
 	 * @param stanza
 	 */
-	public void checkLight(boolean movementValue, Room room, boolean elapsedTimer) {
+	public void checkLight(double movementValue, Room room, boolean elapsedTimer) {
 		ArrayList<Object> lights = room.getObjectList("light");
 		TimerOP timer = new TimerOP();
-		if(movementValue == true) {
+		if(movementValue == 1.00) {
 			for(int i = 0; i < room.getLightsNum(); i++) {
 				if(lights.get(i).isActive() == false) 
 					handler.doAction(lights.get(i).getObjectID(), true);
@@ -224,11 +226,6 @@ public class AutomaticControl {
 						handler.doAction(lights.get(j).getObjectID(), false);
 				}
 		}
-	}
-	
-	public void handleDateEvent() {
-		// TODO - implement AutomaticControl.handleDateEvent
-		throw new UnsupportedOperationException();
 	}
 
 }

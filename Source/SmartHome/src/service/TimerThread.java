@@ -3,7 +3,7 @@ package service;
 
 import domain.TimerOP;
 
-public class ServiceThread extends Thread{
+public class TimerThread extends Thread{
 	
 	private static final int TIME = 300;
 	private TimerOP timer;

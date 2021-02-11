@@ -1,15 +1,20 @@
 package domain;
 
 import java.util.ArrayList;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class Scenario {
 
 	private String nameID;
 	private Date dateTime;// prendere data e ora da currentTime in automaticControl?
 	private boolean active = false;
-	private Object[][] actionList;//?? action list contiene gli IDdegli oggetti?, anche le azioni (boolean per casi semplici)
-	/* 
+	private List<String> objectIDList;
+	private List<Boolean> actionList;
+	/*
+	 * private HashMap<String, Boolean> actionList = new HashMap<String, Boolean>();
+	 * ?? action list contiene gli IDdegli oggetti?, anche le azioni (boolean per casi semplici) 
 	 * il problema della matrice è che sappiamo il numero di colonne ma non il numero di righe
 	 * sarebbe necessaria una struttura dati flessibile che contenga due tipi differenti di valori
 	 * String per l'objectID e boolean per lo stato "desiderato", cioè lo stato in cui si desidera sia l'oggetto una volta eseguita l'azione
@@ -21,7 +26,6 @@ public class Scenario {
 	
 	private String[] roomsIDs;
 	private ConflictHandler handler;
-	private AutomaticControl automaticControl;
 	
 	public String getNameID() {
 		return nameID;
@@ -47,11 +51,19 @@ public class Scenario {
 		this.active = active;
 	}
 
-	public Object[][] getActionList() {
+	public List<String> getObjectIDList() {
+		return objectIDList;
+	}
+
+	public void setObjectIDList(List<String> objectIDList) {
+		this.objectIDList = objectIDList;
+	}
+
+	public List<Boolean> getActionList() {
 		return actionList;
 	}
 
-	public void setActionList(Object[][] actionList) {
+	public void setActionList(List<Boolean> actionList) {
 		this.actionList = actionList;
 	}
 
@@ -64,10 +76,8 @@ public class Scenario {
 	}
 	
 	public void deleteScenario() {
-		/*
-		 * dipende dalla struttura dati utilizzata per l'actionList
-		 * comunque basta eliminare tutti gli elementi contenuti
-		 */
+		objectIDList.clear();
+		actionList.clear();
 	}
 
 	/**
@@ -83,10 +93,15 @@ public class Scenario {
 	public void activateScenario() {
 		 if(active == false) {
 			 active = true;
-			 for(int i = 0; i < actionList.length; i++) {
-				 handler.doAction(actionList[i][0], actionList[i][1]); // vedi commento sotto dichiarazione actionList
+			 for(int i = 0; i < objectIDList.size(); i++) {
+				 handler.doAction(objectIDList.get(i), (boolean)actionList.get(i));
 			 }
 		 }
+	}
+	
+	public void handleDateEvent() {
+		// TODO - implement AutomaticControl.handleDateEvent
+		
 	}
 
 }

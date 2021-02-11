@@ -19,6 +19,9 @@ public class ConflictHandler {
 		throw new UnsupportedOperationException();
 	}
 
+	/*
+	 * chiama update nel caso di alarm
+	 */
 	/**
 	 * 
 	 * @param objectID
