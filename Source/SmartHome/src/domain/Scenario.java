@@ -1,17 +1,22 @@
 package domain;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import service.TimeScheduleThread;
+
 public class Scenario {
 
 	private String nameID;
-	private Date dateTime;// prendere data e ora da currentTime in automaticControl?
+	private LocalDateTime startTime;// prendere data e ora da currentTime in automaticControl?
 	private boolean active = false;
 	private List<String> objectIDList;
 	private List<Boolean> actionList;
+	private List<DayOfWeek> days;
 	/*
 	 * private HashMap<String, Boolean> actionList = new HashMap<String, Boolean>();
 	 * ?? action list contiene gli IDdegli oggetti?, anche le azioni (boolean per casi semplici) 
@@ -26,6 +31,7 @@ public class Scenario {
 	
 	private String[] roomsIDs;
 	private ConflictHandler handler;
+	private TimeScheduleThread thread;
 	
 	public String getNameID() {
 		return nameID;
@@ -75,9 +81,18 @@ public class Scenario {
 		this.roomsIDs = roomsIDs;
 	}
 	
+	public List<DayOfWeek> getDays() {
+		return days;
+	}
+
+	public void setDays(List<DayOfWeek> days) {
+		this.days = days;
+	}
+
 	public void deleteScenario() {
 		objectIDList.clear();
 		actionList.clear();
+		thread.interrupt();
 	}
 
 	/**
@@ -100,8 +115,8 @@ public class Scenario {
 	}
 	
 	public void handleDateEvent() {
-		// TODO - implement AutomaticControl.handleDateEvent
-		
+		thread = new TimeScheduleThread();
+		thread.init(startTime);
 	}
 
 }

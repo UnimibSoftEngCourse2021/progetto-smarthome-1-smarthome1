@@ -9,14 +9,13 @@ import domain.Sensor.Category;
 
 public class AutomaticControl {
 
-	private double[][] userMatrix = new double[8][24];
-	private double[][] standardMatrix = new double[8][24];
+	private double[][] userMatrix = new double[7][26];
+	private double[][] standardMatrix = new double[7][26];
 	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
 	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
 	private boolean atHome = true;
 	private boolean activeLightControl = false;
 	private boolean activeAirControl = false;
-	public static LocalDateTime currentTime = LocalDateTime.now(); // forse dovrebbe stare in una classe "generale" perchè potrebbe servire a chiunque
 	
 	private List<Sensor> sensors;
 	private ConflictHandler handler;
@@ -24,7 +23,7 @@ public class AutomaticControl {
 	private TimerOP[] timers;
 
 	public void userMatrixInitialize(double[][] userMatrix) {
-		for(int i = 1; i <= 7; i++) {
+		for(int i = 0; i <= 6; i++) {
 			for(int j = 0; j <= 23; j++) {
 				// inizializzare matrice con valori presi da utente
 			}
@@ -80,15 +79,18 @@ public class AutomaticControl {
 	}
 
 	public void standardMatrixInitialize(double[][] standardMatrix) {
-		for(int i = 1; i <= 7; i++) {
+
+		for(int i = 0; i <= 6; i++) {
+			standardMatrix[i][24] = 16.00;
+			standardMatrix[i][25] = 20.00;
 			for(int j = 0; j <= 7; j++) {
-				standardMatrix[i][j] = 18.00;
+				standardMatrix[i][j] = 0.00;
 			}
 			for(int j = 8; j <= 20; j++) {
-				standardMatrix[i][j] = 20.00;
+				standardMatrix[i][j] = 1.00;
 			}
 			for(int j = 21; j <= 23; j++) {
-				standardMatrix[i][j] = 18.00;
+				standardMatrix[i][j] = 0.00;
 			}
 		}
 	}
@@ -103,8 +105,8 @@ public class AutomaticControl {
 		 *  forse non è necessario passare la publisherList perchè il metodo viene
 		 *  chiamato automaticamente per ogni calorifero in ascolto sul sensore di temperatura
 		 */
-		int i = currentTime.getDayOfWeek().getValue(); // giorno della settimana
-		int j = currentTime.getHour(); // ora attuale
+		int i = LocalDateTime.now().getDayOfWeek().getValue() - 1; // giorno della settimana
+		int j = LocalDateTime.now().getHour(); // ora attuale
 	
 		if(choosenMatrix.equals(ChoosenMatrix.USER)) {
 			if (userMatrix[i][j] > currentTemp) {

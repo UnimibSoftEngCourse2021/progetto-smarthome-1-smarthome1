@@ -1,24 +1,25 @@
 package domain;
 
-import service.ServiceThread;
+import service.TimerThread;
 
 public class TimerOP{
 
 	private AutomaticControl automaticControl;
 	private Room room;
-	private ServiceThread thread;
+	private TimerThread thread;
 	
 	public void startTimer(Room room) {
 		this.setRoom(room); //forse non serve perche la stanza quando viene creata crea a sua volta il timer
+		thread.setInterrupted(false);
 		thread.start();
 	}
 
 	public void resetTimer() {
-		thread = null;
+		thread.interrupt();
 	}
 
 	public void executeOperations() {
-		automaticControl.checkLight(false, room, true);
+		automaticControl.checkLight(0.00, room, true);
 	}
 	
 	public boolean isWorking() {
