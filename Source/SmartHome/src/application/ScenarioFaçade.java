@@ -3,21 +3,14 @@ package application;
 import java.util.ArrayList;
 
 import domain.Scenario;
-import domain.Statistic;
+import domain.ScenarioCreationHandler;
 
-public class HomeFaçade {
+public class ScenarioFaçade {
 	
-	private Statistic statistic;
+	private ScenarioCreationHandler handler;
 	private Scenario scenario;
 
-	/**
-	 * 
-	 * @param function
-	 */
-	public void manageStatisticOperations(String function) {
-		// TODO - implement HomeFaçade.manageStatisticOperations
-		throw new UnsupportedOperationException();
-	}
+
 
 	/**
 	 * 

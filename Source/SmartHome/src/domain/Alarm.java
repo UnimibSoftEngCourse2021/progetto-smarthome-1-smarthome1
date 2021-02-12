@@ -4,7 +4,7 @@ public class Alarm extends Object {
 
 	private boolean armed;
 	private boolean active; // cambiato nome da mode per incongruenza con getter
-	
+	//esiste gia un attributo active in object -d.barzio
 	public boolean isArmed() {
 		return armed;
 	}

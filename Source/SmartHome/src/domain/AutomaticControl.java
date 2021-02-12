@@ -22,7 +22,12 @@ public class AutomaticControl {
 	private Config config;
 	private TimerOP[] timers;
 
-	public void userMatrixInitialize(double[][] userMatrix) {
+	/*
+	 * se initUserMatrix prende gia una matrice allora 
+	 * esiste gia il metodo setUserMatrix
+	 * -d.barzio
+	 */
+	public void initUserMatrix(double[][] userMatrix) {
 		for(int i = 0; i <= 6; i++) {
 			for(int j = 0; j <= 23; j++) {
 				// inizializzare matrice con valori presi da utente
@@ -78,7 +83,10 @@ public class AutomaticControl {
 		this.activeAirControl = activeAirControl;
 	}
 
-	public void standardMatrixInitialize(double[][] standardMatrix) {
+	/*
+	 * anche qui vale la stessa cosa di initUserMatrix -d.barzio
+	 */
+	public void initStandardMatrix(double[][] standardMatrix) {
 
 		for(int i = 0; i <= 6; i++) {
 			standardMatrix[i][24] = 16.00;
@@ -165,6 +173,9 @@ public class AutomaticControl {
 	 * 
 	 * @param code
 	 * @param alarm
+	 */
+	/*
+	 * AutomatiControl non conosce gli oggetti, capire come gestirlo -d.barzio
 	 */
 	public void isHome(String code, Alarm alarm, Door door) { // ho dovuto aggiungere l'oggetto door come attributo per avere il codice (controllare)
 		int i = 0;

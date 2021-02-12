@@ -16,7 +16,12 @@ public class Room {
 	private boolean lightControlled = false;
 	private boolean airControlled = false;
 	private ArrayList<Object> objectList = null;
-	
+	/*
+	 * esistono due liste di oggetti(??)
+	 * objects e' quello creato dall'associazione quindi credo
+	 * si possa togliere quello
+	 * -d.barzio
+	 */
 	private List<Sensor> sensors;
 	private List<Object> objects;
 	private Config config;
