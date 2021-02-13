@@ -7,7 +7,7 @@ public abstract class Object {
 	private String name;
 	private boolean active; // nome cambiato da state per incongruenza con setter
 	private String objectID;
-	private String referencedRoom;
+	private String referencedRoomID;
 	public enum ObjectType {ALARM, DOOR, HEATER, LIGHT, WINDOW}
 	private ObjectType objectType;
 	
@@ -40,12 +40,12 @@ public abstract class Object {
 		this.objectID = objectID;
 	}
 
-	public String getReferencedRoom() {
-		return referencedRoom;
+	public String getReferencedRoomID() {
+		return referencedRoomID;
 	}
 
-	public void setReferencedRoom(String referencedRoom) {
-		this.referencedRoom = referencedRoom;
+	public void setReferencedRoomID(String referencedRoomID) {
+		this.referencedRoomID = referencedRoomID;
 	}
 	
 	public ObjectType getObjectType() {

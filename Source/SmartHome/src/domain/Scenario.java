@@ -41,12 +41,12 @@ public class Scenario {
 		this.nameID = nameID;
 	}
 
-	public Date getDateTime() {
-		return dateTime;
+	public LocalDateTime getStartTime() {
+		return startTime;
 	}
 
-	public void setDateTime(Date dateTime) {
-		this.dateTime = dateTime;
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
 	}
 
 	public boolean isActive() {

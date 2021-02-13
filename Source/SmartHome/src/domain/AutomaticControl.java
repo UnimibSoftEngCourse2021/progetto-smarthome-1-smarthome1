@@ -13,7 +13,7 @@ public class AutomaticControl {
 	private double[][] standardMatrix = new double[7][26];
 	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
 	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
-	private boolean atHome = true;
+	
 	private boolean activeLightControl = false;
 	private boolean activeAirControl = false;
 	
@@ -57,14 +57,6 @@ public class AutomaticControl {
 
 	public void setChoosenMatrix(ChoosenMatrix choosenMatrix) {
 		this.choosenMatrix = choosenMatrix;
-	}
-
-	public boolean isAtHome() {
-		return atHome;
-	}
-
-	public void setAtHome(boolean atHome) {
-		this.atHome = atHome;
 	}
 
 	public boolean isActiveLightControl() {
@@ -147,11 +139,11 @@ public class AutomaticControl {
 	 * @param returnValue
 	 * @param alarm
 	 */
-	public void checkAlarm(Alarm alarm) { // boolean returnValue
+	public void checkAlarm(String alarmID) { // boolean returnValue
 		if (alarm.isArmed() == true) {
 			//for(int i = 0; i < sensors.size(); i++) {
 				//if(sensors.get(i).getCategory().equals(Category.MOVEMENT) || sensors.get(i).getCategory().equals(Category.DOOR) || sensors.get(i).getCategory().equals(Category.WINDOW)) {
-						handler.doAction(alarm.getObjectID(), true);
+						handler.doAction(alarmID, true);
 				//}
 			//}
 		}
@@ -160,40 +152,8 @@ public class AutomaticControl {
 	 * il metodo viene chiamato solo se uno dei sensori interessati si attiva, quindi se l'allarme è armato deve attivarsi sempre
 	 */
 
-	/**
-	 * 
-	 * @param alarm
-	 */
-	public void isAway(Alarm alarm) {
-		atHome = false;
-		alarm.setArmed(true);
-	}
 
-	/**
-	 * 
-	 * @param code
-	 * @param alarm
-	 */
-	/*
-	 * AutomatiControl non conosce gli oggetti, capire come gestirlo -d.barzio
-	 */
-	public void isHome(String code, Alarm alarm, Door door) { // ho dovuto aggiungere l'oggetto door come attributo per avere il codice (controllare)
-		int i = 0;
-		do {
-			if (code.equals(door.getCode())) {
-				atHome = true;
-				alarm.setArmed(false);
-			}
-			else {
-				//richiedere codice all'utente
-				i++; // contatore degli accessi errati
-			}
-		} while (i < 5);
-		if (i >= 5) {
-			System.out.println("Numero massimo di tentativi superato. Chiamare l'assistenza");
-			// bloccare la richiesta di codice
-		}
-	}
+
 
 	/**
 	 * 
@@ -204,10 +164,13 @@ public class AutomaticControl {
 	public void checkAirPollution(double currentPollutionValue, Room room, String airState) {
 		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION.toString()))
 			for(int i = 0; i < room.getWindowsNum(); i++)
-				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState);
+				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState, true);
 		else if (currentPollutionValue > 30.00)
 			for(int i = 0; i < room.getWindowsNum(); i++)
-				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState);
+				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState, true);
+		else
+			for(int i = 0; i < room.getWindowsNum(); i++)
+				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState, false);
 	}
 
 	/**
