@@ -16,24 +16,13 @@ public class AutomaticControl {
 	
 	private boolean activeLightControl = false;
 	private boolean activeAirControl = false;
+	private int startDayMode;
+	private int stopDayMode;
 	
 	private List<Sensor> sensors;
 	private ConflictHandler handler;
 	private Config config;
 	private TimerOP[] timers;
-
-	/*
-	 * se initUserMatrix prende gia una matrice allora 
-	 * esiste gia il metodo setUserMatrix
-	 * -d.barzio
-	 */
-	public void initUserMatrix(double[][] userMatrix) {
-		for(int i = 0; i <= 6; i++) {
-			for(int j = 0; j <= 23; j++) {
-				// inizializzare matrice con valori presi da utente
-			}
-		}
-	}
 	
 	public double[][] getUserMatrix() {
 		return userMatrix;
@@ -75,6 +64,35 @@ public class AutomaticControl {
 		this.activeAirControl = activeAirControl;
 	}
 
+	public int getStartDayMode() {
+		return startDayMode;
+	}
+
+	public void setStartDayMode(int startDayMode) {
+		this.startDayMode = startDayMode;
+	}
+
+	public int getStopDayMode() {
+		return stopDayMode;
+	}
+
+	public void setStopDayMode(int stopDayMode) {
+		this.stopDayMode = stopDayMode;
+	}
+
+	/*
+	 * se initUserMatrix prende gia una matrice allora 
+	 * esiste gia il metodo setUserMatrix
+	 * -d.barzio
+	 */
+	public void initUserMatrix(double[][] userMatrix) {
+		for(int i = 0; i <= 6; i++) {
+			for(int j = 0; j <= 23; j++) {
+				// inizializzare matrice con valori presi da utente
+			}
+		}
+	}
+	
 	/*
 	 * anche qui vale la stessa cosa di initUserMatrix -d.barzio
 	 */
@@ -136,24 +154,25 @@ public class AutomaticControl {
 
 	/**
 	 * 
-	 * @param returnValue
 	 * @param alarm
 	 */
-	public void checkAlarm(String alarmID) { // boolean returnValue
-		if (alarm.isArmed() == true) {
-			//for(int i = 0; i < sensors.size(); i++) {
-				//if(sensors.get(i).getCategory().equals(Category.MOVEMENT) || sensors.get(i).getCategory().equals(Category.DOOR) || sensors.get(i).getCategory().equals(Category.WINDOW)) {
-						handler.doAction(alarmID, true);
-				//}
-			//}
+	public void checkAlarm(Alarm alarm) { // boolean returnValue
+		if (Alarm.isArmed() == true) {
+			for(Sensor sensor: sensors) {
+				if((sensor.getCategory().equals(Category.MOVEMENT) 
+						|| sensor.getCategory().equals(Category.DOOR) 
+						|| sensor.getCategory().equals(Category.WINDOW))
+						&& sensor.getValue() == 1.00) {
+					handler.doAction(alarm.getObjectID(), true);
+				}
+			}
 		}
 	}
 	/*
-	 * il metodo viene chiamato solo se uno dei sensori interessati si attiva, quindi se l'allarme è armato deve attivarsi sempre
+	 * il metodo viene chiamato solo se uno dei sensori interessati si attiva, 
+	 * quindi se l'allarme è armato deve attivarsi sempre
+	 * il fatto che viene passato l'oggetto alarm per ovviare alla mancata conoscenza di Object è giusto?
 	 */
-
-
-
 
 	/**
 	 * 
@@ -184,13 +203,14 @@ public class AutomaticControl {
 		if(movementValue == 1.00) {
 			for(int i = 0; i < room.getLightsNum(); i++) {
 				if(lights.get(i).isActive() == false) 
-					handler.doAction(lights.get(i).getObjectID(), true);
+					handler.doAction(lights.get(i).getObjectID(), isDayMode(), true);
 			}
 			for(int i = 0; i < timers.length; i++) {
 				if(timers[i].getRoom().equals(room)) 
 					timers[i].resetTimer();	
 			}
-		} else  {/* dire in qualche modo che il sensore di movimento non è attivo da tot minuti*/
+		} 
+		else {
 			for(int i = 0; i < timers.length; i++) 
 				if(timers[i].getRoom().equals(room))
 					timer = timers[i];
@@ -199,9 +219,17 @@ public class AutomaticControl {
 			else if(!timer.isWorking() && elapsedTimer) //forse la prima cond non serve
 				for(int j = 0; j < room.getLightsNum(); j++) {
 					if(lights.get(j).isActive() == true) 
-						handler.doAction(lights.get(j).getObjectID(), false);
+						handler.doAction(lights.get(j).getObjectID(), isDayMode(), false);
 				}
 		}
 	}
+		public boolean isDayMode() {
+			if(LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() >= startDayMode &&
+					LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() < stopDayMode) {
+				return true;
+			}
+			else
+				return false;
+		}
 
 }

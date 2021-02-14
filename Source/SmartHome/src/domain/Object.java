@@ -8,7 +8,7 @@ public abstract class Object {
 	private boolean active; // nome cambiato da state per incongruenza con setter
 	private String objectID;
 	private String referencedRoomID;
-	public enum ObjectType {ALARM, DOOR, HEATER, LIGHT, WINDOW}
+	public enum ObjectType {ALARM, DOOR, HEATER, LIGHT, WINDOW, SHADER}
 	private ObjectType objectType;
 	
 	private List<Sensor> sensors;

@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import domain.Object.ObjectType;
@@ -7,7 +8,7 @@ import service.ObjectCommunicationAdapter;
 
 public class ConflictHandler {
 	
-	private boolean dayMode;
+
 	/*
 	 * variabile per identificare modalità giorno/notte per accensione luci
 	 * gli orari sono flessibili e devono essere scelti dall'utente
@@ -18,14 +19,6 @@ public class ConflictHandler {
 	private List<Object> objects;
 	private List<Scenario> scenario;
 	private ObjectCommunicationAdapter adapter;
-
-	public boolean isDayMode() {
-		return dayMode;
-	}
-
-	public void setDayMode(boolean dayMode) {
-		this.dayMode = dayMode;
-	}
 	
 	public boolean isAtHome() {
 		return atHome;
@@ -109,7 +102,7 @@ public class ConflictHandler {
 	 */
 	public void doAction(String objectID, boolean changeState) {
 		for(Object object: objects) {
-			if(object.getObjectID().equals(objectID)) // associo l'id dell'oggetto passato all'oggetto attuale del for
+			if(object.getObjectID().equals(objectID)) { // associo l'id dell'oggetto passato all'oggetto attuale del for
 				if(changeState) {
 					switch(object.getObjectType()) {
 					case ALARM:
@@ -119,33 +112,75 @@ public class ConflictHandler {
 					case HEATER:
 						/*
 						 * prima di accendere il calorifero controllo che tutte le finestre della stanza siano chiuse
+						 * invio notifica all'utente per chiedere cosa fare
 						 */
+						boolean windowOpen = false;	
+						ArrayList<Object> windows = getSpecificObjectsInRoom(object.getReferencedRoomID(), ObjectType.WINDOW);
 						for(Object window: objects) {
-							if(object.getReferencedRoomID().equals(window.getReferencedRoomID()) && window.getObjectType().equals(ObjectType.WINDOW) && window.isActive() == false)								
-								adapter.triggerAction(object, true);
+							if(window.isActive() == true) {							
+								windowOpen = true;
+								break;
+							}															
 						}
-						break;
-					case LIGHT:
-						/*
-						 * prima di accendere le luci controllo che non sia giorno
-						 * aggiungere variabile per identificare giorno/notte
-						 */
-						if(!dayMode)
+						if(windowOpen) {
+							if(true/*controller.userNotify(heater)*/) {
+								if(true/*controller.userNotify(window)*/)
+									for(Object window: windows) 
+										adapter.triggerAction(window, false);
+								adapter.triggerAction(object, true);
+							}
+						}
+						else
 							adapter.triggerAction(object, true);
 						break;
-					case WINDOW: // gestito nell'altro metodo doAction
+					case SHADER: // non genera conflitti
+					case LIGHT:
+						adapter.triggerAction(object, true);
+						break;
+					case WINDOW:
+						if(!Alarm.isArmed())							
+							adapter.triggerAction(object, true);
+						else if(true/* controller.userNotify()*/)
+								adapter.triggerAction(object, true);
+						break;
 					default:
 						break;
 					}
 				}
 				else // se si vuole spegnere qualcosa non ci sono conflitti
 					adapter.triggerAction(object, false);
+				break;
+			}
 		}
 	}
 	
-	/*
-	 * chiama update nel caso di alarm
-	 */
+	public void doAction(String lightID, boolean dayMode, boolean changeState) {
+		for(Object object: objects) {
+			if(object.getObjectID().equals(lightID)) { // associo l'id dell'oggetto passato all'oggetto attuale del for
+				if(changeState) {
+					if(!dayMode)
+						adapter.triggerAction(object, true);
+					else {
+						ArrayList<Object> shaders = getSpecificObjectsInRoom(object.getReferencedRoomID(), ObjectType.SHADER);
+						boolean shaderOpen = false; 
+						for(Object shader: shaders) {
+							if(!shader.isActive()) { // is active = fermano la luce
+								shaderOpen = true;
+								break;
+							}
+						}
+						if(!shaderOpen) {
+							adapter.triggerAction(object, true);
+						}
+					}
+				}
+				else
+					adapter.triggerAction(object, false);
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * 
 	 * @param objectID
@@ -154,50 +189,45 @@ public class ConflictHandler {
 	 */
 	public void doAction(String windowID, String airState, boolean changeState) {
 		// a seconda di airState azione ha priorità diversa
-		for(Object window: objects) {
+		for(Object object: objects) {
+			Window window = (Window)object;
 			if(window.getObjectID().equals(windowID)) // associo l'id dell'oggetto passato all'oggetto attuale del for
 				if(changeState) {			
 					if(airState.equalsIgnoreCase("pollution")) {
-						for(Object object: objects) {
-							if(object.getReferencedRoomID().equals(window.getReferencedRoomID())) {
-								switch(object.getObjectType()) {
-								case ALARM:
-									Alarm alarm = (Alarm)object;
-									if(!alarm.isArmed())
-										adapter.triggerAction(window, true);
-									else
-										adapter.triggerAction(window, false);
+						if(!Alarm.isArmed()) {
+							boolean userDecision = false;
+							ArrayList<Object> heaters = getSpecificObjectsInRoom(window.getReferencedRoomID(), ObjectType.HEATER);
+							for(Object heater: heaters)
+								if(heater.isActive()) {
+									// controller.notifyUser(...) : boolean true se l'utente vuole aprire le finestre
 									break;
-								case HEATER:
-								case DOOR:
-								case LIGHT:
-								case WINDOW:
-									if(object.isActive() == false)
-										adapter.triggerAction(window, true);
-									else
-										adapter.triggerAction(window, false);
-									break;
-								default:
-									break;
-								/*
-								 * come gestire il caso in cui all'attivazione della pulizia c'è qualcuno in stanza?
-								 * handler non conosce sensore
-								 * potremmo creare un oggetto relativo al sensore di movimento
-								 */
 								}
-							}								
+							if(window.getShader().isActive() && userDecision) {
+								adapter.triggerAction(window.getShader(), false);
+								adapter.triggerAction(window, true);
+							}							
 						}
+						break;
 					}
-					else {
+					else if(airState.equalsIgnoreCase("gas")) {
 						/*
 						 * nel caso ci sia una fuga di gas aprire sempre le finestre
 						 * considerare un possibile comportamento diverso per allarme
 						 */
-						adapter.triggerAction(window, true);
+						ArrayList<Object> lights = getSpecificObjectsInRoom(window.getReferencedRoomID(), ObjectType.LIGHT);
+						for(Object light: lights)
+							adapter.triggerAction(light, false);
+						if(!Alarm.isArmed()) {
+							if(window.getShader().isActive())
+								adapter.triggerAction(window.getShader(), false);
+							adapter.triggerAction(window, true);
+						}
+						else {
+							// if(controller.notifyUser(...)) apri finestre + controllo shader						
+						}
+						break;
 					}
 				}
-				else // se si vogliono chiudere le finestre non ci sono conflitti
-					adapter.triggerAction(window, false); 
 		}
 	}
 
@@ -210,6 +240,16 @@ public class ConflictHandler {
 			if(object.getObjectID().equals(objectID))
 				adapter.triggerAction(object, !object.isActive());
 		}
+	}
+	
+	public ArrayList<Object> getSpecificObjectsInRoom(String roomID, ObjectType type) {
+		ArrayList<Object> roomObjects = new ArrayList<>();
+		for(Object object: objects) {
+			if(object.getObjectType().equals(type) && object.getReferencedRoomID().equals(roomID)) {
+				roomObjects.add(object);
+			}
+		}
+		return roomObjects;
 	}
 	
 }

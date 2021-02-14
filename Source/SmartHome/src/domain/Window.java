@@ -2,15 +2,16 @@ package domain;
 
 public class Window extends Object {
 
-	private boolean shader;
+	private Shader shader;
 	/*
 	 * ricordiamoci che probabilmente shader e' un oggetto
 	 */
-	public boolean isShader() {
+
+	public Shader getShader() {
 		return shader;
 	}
 
-	public void setShader(boolean shader) {
+	public void setShader(Shader shader) {
 		this.shader = shader;
 	}
 
