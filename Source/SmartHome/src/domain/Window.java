@@ -8,10 +8,11 @@ public class Window extends Object {
 	private Shader shader;
 	private Sensor sensor;
 	
-	public Window(String name, String referencedRoomID) {
-		super(name, referencedRoomID, ObjectType.WINDOW);
-		sensor = new Sensor("sensorOf: ", referencedRoomID, SensorCategory.WINDOW);
-		shader = new Shader("ShaderOf: " + name, referencedRoomID, this);
+	public Window(String name, Room room) {
+		super(name, ObjectType.WINDOW, room);
+		sensor = new Sensor("sensorOf: ", SensorCategory.WINDOW, room);
+		shader = new Shader("ShaderOf: " + name, room.getRoomID(), this, room);
+		
 		Alarm.setSensors(sensor);
 	}
 	

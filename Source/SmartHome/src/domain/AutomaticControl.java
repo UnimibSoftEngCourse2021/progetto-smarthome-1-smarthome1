@@ -1,7 +1,6 @@
 package domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import domain.Object.ObjectType;
@@ -11,34 +10,44 @@ import domain.TimerOP.Type;
 
 public class AutomaticControl {
 
-	private int[][] userMatrix = new int[7][26];
-	private int[][] standardMatrix = new int[7][26];
+	private static AutomaticControl automaticControl; //singleton instance
+	private double[][] userMatrix = new double[7][26];
+	private double[][] standardMatrix = new double[7][26];
 	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
 	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
 	//chosen con una o'? -d.barzio
-	private boolean activeLightControl = false;
-	private boolean activeAirControl = false;
-	private int startDayMode;
-	private int stopDayMode;
+	//private boolean activeLightControl = false;
+	//private boolean activeAirControl = false;
+	private static int startDayMode;
+	private static int stopDayMode;
 	
 	private List<Sensor> sensors;
-	private ConflictHandler handler;
-	private Config config;
+	private Config config; // levare causa navigabilita
 	//private TimerOP[] timers; non credo serva -> il timer viene preso dalla stanza che viene passata a parametro di checkLight -d.barzio
 	
-	public int[][] getUserMatrix() {
+	private AutomaticControl() {
+		initStandardMatrix();
+	}
+	
+	public static AutomaticControl getInstance() {
+		if(automaticControl == null)
+			automaticControl = new AutomaticControl();
+		return automaticControl;
+	}
+	
+	public double[][] getUserMatrix() {
 		return userMatrix;
 	}
 
-	public void setUserMatrix(int[][] userMatrix) {
+	public void setUserMatrix(double[][] userMatrix) {
 		this.userMatrix = userMatrix;
 	}
 
-	public int[][] getStandardMatrix() {
+	public double[][] getStandardMatrix() {
 		return standardMatrix;
 	}
 
-	public void setStandardMatrix(int[][] standardMatrix) {
+	public void setStandardMatrix(double[][] standardMatrix) {
 		this.standardMatrix = standardMatrix;
 	}
 
@@ -50,36 +59,21 @@ public class AutomaticControl {
 		this.choosenMatrix = choosenMatrix;
 	}
 
-	public boolean isActiveLightControl() {
-		return activeLightControl;
-	}
-
-	public void setActiveLightControl(boolean activeLightControl) {
-		this.activeLightControl = activeLightControl;
-	}
-
-	public boolean isActiveAirControl() {
-		return activeAirControl;
-	}
-
-	public void setActiveAirControl(boolean activeAirControl) {
-		this.activeAirControl = activeAirControl;
-	}
-
 	public int getStartDayMode() {
 		return startDayMode;
 	}
 
-	public void setStartDayMode(int startDayMode) {
-		this.startDayMode = startDayMode;
+	public static void setStartDayMode(String startDayMode) {
+		AutomaticControl.startDayMode = Integer.parseInt(startDayMode.substring(0, 2))*60 + Integer.parseInt(startDayMode.substring(3));
+				
 	}
 
 	public int getStopDayMode() {
 		return stopDayMode;
 	}
 
-	public void setStopDayMode(int stopDayMode) {
-		this.stopDayMode = stopDayMode;
+	public static void setStopDayMode(String stopDayMode) {
+		AutomaticControl.stopDayMode = Integer.parseInt(stopDayMode.substring(0, 2))*60 + Integer.parseInt(stopDayMode.substring(3));
 	}
 
 	/*
@@ -98,7 +92,7 @@ public class AutomaticControl {
 	/*
 	 * anche qui vale la stessa cosa di initUserMatrix -d.barzio
 	 */
-	public void initStandardMatrix(double[][] standardMatrix) {
+	private void initStandardMatrix() {
 
 		for(int i = 0; i <= 6; i++) {
 			standardMatrix[i][24] = 16.00;
@@ -143,18 +137,18 @@ public class AutomaticControl {
 		if(choosenMatrix.equals(ChoosenMatrix.USER)) {
 			if(userMatrix[i][treshold] > currentTemp) {
 				for(int k = 0; k < publisherList.size(); k++) 
-					handler.doAction(publisherList.get(k).getObjectID(), true);
+					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjectID(), true);
 			} else {
 				for(int k = 0; k < publisherList.size(); k++) 
-					handler.doAction(publisherList.get(k).getObjectID(), false);
+					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjectID(), false);
 			}	
 		} else {
 			if (standardMatrix[i][treshold] > currentTemp) {
 				for(int k = 0; k < publisherList.size(); k++) 
-					handler.doAction(publisherList.get(k).getObjectID(), true);
+					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjectID(), true);
 			} else {
 				for(int k = 0; k < publisherList.size(); k++) 
-					handler.doAction(publisherList.get(k).getObjectID(), false);
+					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjectID(), false);
 			}
 		}
 	}
@@ -169,7 +163,7 @@ public class AutomaticControl {
 						|| sensor.getCategory().equals(SensorCategory.DOOR) 
 						|| sensor.getCategory().equals(SensorCategory.WINDOW))
 						&& sensor.getValue() == 1.00) {
-					handler.doAction(alarm.getObjectID(), true);
+					ConflictHandler.getInstance().doAction(alarm.getObjectID(), true);
 					break;
 				}
 	}
@@ -186,7 +180,7 @@ public class AutomaticControl {
 		TimerOP timer = room.getTimer();
 		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION)) {
 			for(int i = 0; i < room.getWindowsNum(); i++)
-				handler.doAction(room.getObjectList(ObjectType.WINDOW).get(i).getObjectID(), airState, true);
+				ConflictHandler.getInstance().doAction(room.getObjectList(ObjectType.WINDOW).get(i).getObjectID(), airState, true);
 			timer.resetTimer(Type.AIR);
 		} else {
 			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
@@ -194,11 +188,11 @@ public class AutomaticControl {
 			else if(!timer.isWorking(Type.LIGHT) && timer.getElapsedTimers()[0]) //forse la seconda cond non serve
 				for(int j = 0; j < room.getWindowsNum(); j++) 
 					if(windows.get(j).isActive() == true) 
-						handler.doAction(windows.get(j).getObjectID(), airState, true);
+						ConflictHandler.getInstance().doAction(windows.get(j).getObjectID(), airState, true);
 		}
 		if (currentPollutionValue > 30.00 && airState.equals(AirState.GAS))
 			for(int i = 0; i < room.getWindowsNum(); i++)
-				handler.doAction(room.getObjectList(ObjectType.WINDOW).get(i).getObjectID(), airState, true);
+				ConflictHandler.getInstance().doAction(room.getObjectList(ObjectType.WINDOW).get(i).getObjectID(), airState, true);
 
 	}
 
@@ -208,12 +202,12 @@ public class AutomaticControl {
 	 * @param stanza
 	 */
 	public void checkLight(double movementValue, Room room) {
-		ArrayList<Object> lights = room.getObjectList("light");
+		List<Object> lights = room.getObjectList(ObjectType.LIGHT);
 		TimerOP timer = room.getTimer();
 		if(movementValue == 1.00) {
 			for(int i = 0; i < room.getLightsNum(); i++) 
 				if(lights.get(i).isActive() == false) 
-					handler.doAction(lights.get(i).getObjectID(), isDayMode(), true);
+					ConflictHandler.getInstance().doAction(lights.get(i).getObjectID(), isDayMode(), true);
 			timer.resetTimer(Type.LIGHT);	
 		} else {
 			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
@@ -221,15 +215,15 @@ public class AutomaticControl {
 			else if(!timer.isWorking(Type.LIGHT) && timer.getElapsedTimers()[0]) //forse la seconda cond non serve
 				for(int j = 0; j < room.getLightsNum(); j++) 
 					if(lights.get(j).isActive() == true) 
-						handler.doAction(lights.get(j).getObjectID(), isDayMode(), false);
+						ConflictHandler.getInstance().doAction(lights.get(j).getObjectID(), isDayMode(), false);
 		}
 	}
-		public boolean isDayMode() {
-			if(LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() >= startDayMode &&
-					LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() < stopDayMode) 
-				return true;
-			else
-				return false;
-		}
-
+	
+	public boolean isDayMode() {
+		if(LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() >= startDayMode &&
+				LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() < stopDayMode) 
+			return true;
+		else
+			return false;
+	}
 }

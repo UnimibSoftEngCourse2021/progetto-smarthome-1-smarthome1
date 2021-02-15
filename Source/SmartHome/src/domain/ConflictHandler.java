@@ -9,18 +9,27 @@ import service.ObjectCommunicationAdapter;
 
 public class ConflictHandler {
 	
-
+	private static ConflictHandler conflictHandler; //singleton instance
 	/*
 	 * variabile per identificare modalità giorno/notte per accensione luci
 	 * gli orari sono flessibili e devono essere scelti dall'utente
 	 */
 	private boolean atHome = true;
 	
-	private AutomaticControl automaticControl;
-	private List<Object> objects;
+	private AutomaticControl automaticControl; // da levare (causa navigabilita)
+	private static List<Object> objects;
 	private List<Scenario> scenario;
 	private ObjectCommunicationAdapter adapter;
 	
+	private ConflictHandler() {
+		
+	}
+	
+	public static ConflictHandler getInstance() {
+		if(conflictHandler == null)
+			conflictHandler = new ConflictHandler();
+		return conflictHandler;
+	}
 	public boolean isAtHome() {
 		return atHome;
 	}
@@ -29,6 +38,14 @@ public class ConflictHandler {
 		this.atHome = atHome;
 	}
 	
+	public List<Object> getObjects() {
+		return objects;
+	}
+
+	public static void addObjects(Object object) {
+		objects.add(object);
+	}
+
 	/**
 	 * 
 	 * @param alarmID
@@ -116,7 +133,7 @@ public class ConflictHandler {
 						 * invio notifica all'utente per chiedere cosa fare
 						 */
 						boolean windowOpen = false;	
-						ArrayList<Object> windows = getSpecificObjectsInRoom(object.getReferencedRoomID(), ObjectType.WINDOW);
+						ArrayList<Object> windows = getSpecificObjectsInRoom(object.getRoom().getRoomID(), ObjectType.WINDOW);
 						for(Object window: objects) {
 							if(window.isActive() == true) {							
 								windowOpen = true;
@@ -162,7 +179,7 @@ public class ConflictHandler {
 					if(!dayMode)
 						adapter.triggerAction(object, true);
 					else {
-						ArrayList<Object> shaders = getSpecificObjectsInRoom(object.getReferencedRoomID(), ObjectType.SHADER);
+						ArrayList<Object> shaders = getSpecificObjectsInRoom(object.getRoom().getRoomID(), ObjectType.SHADER);
 						boolean shaderOpen = false; 
 						for(Object shader: shaders) {
 							if(!shader.isActive()) { // is active = fermano la luce
@@ -197,7 +214,7 @@ public class ConflictHandler {
 					if(airState.equals(AirState.POLLUTION)) {
 						if(!Alarm.isArmed()) {
 							boolean userDecision = false;
-							ArrayList<Object> heaters = getSpecificObjectsInRoom(window.getReferencedRoomID(), ObjectType.HEATER);
+							ArrayList<Object> heaters = getSpecificObjectsInRoom(window.getRoom().getRoomID(), ObjectType.HEATER);
 							for(Object heater: heaters)
 								if(heater.isActive()) {
 									// controller.notifyUser(...) : boolean true se l'utente vuole aprire le finestre
@@ -215,7 +232,7 @@ public class ConflictHandler {
 						 * nel caso ci sia una fuga di gas aprire sempre le finestre
 						 * considerare un possibile comportamento diverso per allarme
 						 */
-						ArrayList<Object> lights = getSpecificObjectsInRoom(window.getReferencedRoomID(), ObjectType.LIGHT);
+						ArrayList<Object> lights = getSpecificObjectsInRoom(window.getRoom().getRoomID(), ObjectType.LIGHT);
 						for(Object light: lights)
 							adapter.triggerAction(light, false);
 						if(!Alarm.isArmed()) {
@@ -246,7 +263,7 @@ public class ConflictHandler {
 	public ArrayList<Object> getSpecificObjectsInRoom(String roomID, ObjectType type) {
 		ArrayList<Object> roomObjects = new ArrayList<>();
 		for(Object object: objects) {
-			if(object.getObjectType().equals(type) && object.getReferencedRoomID().equals(roomID)) {
+			if(object.getObjectType().equals(type) && object.getRoom().getRoomID().equals(roomID)) {
 				roomObjects.add(object);
 			}
 		}

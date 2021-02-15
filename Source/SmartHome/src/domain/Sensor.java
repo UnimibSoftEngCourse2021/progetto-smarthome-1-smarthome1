@@ -12,23 +12,23 @@ public class Sensor {
 	private String sensorID;
 	private double value;
 	private String communicationType;//BOH in caso da scrivere: in config, in tutti i costruttori di sensor chiamati dagli oggetti
-	private String roomID;
+	//private String roomID;
+	private Room room;
 	private List<Object> publisherList;
 	public enum SensorCategory {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM, SHADER}
 	private SensorCategory category;
 	public enum AirState {POLLUTION, GAS}
 	private AirState airState;
 	
-	private AutomaticControl automaticControl;
 	private DatabaseCommunicationSystem database;
 	private SensorCommunicationAdapter adapter;
 	
 
-	public Sensor(String name, String roomID, SensorCategory category) {
+	public Sensor(String name, SensorCategory category, Room room) {
 		this.name = name;
 		this.value = 0.00;
 		this.category = category;
-		this.roomID = roomID;
+		this.room = room;
 		this.airState = null;
 		if(category.equals(SensorCategory.MOVEMENT))
 			Alarm.setSensors(this);
@@ -51,14 +51,6 @@ public class Sensor {
 
 	public void setSensorID(String sensorID) {
 		this.sensorID = sensorID;
-	}
-
-	public String getRoomID() {
-		return roomID;
-	}
-
-	public void setRoomID(String roomID) {
-		this.roomID = roomID;
 	}
 
 	public double getValue() {
@@ -123,28 +115,29 @@ public class Sensor {
 			if(value == 1.00) {
 				for (int i = 0; i < publisherList.size(); i++) {
 					if(publisherList.get(i).getObjectType().equals(ObjectType.ALARM))
-						automaticControl.checkAlarm((Alarm)publisherList.get(i));
+						AutomaticControl.getInstance().checkAlarm((Alarm)publisherList.get(i));
 					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
-						automaticControl.checkLight(value, room);
+						AutomaticControl.getInstance().checkLight(value, room);
 				}
 			}
 			else
 				for (int i = 0; i < publisherList.size(); i++)
 					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
-						automaticControl.checkLight(value, room);
+						AutomaticControl.getInstance().checkLight(value, room);
 			break;
 		case AIR:
-			automaticControl.checkAirPollution(value, room, airState);
+			AutomaticControl.getInstance().checkAirPollution(value, room, airState);
 			break;
 		case LIGHT:
 		case WINDOW:
 		case DOOR:
 		case HEATER:
 		case ALARM:
+		case SHADER:
 			publisherList.get(0).update(value);
 			break;
 		case TEMPERATURE:
-			automaticControl.checkTempTresholds(value, publisherList);
+			AutomaticControl.getInstance().checkTempTresholds(value, publisherList);
 			break;
 		// definire un case di default??
 		}

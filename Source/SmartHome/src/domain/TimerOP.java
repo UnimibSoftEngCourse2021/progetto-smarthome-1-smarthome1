@@ -1,16 +1,20 @@
 package domain;
 
 
+import domain.Sensor.AirState;
 import service.TimerThread;
 
 public class TimerOP{
 
-	private AutomaticControl automaticControl;
 	private Room room;
 	private TimerThread airThread;
 	private TimerThread lightThread;
 	public enum Type {LIGHT, AIR};
 	private boolean[] elapsedTimers = {false, false};
+	
+	public TimerOP(Room room) {
+		this.room = room;
+	}
 	
 	public TimerThread getAirThread() {
 		return airThread;
@@ -64,10 +68,10 @@ public class TimerOP{
 	public void executeOperations(Type timerType) {
 		if(timerType.equals(Type.LIGHT)) {
 			elapsedTimers[0] = true;
-			automaticControl.checkLight(0.00, room);
+			AutomaticControl.getInstance().checkLight(0.00, room);
 		} else {
 			elapsedTimers[1] = true;
-			automaticControl.checkAirPollution(0.00, room, "pollution");
+			AutomaticControl.getInstance().checkAirPollution(0.00, room, AirState.POLLUTION);
 		}
 	}
 	
@@ -90,14 +94,6 @@ public class TimerOP{
 		}
 	}
 	
-	public AutomaticControl getAutomaticControl() {
-		return automaticControl;
-	}
-
-	public void setAutomaticControl(AutomaticControl automaticControl) {
-		this.automaticControl = automaticControl;
-	}
-
 	public Room getRoom() {
 		return room;
 	}

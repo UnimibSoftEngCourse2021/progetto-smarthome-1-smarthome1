@@ -8,9 +8,9 @@ public class Door extends Object {
 	private String code;
 	private Sensor sensor;
 
-	public Door(String name, String referencedRoomID) {
-		super(name, referencedRoomID, ObjectType.DOOR);
-		sensor = new Sensor("sensorOf: ", referencedRoomID, SensorCategory.DOOR);
+	public Door(String name, Room room) {
+		super(name, ObjectType.DOOR, room);
+		sensor = new Sensor("sensorOf: ", SensorCategory.DOOR, room);
 		Alarm.setSensors(sensor);
 	}
 	public String getCode() {

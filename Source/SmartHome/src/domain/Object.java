@@ -7,18 +7,26 @@ public abstract class Object {
 	private String name;
 	private boolean active; // nome cambiato da state per incongruenza con setter
 	private String objectID;
-	private String referencedRoomID;
+	private Room room;
 	public enum ObjectType {ALARM, DOOR, HEATER, LIGHT, WINDOW, SHADER}
 	private ObjectType objectType;
 	
 	private ConflictHandler handler; //da togliere
 
-	public Object(String name, String referencedRoomID, ObjectType objectType) {
+	public Object(String name, ObjectType objectType, Room room) {
 		this.name = name;
 		this.active = false;
-		this.referencedRoomID = referencedRoomID;
 		this.objectType = objectType;
+		this.room = room;
+		handler = ConflictHandler.getInstance();
 	}
+	public Room getRoom() {
+		return room;
+	}
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -41,14 +49,6 @@ public abstract class Object {
 
 	public void setObjectID(String objectID) {
 		this.objectID = objectID;
-	}
-
-	public String getReferencedRoomID() {
-		return referencedRoomID;
-	}
-
-	public void setReferencedRoomID(String referencedRoomID) {
-		this.referencedRoomID = referencedRoomID;
 	}
 	
 	public ObjectType getObjectType() {

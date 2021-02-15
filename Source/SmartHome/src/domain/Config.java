@@ -23,7 +23,7 @@ public class Config {
 		try {
 			inputStream = new Scanner(new File (dataDescription.getFileHomeConfig().getName()));
 		} catch (FileNotFoundException e) {
-			System.out.println("errore");
+			System.out.println("error");
 			System.exit(0);
 		}
 		Room room = null;
@@ -31,12 +31,10 @@ public class Config {
 		while(inputStream.hasNextLine()) {
 			String riga = inputStream.nextLine();
 			if(riga.equals(":room")) {
-				room = new Room();
-				rooms.add(room);
 				String name = inputStream.nextLine();
-				room.setRoomID(name);
 				String floor = inputStream.nextLine();
-				room.setFloor(Short.parseShort(floor));
+				room = new Room(name, Short.parseShort(floor));
+				rooms.add(room);
 			}
 			else if(riga.substring(1).equals(":ALARM")) {
 				String name = inputStream.nextLine();
@@ -77,8 +75,21 @@ public class Config {
 						}					
 					}
 				}
-			}
-		}						
+			} else if(riga.equals(":STARTDAYMODE")) {
+				String sdm = inputStream.nextLine();
+				AutomaticControl.setStartDayMode(sdm);
+			}  else if(riga.equals(":STOPDAYMODE")) {
+				String sdm = inputStream.nextLine();
+				AutomaticControl.setStopDayMode(sdm);
+			} 				
+		}
+		for(Room r: rooms) {
+			r.setDoorsNum();
+			r.setLightsNum();
+			r.setHeatersNum();
+			r.setWindowsNum();
+		}
+		
 	}
 
 	/**

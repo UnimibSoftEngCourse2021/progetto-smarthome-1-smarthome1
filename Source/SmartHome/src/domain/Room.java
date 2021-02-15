@@ -1,6 +1,5 @@
 package domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import domain.Object.ObjectType;
@@ -12,10 +11,10 @@ public class Room {
 	private short floor;
 	private short lightsNum;
 	private short doorsNum;
-	private short HeatersNum;
+	private short heatersNum;
 	private short windowsNum;
-	private boolean lightControlled = false;
-	private boolean airControlled = false;
+	//private boolean lightControlled = false;
+	//private boolean airControlled = false;
 	
 	/*
 	 * esistono due liste di oggetti(??)
@@ -26,7 +25,13 @@ public class Room {
 	private List<Sensor> sensors;
 	private List<Object> objects;
 	private TimerOP timer;
-	private Config config;
+	private Config config; // prob da togliere per navigabilita
+	
+	public Room(String roomID, Short floor) {
+		this.roomID = roomID;
+		this.floor = floor;
+		timer = new TimerOP(this);
+	}
 
 	public String getRoomID() {
 		return roomID;
@@ -56,48 +61,48 @@ public class Room {
 		return lightsNum;
 	}
 
-	public void setLightsNum(short lightsNum) {
-		this.lightsNum = lightsNum;
+	public void setLightsNum() {
+		short r = 0;
+		for(Object object: objects) 
+			if(object.getObjectType().equals(ObjectType.LIGHT))
+				r++;
+		lightsNum = r;
 	}
 
 	public short getDoorsNum() {
 		return doorsNum;
 	}
 
-	public void setDoorsNum(short doorsNum) {
-		this.doorsNum = doorsNum;
+	public void setDoorsNum() {
+		short r = 0;
+		for(Object object: objects) 
+			if(object.getObjectType().equals(ObjectType.DOOR))
+				r++;
+		doorsNum = r;
 	}
 
 	public short getHeatersNum() {
-		return HeatersNum;
+		return heatersNum;
 	}
 
-	public void setHeatersNum(short heatersNum) {
-		HeatersNum = heatersNum;
+	public void setHeatersNum() {
+		short r = 0;
+		for(Object object: objects) 
+			if(object.getObjectType().equals(ObjectType.HEATER))
+				r++;
+		heatersNum = r;
 	}
 
 	public short getWindowsNum() {
 		return windowsNum;
 	}
 
-	public void setWindowsNum(short windowsNum) {
-		this.windowsNum = windowsNum;
-	}
-
-	public boolean isLightControlled() {
-		return lightControlled;
-	}
-
-	public void setLightControlled(boolean lightControlled) {
-		this.lightControlled = lightControlled;
-	}
-
-	public boolean isAirControl() {
-		return airControlled;
-	}
-
-	public void setAirControlled(boolean airControlled) {
-		this.airControlled = airControlled;
+	public void setWindowsNum() {
+		short r = 0;
+		for(Object object: objects) 
+			if(object.getObjectType().equals(ObjectType.WINDOW))
+				r++;
+		windowsNum = r;
 	}
 
 	// non sono sicuro se vadano aggiunti getter/setter per objectList (il getter in teoria è già definito sotto)
@@ -107,7 +112,7 @@ public class Room {
 	 * @param sensorCategory
 	 */
 	public void instantiateSensor(SensorCategory category, String name) {
-		Sensor sensor = new Sensor(name, roomID, category);
+		Sensor sensor = new Sensor(name, category, this);
 		sensors.add(sensor);
 		sensor.setSensorID(category.toString() + "_" + roomID);
 	}
@@ -115,15 +120,16 @@ public class Room {
 	public void instantiateObject(ObjectType type, String name) {
 		switch(type) {
 		case DOOR:
-			Door door= new Door(name, roomID);
+			Door door= new Door(name, this);
 			door.getSensor().attach(door);
 			objects.add(door);
 			door.setObjectID(type.toString() + "_" + roomID + "_" + String.valueOf(objects.indexOf(door)));
 			door.getSensor().concatName(door.getObjectID());
 			door.getSensor().setSensorID(door.getSensor().getCategory().toString() + "_" + door.getObjectID());
+			ConflictHandler.addObjects(door);
 			break;
 		case WINDOW:
-			Window window = new Window(name, roomID);
+			Window window = new Window(name, this);
 			window.getSensor().attach(window);
 			objects.add(window);
 			window.setObjectID(type.toString() + "_" + roomID + "_" + String.valueOf(objects.indexOf(window)));
@@ -133,21 +139,25 @@ public class Room {
 			objects.add(shader);
 			shader.setObjectID("SHADER_" + window.getObjectID());
 			shader.getSensor().setSensorID(shader.getSensor().getCategory().toString() + "_" + shader.getObjectID());
+			ConflictHandler.addObjects(window);
+			ConflictHandler.addObjects(shader);
 			break;
 		case LIGHT:
-			Light light= new Light(name, roomID);
+			Light light= new Light(name, this);
 			light.getSensor().attach(light);
 			objects.add(light);
 			light.setObjectID(type.toString() + "_" + roomID + "_" + String.valueOf(objects.indexOf(light)));
 			light.getSensor().concatName(light.getObjectID());
 			light.getSensor().setSensorID(light.getSensor().getCategory().toString() + "_" + light.getObjectID());
+			ConflictHandler.addObjects(light);
 			break;
 		case HEATER:
-			Heater heater= new Heater(name, roomID);
+			Heater heater= new Heater(name, this);
 			objects.add(heater);
 			heater.setObjectID(type.toString() + "_" + roomID + "_" + String.valueOf(objects.indexOf(heater)));
 			heater.getSensor().concatName(heater.getObjectID());
 			heater.getSensor().setSensorID(heater.getSensor().getCategory().toString() + "_" + heater.getObjectID());
+			ConflictHandler.addObjects(heater);
 			break;
 		default:
 			break;
