@@ -8,7 +8,6 @@ import domain.Object.ObjectType;
 public class Room {
 
 	private String name;
-	private short floor;
 	private short lightsNum;
 	private short doorsNum;
 	private short HeatersNum;
@@ -24,7 +23,16 @@ public class Room {
 	 */
 	private List<Sensor> sensors;
 	private List<Object> objects;
+	private TimerOP timer;
 	private Config config;
+
+	public TimerOP getTimer() {
+		return timer;
+	}
+
+	public void setTimer(TimerOP timer) {
+		this.timer = timer;
+	}
 
 	public String getName() {
 		return name;
@@ -100,6 +108,7 @@ public class Room {
 		///crea sensore associati a stanza 
 		throw new UnsupportedOperationException();
 	}
+	
 
 	/**
 	 * 
@@ -108,7 +117,7 @@ public class Room {
 	// provare con iterator
 	public ArrayList<Object> getObjectList(String objectType) {
 			for(int i = 0; i < objects.size(); i++) 
-				if(objects.get(i).getObjectType().toString().equals(objectType) && objects.get(i).getReferencedRoom().equals(name))
+				if(objects.get(i).getObjectType().toString().equals(objectType) && objects.get(i).getReferencedRoomID().equals(name))
 					objectList.add(objects.get(i));	
 			return objectList;
 	}

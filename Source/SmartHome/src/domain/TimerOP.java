@@ -1,35 +1,93 @@
 package domain;
 
+
 import service.TimerThread;
 
 public class TimerOP{
 
 	private AutomaticControl automaticControl;
 	private Room room;
-	private TimerThread thread;
+	private TimerThread airThread;
+	private TimerThread lightThread;
+	public enum Type {LIGHT, AIR};
+	private boolean[] elapsedTimers = {false, false};
 	
-	public void startTimer(Room room) {
-		this.setRoom(room); //forse non serve perche la stanza quando viene creata crea a sua volta il timer
-		thread.setInterrupted(false);
-		thread.start();
+	public TimerThread getAirThread() {
+		return airThread;
 	}
 
-	public void resetTimer() {
-		thread.interrupt();
+	public void setAirThread(TimerThread airThread) {
+		this.airThread = airThread;
 	}
 
-	public void executeOperations() {
-		automaticControl.checkLight(0.00, room, true);
+	public TimerThread getLightThread() {
+		return lightThread;
+	}
+
+	public void setLightThread(TimerThread lightThread) {
+		this.lightThread = lightThread;
+	}
+
+	public boolean[] getElapsedTimers() {
+		return elapsedTimers;
+	}
+
+	public void setElapsedTimers(boolean[] elapsedTimers) {
+		this.elapsedTimers = elapsedTimers;
+	}
+
+	public void startTimer(Type timerType, Room room, int time) {
+		this.setRoom(room);//forse non serve perche la stanza quando viene creata crea a sua volta il timer
+		if(timerType.equals(Type.AIR)) {
+			elapsedTimers[1] = false;
+			airThread = new TimerThread(time, Type.AIR);
+			airThread.setInterrupted(false);
+			airThread.start();
+		} else {
+			elapsedTimers[0] = false;
+			lightThread = new TimerThread(time, Type.LIGHT);
+			lightThread.setInterrupted(false);
+			lightThread.start();
+		}
+	}
+
+	public void resetTimer(Type timerType) {
+		if(timerType.equals(Type.AIR)) {
+			elapsedTimers[1] = false;
+			airThread.interrupt();
+		} else {
+			elapsedTimers[0] = false;
+			lightThread.interrupt();
+		}
+	}
+
+	public void executeOperations(Type timerType) {
+		if(timerType.equals(Type.LIGHT)) {
+			elapsedTimers[0] = true;
+			automaticControl.checkLight(0.00, room);
+		} else {
+			elapsedTimers[1] = true;
+			automaticControl.checkAirPollution(0.00, room, "pollution");
+		}
 	}
 	
-	public boolean isWorking() {
-		return thread.isAlive();
+	public boolean isWorking(Type timerType) {
+		if(timerType.equals(Type.AIR))
+			return airThread.isAlive();
+		else
+			return lightThread.isAlive();
 	}
 	
-	public boolean isFinished() {
-		if(thread.equals(null))
-			return true;
-		return false;
+	public boolean isFinished(Type timerType) {
+		if(timerType.equals(Type.AIR)) {
+			if(airThread.equals(null)) 
+				return true;
+			return false;
+		} else {
+			if(lightThread.equals(null))
+				return true;
+			return false;
+		}
 	}
 	
 	public AutomaticControl getAutomaticControl() {

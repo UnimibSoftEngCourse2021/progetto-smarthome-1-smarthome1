@@ -6,14 +6,15 @@ import java.util.List;
 
 import domain.Sensor.AirState;
 import domain.Sensor.Category;
+import domain.TimerOP.Type;
 
 public class AutomaticControl {
 
-	private double[][] userMatrix = new double[7][26];
-	private double[][] standardMatrix = new double[7][26];
+	private int[][] userMatrix = new int[7][26];
+	private int[][] standardMatrix = new int[7][26];
 	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
 	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
-	
+	//chosen con una o'? -d.barzio
 	private boolean activeLightControl = false;
 	private boolean activeAirControl = false;
 	private int startDayMode;
@@ -22,21 +23,21 @@ public class AutomaticControl {
 	private List<Sensor> sensors;
 	private ConflictHandler handler;
 	private Config config;
-	private TimerOP[] timers;
+	//private TimerOP[] timers; non credo serva -> il timer viene preso dalla stanza che viene passata a parametro di checkLight -d.barzio
 	
-	public double[][] getUserMatrix() {
+	public int[][] getUserMatrix() {
 		return userMatrix;
 	}
 
-	public void setUserMatrix(double[][] userMatrix) {
+	public void setUserMatrix(int[][] userMatrix) {
 		this.userMatrix = userMatrix;
 	}
 
-	public double[][] getStandardMatrix() {
+	public int[][] getStandardMatrix() {
 		return standardMatrix;
 	}
 
-	public void setStandardMatrix(double[][] standardMatrix) {
+	public void setStandardMatrix(int[][] standardMatrix) {
 		this.standardMatrix = standardMatrix;
 	}
 
@@ -125,71 +126,81 @@ public class AutomaticControl {
 		 */
 		int i = LocalDateTime.now().getDayOfWeek().getValue() - 1; // giorno della settimana
 		int j = LocalDateTime.now().getHour(); // ora attuale
+		int treshold = 0;
 	
 		if(choosenMatrix.equals(ChoosenMatrix.USER)) {
-			if (userMatrix[i][j] > currentTemp) {
-				for(int k = 0; k < publisherList.size(); k++) {
-					handler.doAction(publisherList.get(k).getObjectID(), true);
-				}
-			}
-			else {
-				for(int k = 0; k < publisherList.size(); k++) {
-					handler.doAction(publisherList.get(k).getObjectID(), false);
-				}
-			}
+			if(userMatrix[i][j] == 0) 
+				treshold = 24;
+			else	
+				treshold = 25;
+		} else {
+			if(standardMatrix[i][j] == 0)
+				treshold = 24;
+			else
+				treshold = 25;
 		}
-		else {
-			if (standardMatrix[i][j] > currentTemp) {
-				for(int k = 0; k < publisherList.size(); k++) {
+		if(choosenMatrix.equals(ChoosenMatrix.USER)) {
+			if(userMatrix[i][treshold] > currentTemp) {
+				for(int k = 0; k < publisherList.size(); k++) 
 					handler.doAction(publisherList.get(k).getObjectID(), true);
-				}
-			}
-			else {
-				for(int k = 0; k < publisherList.size(); k++) {
+			} else {
+				for(int k = 0; k < publisherList.size(); k++) 
 					handler.doAction(publisherList.get(k).getObjectID(), false);
-				}
+			}	
+		} else {
+			if (standardMatrix[i][treshold] > currentTemp) {
+				for(int k = 0; k < publisherList.size(); k++) 
+					handler.doAction(publisherList.get(k).getObjectID(), true);
+			} else {
+				for(int k = 0; k < publisherList.size(); k++) 
+					handler.doAction(publisherList.get(k).getObjectID(), false);
 			}
 		}
 	}
-
 	/**
 	 * 
 	 * @param alarm
 	 */
-	public void checkAlarm(Alarm alarm) { // boolean returnValue
-		if (Alarm.isArmed() == true) {
-			for(Sensor sensor: sensors) {
+	public void checkAlarm(Alarm alarm) {
+		if (Alarm.isArmed() == true) 
+			for(Sensor sensor: sensors) 
 				if((sensor.getCategory().equals(Category.MOVEMENT) 
 						|| sensor.getCategory().equals(Category.DOOR) 
 						|| sensor.getCategory().equals(Category.WINDOW))
 						&& sensor.getValue() == 1.00) {
 					handler.doAction(alarm.getObjectID(), true);
+					break;
 				}
-			}
-		}
 	}
-	/*
-	 * il metodo viene chiamato solo se uno dei sensori interessati si attiva, 
-	 * quindi se l'allarme è armato deve attivarsi sempre
-	 * il fatto che viene passato l'oggetto alarm per ovviare alla mancata conoscenza di Object è giusto?
-	 */
-
+	
 	/**
 	 * 
 	 * @param currentPollutionValue
 	 * @param stanza
 	 * @param airState
 	 */
+	/*
+	 * ha senso chiudere le finestre se il value non supera la soglia? -d.barzio  
+	 */
 	public void checkAirPollution(double currentPollutionValue, Room room, String airState) {
-		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION.toString()))
+		ArrayList<Object> windows = room.getObjectList("window");
+		TimerOP timer = room.getTimer();
+		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION.toString())) {
 			for(int i = 0; i < room.getWindowsNum(); i++)
 				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState, true);
-		else if (currentPollutionValue > 30.00)
+			timer.resetTimer(Type.AIR);
+		} else {
+			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
+				timer.startTimer(Type.LIGHT, room, 300);
+			else if(!timer.isWorking(Type.LIGHT) && timer.getElapsedTimers()[0]) //forse la seconda cond non serve
+				for(int j = 0; j < room.getWindowsNum(); j++) 
+					if(windows.get(j).isActive() == true) 
+						handler.doAction(windows.get(j).getObjectID(), airState, true);
+		}
+		if (currentPollutionValue > 30.00 && airState.equals(AirState.GAS.toString()))
 			for(int i = 0; i < room.getWindowsNum(); i++)
 				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState, true);
-		else
-			for(int i = 0; i < room.getWindowsNum(); i++)
-				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState, false);
+
 	}
 
 	/**
@@ -197,37 +208,27 @@ public class AutomaticControl {
 	 * @param movementValue
 	 * @param stanza
 	 */
-	public void checkLight(double movementValue, Room room, boolean elapsedTimer) {
+	public void checkLight(double movementValue, Room room) {
 		ArrayList<Object> lights = room.getObjectList("light");
-		TimerOP timer = new TimerOP();
+		TimerOP timer = room.getTimer();
 		if(movementValue == 1.00) {
-			for(int i = 0; i < room.getLightsNum(); i++) {
+			for(int i = 0; i < room.getLightsNum(); i++) 
 				if(lights.get(i).isActive() == false) 
 					handler.doAction(lights.get(i).getObjectID(), isDayMode(), true);
-			}
-			for(int i = 0; i < timers.length; i++) {
-				if(timers[i].getRoom().equals(room)) 
-					timers[i].resetTimer();	
-			}
-		} 
-		else {
-			for(int i = 0; i < timers.length; i++) 
-				if(timers[i].getRoom().equals(room))
-					timer = timers[i];
-			if(!timer.isWorking() && !elapsedTimer) 
-				timer.startTimer(room);
-			else if(!timer.isWorking() && elapsedTimer) //forse la prima cond non serve
-				for(int j = 0; j < room.getLightsNum(); j++) {
+			timer.resetTimer(Type.LIGHT);	
+		} else {
+			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
+				timer.startTimer(Type.LIGHT, room, 300);
+			else if(!timer.isWorking(Type.LIGHT) && timer.getElapsedTimers()[0]) //forse la seconda cond non serve
+				for(int j = 0; j < room.getLightsNum(); j++) 
 					if(lights.get(j).isActive() == true) 
 						handler.doAction(lights.get(j).getObjectID(), isDayMode(), false);
-				}
 		}
 	}
 		public boolean isDayMode() {
 			if(LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() >= startDayMode &&
-					LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() < stopDayMode) {
+					LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() < stopDayMode) 
 				return true;
-			}
 			else
 				return false;
 		}

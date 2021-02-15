@@ -104,13 +104,13 @@ public class Sensor {
 					if(publisherList.get(i).getObjectType().equals(ObjectType.ALARM))
 						automaticControl.checkAlarm((Alarm)publisherList.get(i));
 					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
-						automaticControl.checkLight(value, room, false);
+						automaticControl.checkLight(value, room);
 				}
 			}
 			else
 				for (int i = 0; i < publisherList.size(); i++)
 					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
-						automaticControl.checkLight(value, room, false);
+						automaticControl.checkLight(value, room);
 			break;
 		case AIR:
 			automaticControl.checkAirPollution(value, room, airState.toString());
