@@ -7,9 +7,9 @@ public class Light extends Object {
 
 	private Sensor sensor;
 	
-	public Light(String name, String objectID, String referencedRoomID) {
-		super(name, objectID, referencedRoomID, ObjectType.LIGHT);
-		sensor = new Sensor("sensorOf: " + objectID, SensorCategory.LIGHT, null);
+	public Light(String name, String referencedRoomID) {
+		super(name, referencedRoomID, ObjectType.LIGHT);
+		sensor = new Sensor("sensorOf: ", referencedRoomID, SensorCategory.LIGHT);
 	}
 
 	public Sensor getSensor() {

@@ -9,8 +9,10 @@ import service.SensorCommunicationAdapter;
 public class Sensor {
 
 	private String name;
+	private String sensorID;
 	private double value;
-	private String communicationType;//BOH
+	private String communicationType;//BOH in caso da scrivere: in config, in tutti i costruttori di sensor chiamati dagli oggetti
+	private String roomID;
 	private List<Object> publisherList;
 	public enum SensorCategory {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM, SHADER}
 	private SensorCategory category;
@@ -20,18 +22,20 @@ public class Sensor {
 	private AutomaticControl automaticControl;
 	private DatabaseCommunicationSystem database;
 	private SensorCommunicationAdapter adapter;
-	private Room room;
+	
 
-	public Sensor(String name, SensorCategory category, AirState airState) {
+	public Sensor(String name, String roomID, SensorCategory category) {
 		this.name = name;
 		this.value = 0.00;
 		this.category = category;
-		if(category.equals(SensorCategory.AIR))
-			this.airState = airState;
-		else
-			this.airState = null;
+		this.roomID = roomID;
+		this.airState = null;
 		if(category.equals(SensorCategory.MOVEMENT))
 			Alarm.setSensors(this);
+	}
+	
+	public void concatName(String stringToBeAttached) {
+		setName(name + stringToBeAttached);
 	}
 	public String getName() {
 		return name;
@@ -41,6 +45,22 @@ public class Sensor {
 		this.name = name;
 	}
 	
+	public String getSensorID() {
+		return sensorID;
+	}
+
+	public void setSensorID(String sensorID) {
+		this.sensorID = sensorID;
+	}
+
+	public String getRoomID() {
+		return roomID;
+	}
+
+	public void setRoomID(String roomID) {
+		this.roomID = roomID;
+	}
+
 	public double getValue() {
 		return value;
 	}
@@ -114,7 +134,7 @@ public class Sensor {
 						automaticControl.checkLight(value, room);
 			break;
 		case AIR:
-			automaticControl.checkAirPollution(value, room, airState.toString());
+			automaticControl.checkAirPollution(value, room, airState);
 			break;
 		case LIGHT:
 		case WINDOW:

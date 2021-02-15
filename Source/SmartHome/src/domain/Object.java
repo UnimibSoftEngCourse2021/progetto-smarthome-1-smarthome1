@@ -13,10 +13,9 @@ public abstract class Object {
 	
 	private ConflictHandler handler; //da togliere
 
-	public Object(String name, String objectID, String referencedRoomID, ObjectType objectType) {
+	public Object(String name, String referencedRoomID, ObjectType objectType) {
 		this.name = name;
 		this.active = false;
-		this.objectID = objectID;
 		this.referencedRoomID = referencedRoomID;
 		this.objectType = objectType;
 	}

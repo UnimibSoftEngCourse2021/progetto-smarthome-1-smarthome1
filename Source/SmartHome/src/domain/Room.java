@@ -106,11 +106,52 @@ public class Room {
 	 * 
 	 * @param sensorCategory
 	 */
-	public void instantiateSensor(SensorCategory Category, String name) {
-		
+	public void instantiateSensor(SensorCategory category, String name) {
+		Sensor sensor = new Sensor(name, roomID, category);
+		sensors.add(sensor);
+		sensor.setSensorID(category.toString() + "_" + roomID);
 	}
 	
 	public void instantiateObject(ObjectType type, String name) {
+		switch(type) {
+		case DOOR:
+			Door door= new Door(name, roomID);
+			door.getSensor().attach(door);
+			objects.add(door);
+			door.setObjectID(type.toString() + "_" + roomID + "_" + String.valueOf(objects.indexOf(door)));
+			door.getSensor().concatName(door.getObjectID());
+			door.getSensor().setSensorID(door.getSensor().getCategory().toString() + "_" + door.getObjectID());
+			break;
+		case WINDOW:
+			Window window = new Window(name, roomID);
+			window.getSensor().attach(window);
+			objects.add(window);
+			window.setObjectID(type.toString() + "_" + roomID + "_" + String.valueOf(objects.indexOf(window)));
+			window.getSensor().concatName(window.getObjectID());
+			window.getSensor().setSensorID(window.getSensor().getCategory().toString() + "_" + window.getObjectID());
+			Shader shader = window.getShader();
+			objects.add(shader);
+			shader.setObjectID("SHADER_" + window.getObjectID());
+			shader.getSensor().setSensorID(shader.getSensor().getCategory().toString() + "_" + shader.getObjectID());
+			break;
+		case LIGHT:
+			Light light= new Light(name, roomID);
+			light.getSensor().attach(light);
+			objects.add(light);
+			light.setObjectID(type.toString() + "_" + roomID + "_" + String.valueOf(objects.indexOf(light)));
+			light.getSensor().concatName(light.getObjectID());
+			light.getSensor().setSensorID(light.getSensor().getCategory().toString() + "_" + light.getObjectID());
+			break;
+		case HEATER:
+			Heater heater= new Heater(name, roomID);
+			objects.add(heater);
+			heater.setObjectID(type.toString() + "_" + roomID + "_" + String.valueOf(objects.indexOf(heater)));
+			heater.getSensor().concatName(heater.getObjectID());
+			heater.getSensor().setSensorID(heater.getSensor().getCategory().toString() + "_" + heater.getObjectID());
+			break;
+		default:
+			break;
+		}
 		
 	}
 
@@ -137,7 +178,7 @@ public class Room {
 		return sensorList;
 	}
 	public void bindHeater(Heater heater, Sensor temperature) {
-		//TODO
+		temperature.attach(heater);
 	}
 	
 	public void setDoorCode(String code) {

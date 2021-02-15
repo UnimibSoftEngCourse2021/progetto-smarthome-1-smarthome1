@@ -45,8 +45,7 @@ public class Config {
 			else if(riga.equals(":LIGHT")
 					|| riga.equals(":WINDOW")
 					|| riga.equals(":DOOR")
-					|| riga.equals(":HEATER")
-					|| riga.equals(":WINDOW")) {
+					|| riga.equals(":HEATER")) {
 				String name = inputStream.nextLine();
 				room.instantiateObject(ObjectType.valueOf(riga.substring(1)), name);	 
 				if(riga.equals(":DOOR")) {

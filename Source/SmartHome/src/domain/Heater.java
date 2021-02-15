@@ -6,8 +6,8 @@ public class Heater extends Object {
 
 	private Sensor sensor;
 	
-	public Heater(String name, String objectID, String referencedRoomID, ObjectType objectType) {
-		super(name, objectID, referencedRoomID, ObjectType.HEATER);
+	public Heater(String name, String referencedRoomID) {
+		super(name, referencedRoomID, ObjectType.HEATER);
 	}
 
 	public Sensor getSensor() {

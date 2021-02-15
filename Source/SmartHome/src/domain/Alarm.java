@@ -10,8 +10,9 @@ public class Alarm extends Object {
 	private static List<Sensor> sensors;
 	
 	public Alarm(String name) {
-		super(name, null, null, ObjectType.ALARM);
+		super(name, null, ObjectType.ALARM);
 		Alarm.armed = false;
+		setObjectID(name);
 	}
 	
 	public static boolean isArmed() {

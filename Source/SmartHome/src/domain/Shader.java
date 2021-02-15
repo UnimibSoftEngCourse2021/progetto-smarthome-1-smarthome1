@@ -8,9 +8,9 @@ public class Shader extends Object {
 	private Window window; 
 	private Sensor sensor;
 
-	public Shader(String name, String objectID, String referencedRoomID, Window window) {
-		super(name, objectID, referencedRoomID, ObjectType.SHADER);
-		sensor = new Sensor("sensorOf: " + objectID, SensorCategory.SHADER, null);
+	public Shader(String name, String referencedRoomID, Window window) {
+		super(name, referencedRoomID, ObjectType.SHADER);
+		sensor = new Sensor("sensorOf: ", referencedRoomID, SensorCategory.SHADER);
 		this.window = window;
 	}
 	
