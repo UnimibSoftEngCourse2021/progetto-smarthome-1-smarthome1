@@ -1,18 +1,20 @@
 package domain;
 
 public class Heater extends Object {
-	/*
-	 * se non ha nessun attributo/metodo
-	 * levare la classe e mantenere nell'enum di object HEATER
-	 * -d.barzio
-	 */
-	private String sensorID;
 
-	public String getSensorID() {
-		return sensorID;
+
+
+	private Sensor sensor;
+	
+	public Heater(String name, String objectID, String referencedRoomID, ObjectType objectType) {
+		super(name, objectID, referencedRoomID, ObjectType.HEATER);
 	}
 
-	public void setSensorID(String sensorID) {
-		this.sensorID = sensorID;
+	public Sensor getSensor() {
+		return sensor;
+	}
+
+	public void setSensor(Sensor sensor) {
+		this.sensor = sensor;
 	}
 }

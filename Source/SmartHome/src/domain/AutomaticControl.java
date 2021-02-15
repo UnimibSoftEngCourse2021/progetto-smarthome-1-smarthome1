@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.Object.ObjectType;
 import domain.Sensor.AirState;
-import domain.Sensor.Category;
+import domain.Sensor.SensorCategory;
 import domain.TimerOP.Type;
 
 public class AutomaticControl {
@@ -164,9 +165,9 @@ public class AutomaticControl {
 	public void checkAlarm(Alarm alarm) {
 		if (Alarm.isArmed() == true) 
 			for(Sensor sensor: sensors) 
-				if((sensor.getCategory().equals(Category.MOVEMENT) 
-						|| sensor.getCategory().equals(Category.DOOR) 
-						|| sensor.getCategory().equals(Category.WINDOW))
+				if((sensor.getCategory().equals(SensorCategory.MOVEMENT) 
+						|| sensor.getCategory().equals(SensorCategory.DOOR) 
+						|| sensor.getCategory().equals(SensorCategory.WINDOW))
 						&& sensor.getValue() == 1.00) {
 					handler.doAction(alarm.getObjectID(), true);
 					break;
@@ -179,15 +180,13 @@ public class AutomaticControl {
 	 * @param stanza
 	 * @param airState
 	 */
-	/*
-	 * ha senso chiudere le finestre se il value non supera la soglia? -d.barzio  
-	 */
-	public void checkAirPollution(double currentPollutionValue, Room room, String airState) {
-		ArrayList<Object> windows = room.getObjectList("window");
+	
+	public void checkAirPollution(double currentPollutionValue, Room room, AirState airState) {
+		List<Object> windows = room.getObjectList(ObjectType.WINDOW);
 		TimerOP timer = room.getTimer();
-		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION.toString())) {
+		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION)) {
 			for(int i = 0; i < room.getWindowsNum(); i++)
-				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState, true);
+				handler.doAction(room.getObjectList(ObjectType.WINDOW).get(i).getObjectID(), airState, true);
 			timer.resetTimer(Type.AIR);
 		} else {
 			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
@@ -197,9 +196,9 @@ public class AutomaticControl {
 					if(windows.get(j).isActive() == true) 
 						handler.doAction(windows.get(j).getObjectID(), airState, true);
 		}
-		if (currentPollutionValue > 30.00 && airState.equals(AirState.GAS.toString()))
+		if (currentPollutionValue > 30.00 && airState.equals(AirState.GAS))
 			for(int i = 0; i < room.getWindowsNum(); i++)
-				handler.doAction(room.getObjectList("window").get(i).getObjectID(), airState, true);
+				handler.doAction(room.getObjectList(ObjectType.WINDOW).get(i).getObjectID(), airState, true);
 
 	}
 

@@ -1,21 +1,22 @@
 package domain;
 
+import domain.Object.ObjectType;
+import domain.Sensor.SensorCategory;
+
 public class Light extends Object {
 
-	private double intensity;
-	private String color;
+	private Sensor sensor;
 	
-	public double getIntensity() {
-		return intensity;
-	}
-	public void setIntensity(double intensity) {
-		this.intensity = intensity;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
+	public Light(String name, String objectID, String referencedRoomID) {
+		super(name, objectID, referencedRoomID, ObjectType.LIGHT);
+		sensor = new Sensor("sensorOf: " + objectID, SensorCategory.LIGHT, null);
 	}
 
+	public Sensor getSensor() {
+		return sensor;
+	}
+
+	public void setSensor(Sensor sensor) {
+		this.sensor = sensor;
+	}
 }

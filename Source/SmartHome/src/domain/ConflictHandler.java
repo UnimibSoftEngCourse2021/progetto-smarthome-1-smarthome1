@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Object.ObjectType;
+import domain.Sensor.AirState;
 import service.ObjectCommunicationAdapter;
 
 public class ConflictHandler {
@@ -187,13 +188,13 @@ public class ConflictHandler {
 	 * @param airState
 	 * @param changeState
 	 */
-	public void doAction(String windowID, String airState, boolean changeState) {
+	public void doAction(String windowID, AirState airState, boolean changeState) {
 		// a seconda di airState azione ha priorità diversa
 		for(Object object: objects) {
 			Window window = (Window)object;
 			if(window.getObjectID().equals(windowID)) // associo l'id dell'oggetto passato all'oggetto attuale del for
 				if(changeState) {			
-					if(airState.equalsIgnoreCase("pollution")) {
+					if(airState.equals(AirState.POLLUTION)) {
 						if(!Alarm.isArmed()) {
 							boolean userDecision = false;
 							ArrayList<Object> heaters = getSpecificObjectsInRoom(window.getReferencedRoomID(), ObjectType.HEATER);
@@ -209,7 +210,7 @@ public class ConflictHandler {
 						}
 						break;
 					}
-					else if(airState.equalsIgnoreCase("gas")) {
+					else if(airState.equals(AirState.GAS)) {
 						/*
 						 * nel caso ci sia una fuga di gas aprire sempre le finestre
 						 * considerare un possibile comportamento diverso per allarme

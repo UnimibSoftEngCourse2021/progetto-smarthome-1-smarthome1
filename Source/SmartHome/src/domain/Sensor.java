@@ -10,12 +10,10 @@ public class Sensor {
 
 	private String name;
 	private double value;
-	private String communicationType;
+	private String communicationType;//BOH
 	private List<Object> publisherList;
-	public enum Category {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM}
-	private Category category;
-	private enum SensorType {BOOLEAN, DOUBLE}
-	private SensorType sensorType;
+	public enum SensorCategory {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM, SHADER}
+	private SensorCategory category;
 	public enum AirState {POLLUTION, GAS}
 	private AirState airState;
 	
@@ -24,6 +22,17 @@ public class Sensor {
 	private SensorCommunicationAdapter adapter;
 	private Room room;
 
+	public Sensor(String name, SensorCategory category, AirState airState) {
+		this.name = name;
+		this.value = 0.00;
+		this.category = category;
+		if(category.equals(SensorCategory.AIR))
+			this.airState = airState;
+		else
+			this.airState = null;
+		if(category.equals(SensorCategory.MOVEMENT))
+			Alarm.setSensors(this);
+	}
 	public String getName() {
 		return name;
 	}
@@ -56,22 +65,14 @@ public class Sensor {
 		this.publisherList = publisherList;
 	}
 	
-	public Category getCategory() {
+	public SensorCategory getCategory() {
 		return category;
 	}
 
-	public void setCategory(Category category) {
+	public void setCategory(SensorCategory category) {
 		this.category = category;
 	}
 
-	public SensorType getSensorType() {
-		return sensorType;
-	}
-
-	public void setSensorType(SensorType sensorType) {
-		this.sensorType = sensorType;
-	}
-	
 	public AirState getAirState() {
 		return airState;
 	}

@@ -11,11 +11,15 @@ public abstract class Object {
 	public enum ObjectType {ALARM, DOOR, HEATER, LIGHT, WINDOW, SHADER}
 	private ObjectType objectType;
 	
-	private List<Sensor> sensors;
-	private ConflictHandler handler;
-	private Config config;
-	private AutomaticControl automaticControl; // TOGLIERE
+	private ConflictHandler handler; //da togliere
 
+	public Object(String name, String objectID, String referencedRoomID, ObjectType objectType) {
+		this.name = name;
+		this.active = false;
+		this.objectID = objectID;
+		this.referencedRoomID = referencedRoomID;
+		this.objectType = objectType;
+	}
 	public String getName() {
 		return name;
 	}

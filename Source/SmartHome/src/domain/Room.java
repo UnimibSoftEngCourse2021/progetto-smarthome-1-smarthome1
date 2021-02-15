@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Object.ObjectType;
+import domain.Sensor.SensorCategory;
 
 public class Room {
 
-	private String name;
+	private String roomID;
+	private short floor;
 	private short lightsNum;
 	private short doorsNum;
 	private short HeatersNum;
 	private short windowsNum;
 	private boolean lightControlled = false;
 	private boolean airControlled = false;
-	private ArrayList<Object> objectList = null;
+	
 	/*
 	 * esistono due liste di oggetti(??)
 	 * objects e' quello creato dall'associazione quindi credo
@@ -26,20 +28,20 @@ public class Room {
 	private TimerOP timer;
 	private Config config;
 
+	public String getRoomID() {
+		return roomID;
+	}
+
+	public void setRoomID(String roomID) {
+		this.roomID = roomID;
+	}
+
 	public TimerOP getTimer() {
 		return timer;
 	}
 
 	public void setTimer(TimerOP timer) {
 		this.timer = timer;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public short getFloor() {
@@ -104,22 +106,47 @@ public class Room {
 	 * 
 	 * @param sensorCategory
 	 */
-	public void instatiateSensor(String sensorCategory) {
-		///crea sensore associati a stanza 
-		throw new UnsupportedOperationException();
+	public void instantiateSensor(SensorCategory Category, String name) {
+		
 	}
 	
+	public void instantiateObject(ObjectType type, String name) {
+		
+	}
 
 	/**
 	 * 
 	 * @param objectType
 	 */
-	// provare con iterator
-	public ArrayList<Object> getObjectList(String objectType) {
-			for(int i = 0; i < objects.size(); i++) 
-				if(objects.get(i).getObjectType().toString().equals(objectType) && objects.get(i).getReferencedRoomID().equals(name))
-					objectList.add(objects.get(i));	
-			return objectList;
+	
+	public List<Object> getObjectList(ObjectType type) {
+		List<Object> objectList = null;	
+		for(Object object: objects) {
+			if(object.getObjectType().equals(type))
+				objectList.add(object);
+		}
+		return objectList;
 	}
 
+	public List<Sensor> getSensorList(SensorCategory category){
+		List<Sensor> sensorList = null;
+		for(Sensor sensor: sensors) {
+			if(sensor.getCategory().equals(category))
+				sensorList.add(sensor);
+		}
+		return sensorList;
+	}
+	public void bindHeater(Heater heater, Sensor temperature) {
+		//TODO
+	}
+	
+	public void setDoorCode(String code) {
+		for(Object object: objects) {
+			Door door;
+			if(object.getObjectType().equals(ObjectType.DOOR)) {
+				 door = (Door)object;
+				 door.setCode(code);
+			}
+		}
+	}
 }
