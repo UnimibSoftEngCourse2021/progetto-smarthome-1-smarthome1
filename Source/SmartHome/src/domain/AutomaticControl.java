@@ -197,6 +197,7 @@ public class AutomaticControl {
 	 * @param movementValue
 	 * @param stanza
 	 */
+	//vedere meglio la gestione del timer
 	public void checkLight(double movementValue, Room room) {
 		List<Object> lights = room.getObjectList(ObjectType.LIGHT);
 		TimerOP timer = room.getTimer();

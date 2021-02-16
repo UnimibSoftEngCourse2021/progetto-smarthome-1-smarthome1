@@ -12,6 +12,7 @@ import domain.Sensor.SensorCategory;
 
 public class Config {
 	
+	private static Config config;
 	private DataDescription dataDescription;
 	private List<Room> rooms;
 
@@ -19,10 +20,21 @@ public class Config {
 	 * 
 	 * @param fileHC
 	 */
-	public void processFileHC(File fileHC) {  //home config
+	
+	private Config() {
+		
+	}
+	
+	public static Config getInstance() {
+		if(config == null)
+			config = new Config();
+		return config;
+	}
+	
+	public void processFileHC() {  //home config
 		Scanner inputStream = null;
 		try {
-			inputStream = new Scanner(new File (dataDescription.getFileHomeConfig().getName()));
+			inputStream = new Scanner(new File (dataDescription.getHCFILENAME()));
 		} catch (FileNotFoundException e) {
 			System.out.println("error");
 			System.exit(0);
@@ -97,10 +109,10 @@ public class Config {
 	 * 
 	 * @param fileHSC
 	 */
-	public void processFileHSC(File fileHSC) {
+	public void processFileHSC() {
 		Scanner inputStream = null;
 		try {
-			inputStream = new Scanner(new File (dataDescription.getFileHomeConfig().getName()));
+			inputStream = new Scanner(new File (dataDescription.getHSCFILENAME()));
 		} catch (FileNotFoundException e) {
 			System.out.println("error");
 			System.exit(0);
