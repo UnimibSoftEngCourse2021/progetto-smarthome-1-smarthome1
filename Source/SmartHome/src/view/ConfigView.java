@@ -5,9 +5,9 @@ import application.GenericFaçade;
 import application.RoomFaçade;
 
 public class ConfigView {
-	
+	/*
 	private GenericFaçade genericFacade;
-	private DataFaçade dataFacade;
+	//private DataFaçade dataFacade;
 	Scanner input = new Scanner(System.in);
 
 	public void roomConfig() {
@@ -25,7 +25,7 @@ public class ConfigView {
 		roomFloor = input.nextLine();
 		// inviare dati
 	}
-	
+ 	
 	public void alarmConfig() {
 		String alarmName;
 		System.out.println("Inserire il nome dell'allarme che si intende creare: (premere invio per non inserire allarmi)");
@@ -212,4 +212,5 @@ public class ConfigView {
 					fine = true;
 			}
 	}
+	*/
 }
