@@ -11,10 +11,10 @@ import domain.TimerOP.Type;
 public class AutomaticControl {
 
 	private static AutomaticControl automaticControl; //singleton instance
-	private double[][] userMatrix = new double[7][26];
+	private static double[][] userMatrix = new double[7][26];
 	private double[][] standardMatrix = new double[7][26];
-	private enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
-	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
+	public enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
+	private static ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
 	//chosen con una o'? -d.barzio
 	//private boolean activeLightControl = false;
 	//private boolean activeAirControl = false;
@@ -55,8 +55,8 @@ public class AutomaticControl {
 		return choosenMatrix;
 	}
 
-	public void setChoosenMatrix(ChoosenMatrix choosenMatrix) {
-		this.choosenMatrix = choosenMatrix;
+	public static void setChoosenMatrix(ChoosenMatrix choosenMatrix) {
+		AutomaticControl.choosenMatrix = choosenMatrix;
 	}
 
 	public int getStartDayMode() {
@@ -81,12 +81,8 @@ public class AutomaticControl {
 	 * esiste gia il metodo setUserMatrix
 	 * -d.barzio
 	 */
-	public void initUserMatrix(double[][] userMatrix) {
-		for(int i = 0; i <= 6; i++) {
-			for(int j = 0; j <= 23; j++) {
-				// inizializzare matrice con valori presi da utente
-			}
-		}
+	public static void initUserMatrix(int i , int j, double value) {
+		userMatrix[i][j] = value;
 	}
 	
 	/*

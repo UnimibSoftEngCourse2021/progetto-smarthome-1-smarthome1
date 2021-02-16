@@ -2,9 +2,11 @@ package domain;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Scanner;
 
+import domain.AutomaticControl.ChoosenMatrix;
 import domain.Object.ObjectType;
 import domain.Sensor.SensorCategory;
 
@@ -12,7 +14,6 @@ public class Config {
 	
 	private DataDescription dataDescription;
 	private List<Room> rooms;
-	private AutomaticControl automaticControl;
 
 	/**
 	 * 
@@ -97,7 +98,34 @@ public class Config {
 	 * @param fileHSC
 	 */
 	public void processFileHSC(File fileHSC) {
+		Scanner inputStream = null;
+		try {
+			inputStream = new Scanner(new File (dataDescription.getFileHomeConfig().getName()));
+		} catch (FileNotFoundException e) {
+			System.out.println("error");
+			System.exit(0);
+		}	
 		
+		while(!inputStream.hasNextLine()) {
+			AutomaticControl.setChoosenMatrix(ChoosenMatrix.USER);
+			String riga = inputStream.nextLine();
+			if(riga.equals(":LUNEDI")
+				|| riga.equals(":MARTEDI")
+				|| riga.equals(":MERCOLEDI")
+				|| riga.equals(":GIOVEDI")
+				|| riga.equals(":VENERDI")
+				|| riga.equals(":SABATO")
+				|| riga.equals(":DOMENICA")) {
+				String activeTemp = inputStream.nextLine();
+				String passiveTemp = inputStream.nextLine();
+				AutomaticControl.initUserMatrix(DayOfWeek.valueOf(riga.substring(1)).ordinal(), 24, Double.parseDouble(activeTemp));
+				AutomaticControl.initUserMatrix(DayOfWeek.valueOf(riga.substring(1)).ordinal(), 25, Double.parseDouble(passiveTemp));
+				for(int j = 0; j < 24; j++) {
+					String temp = inputStream.nextLine();
+					AutomaticControl.initUserMatrix(DayOfWeek.valueOf(riga.substring(1)).ordinal(), j, Double.parseDouble(temp));
+				}
+			}
+		}
 	}
 
 }
