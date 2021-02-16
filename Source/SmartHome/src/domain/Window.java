@@ -12,8 +12,8 @@ public class Window extends Object {
 		super(name, ObjectType.WINDOW, room);
 		sensor = new Sensor("sensorOf: ", SensorCategory.WINDOW, room);
 		shader = new Shader("ShaderOf: " + name, room.getRoomID(), this, room);
-		
-		Alarm.setSensors(sensor);
+		if(Alarm.isCreated())
+			Alarm.setSensors(sensor);
 	}
 	
 	public Sensor getSensor() {

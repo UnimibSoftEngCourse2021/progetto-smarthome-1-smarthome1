@@ -11,7 +11,8 @@ public class Door extends Object {
 	public Door(String name, Room room) {
 		super(name, ObjectType.DOOR, room);
 		sensor = new Sensor("sensorOf: ", SensorCategory.DOOR, room);
-		Alarm.setSensors(sensor);
+		if(Alarm.isCreated())
+			Alarm.setSensors(sensor);
 	}
 	public String getCode() {
 		return code;

@@ -9,7 +9,7 @@ import service.ObjectCommunicationAdapter;
 
 public class ConflictHandler {
 	
-	private static ConflictHandler conflictHandler; //singleton instance
+	private static ConflictHandler conflictHandler = null; //singleton instance
 	/*
 	 * variabile per identificare modalità giorno/notte per accensione luci
 	 * gli orari sono flessibili e devono essere scelti dall'utente

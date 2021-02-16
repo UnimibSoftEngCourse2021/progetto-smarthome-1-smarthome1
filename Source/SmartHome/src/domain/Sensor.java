@@ -31,7 +31,8 @@ public class Sensor {
 		this.room = room;
 		this.airState = null;
 		if(category.equals(SensorCategory.MOVEMENT))
-			Alarm.setSensors(this);
+			if(Alarm.isCreated())
+				Alarm.setSensors(this);
 	}
 	
 	public void concatName(String stringToBeAttached) {

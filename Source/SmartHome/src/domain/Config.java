@@ -12,23 +12,30 @@ import domain.Sensor.SensorCategory;
 
 public class Config {
 	
+	private static Config config = null;
 	private DataDescription dataDescription;
 	private List<Room> rooms;
 
-	/**
-	 * 
-	 * @param fileHC
-	 */
-	public void processFileHC(File fileHC) {  //home config
+	
+	private Config() {
+		
+	}
+	
+	public static Config getInstance() {
+		if(config == null)
+			config = new Config();
+		return config;
+	}
+	
+	public void processFileHC() {  //home config
 		Scanner inputStream = null;
 		try {
-			inputStream = new Scanner(new File (dataDescription.getFileHomeConfig().getName()));
+			inputStream = new Scanner(new File (dataDescription.getHCFILENAME()));
 		} catch (FileNotFoundException e) {
 			System.out.println("error");
 			System.exit(0);
 		}
 		Room room = null;
-		Alarm alarm = null;
 		while(inputStream.hasNextLine()) {
 			String riga = inputStream.nextLine();
 			if(riga.equals(":room")) {
@@ -39,7 +46,7 @@ public class Config {
 			}
 			else if(riga.substring(1).equals(":ALARM")) {
 				String name = inputStream.nextLine();
-				alarm = new Alarm(name);
+				Alarm.getInstance(name);
 			}
 			else if(riga.equals(":LIGHT")
 					|| riga.equals(":WINDOW")
@@ -93,14 +100,10 @@ public class Config {
 		
 	}
 
-	/**
-	 * 
-	 * @param fileHSC
-	 */
-	public void processFileHSC(File fileHSC) {
+	public void processFileHSC() {
 		Scanner inputStream = null;
 		try {
-			inputStream = new Scanner(new File (dataDescription.getFileHomeConfig().getName()));
+			inputStream = new Scanner(new File (dataDescription.getHSCFILENAME()));
 		} catch (FileNotFoundException e) {
 			System.out.println("error");
 			System.exit(0);

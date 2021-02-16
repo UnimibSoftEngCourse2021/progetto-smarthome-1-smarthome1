@@ -17,6 +17,7 @@ public class Scenario {
 	private List<String> objectIDList;
 	private List<Boolean> actionList;
 	private List<DayOfWeek> days;
+	
 	/*
 	 * private HashMap<String, Boolean> actionList = new HashMap<String, Boolean>();
 	 * ?? action list contiene gli IDdegli oggetti?, anche le azioni (boolean per casi semplici) 
@@ -30,7 +31,6 @@ public class Scenario {
 	*/
 	
 	private String[] roomsIDs;
-	private ConflictHandler handler;
 	private TimeScheduleThread thread;
 	
 	public String getNameID() {
@@ -39,6 +39,14 @@ public class Scenario {
 
 	public void setNameID(String nameID) {
 		this.nameID = nameID;
+	}
+
+	public List<DayOfWeek> getDays() {
+		return days;
+	}
+
+	public void setDays(List<DayOfWeek> days) {
+		this.days = days;
 	}
 
 	public LocalDateTime getStartTime() {
@@ -80,14 +88,6 @@ public class Scenario {
 	public void setRoomsIDs(String[] roomsIDs) {
 		this.roomsIDs = roomsIDs;
 	}
-	
-	public List<DayOfWeek> getDays() {
-		return days;
-	}
-
-	public void setDays(List<DayOfWeek> days) {
-		this.days = days;
-	}
 
 	public void deleteScenario() {
 		objectIDList.clear();
@@ -109,7 +109,7 @@ public class Scenario {
 		 if(active == false) {
 			 active = true;
 			 for(int i = 0; i < objectIDList.size(); i++) {
-				 handler.doAction(objectIDList.get(i), (boolean)actionList.get(i));
+				 ConflictHandler.getInstance().doAction(objectIDList.get(i), (boolean)actionList.get(i));
 			 }
 		 }
 	}

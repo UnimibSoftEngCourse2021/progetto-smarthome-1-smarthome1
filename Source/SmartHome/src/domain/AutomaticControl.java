@@ -10,7 +10,7 @@ import domain.TimerOP.Type;
 
 public class AutomaticControl {
 
-	private static AutomaticControl automaticControl; //singleton instance
+	private static AutomaticControl automaticControl = null; //singleton instance
 	private static double[][] userMatrix = new double[7][26];
 	private double[][] standardMatrix = new double[7][26];
 	public enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
@@ -180,7 +180,7 @@ public class AutomaticControl {
 			timer.resetTimer(Type.AIR);
 		} else {
 			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
-				timer.startTimer(Type.LIGHT, room, 300);
+				timer.startTimer(Type.LIGHT, 300);
 			else if(!timer.isWorking(Type.LIGHT) && timer.getElapsedTimers()[0]) //forse la seconda cond non serve
 				for(int j = 0; j < room.getWindowsNum(); j++) 
 					if(windows.get(j).isActive() == true) 
@@ -197,6 +197,7 @@ public class AutomaticControl {
 	 * @param movementValue
 	 * @param stanza
 	 */
+	//vedere meglio la gestione del timer
 	public void checkLight(double movementValue, Room room) {
 		List<Object> lights = room.getObjectList(ObjectType.LIGHT);
 		TimerOP timer = room.getTimer();
@@ -207,7 +208,7 @@ public class AutomaticControl {
 			timer.resetTimer(Type.LIGHT);	
 		} else {
 			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
-				timer.startTimer(Type.LIGHT, room, 300);
+				timer.startTimer(Type.LIGHT, 300);
 			else if(!timer.isWorking(Type.LIGHT) && timer.getElapsedTimers()[0]) //forse la seconda cond non serve
 				for(int j = 0; j < room.getLightsNum(); j++) 
 					if(lights.get(j).isActive() == true) 

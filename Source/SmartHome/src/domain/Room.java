@@ -31,6 +31,7 @@ public class Room {
 		this.roomID = roomID;
 		this.floor = floor;
 		timer = new TimerOP(this);
+		timer.setRoom(this);
 	}
 
 	public String getRoomID() {
