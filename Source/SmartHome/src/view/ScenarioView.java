@@ -27,24 +27,59 @@ public class ScenarioView {
 	}
 	
 	public void setAction() {
-		System.out.println("Selezionare l'operazione da effettuare sull'azione: ");
-		System.out.println("create: aggiungerne una nuova");
-		System.out.println("modify: modificarne una esistente");
-		System.out.println("delete: eliminarne una esistente");
-		switch(input.nextLine()) {
-		case "create":
-			do {
-				System.out.println("Inserire il nome dell'oggetto su cui effettuare l'azione");
-				String objectName = input.nextLine();
-				System.out.println("Inserire lo stato desiderato per l'azione");
-				String newState = input.nextLine();	
-				String[] object = {objectName, newState};
-				roomObjects.add(object);
-				System.out.print("inserire altri oggetti? (s/n)");
-			} while(input.nextLine() != "n");
-			rooms.add(roomObjects);
-			break;
-		}
+		do {
+			System.out.println("Selezionare l'operazione da effettuare sull'azione: ");
+			System.out.println("create: aggiungerne una nuova");
+			System.out.println("modify: modificarne una esistente");
+			System.out.println("delete: eliminarne una esistente");
+			switch(input.nextLine()) {
+			case "create":
+				do {
+					System.out.println("Inserire il nome dell'oggetto su cui effettuare l'azione");
+					String objectName = input.nextLine();
+					System.out.println("Inserire lo stato desiderato per l'azione");
+					String newState = input.nextLine();	
+					String[] object = {objectName, newState};
+					roomObjects.add(object);
+					System.out.print("inserire altri oggetti? (s/n)");
+				} while(input.nextLine() != "n");
+				rooms.add(roomObjects);
+				break;
+			case "modify":
+				do {
+					System.out.println("Selezionare l'oggetto desiderato tra quelli disponibili: ");
+					// ritornare la lista di oggetti nella stanza
+					for(String[] objectName: roomObjects) {
+						System.out.println(objectName[0]);
+					}					
+					String objectName = input.nextLine();
+					for(String[] oldObject: roomObjects) {
+						if(oldObject[0]).equalsIgnoreCase(objectName);
+					}
+					}
+					
+					/*
+					 * prendere indice oggetto dalla lista
+					 * rimuoverlo
+					 * inserire oggetto stesso nome con azione nuova
+					 */
+					
+					roomObjects.indexOf(oldObject);
+					
+					System.out.println("Inserire lo stato desiderato per l'azione");
+					String newState = input.nextLine();
+					String[] object = {objectName, newState};
+					roomObjects.add(object);
+					System.out.print("inserire altri oggetti? (s/n)");
+				} while(input.nextLine() != "n");
+				rooms.add(roomObjects);
+				break;
+			case "delete":
+				// prende un oggetto dalla lista come sopra
+				break;
+			}
+			System.out.println("Effettuare altre operazioni?");
+		} while(input.nextLine() != "n");
 	}
 	
 	public void setTime() {
@@ -111,8 +146,7 @@ public class ScenarioView {
 			break;
 		case "modify":
 			// scegliere la stanza da rooms e ritornare la lista della stanza desiderata
-			setAction();
-			
+			setAction();			
 		}
 	}
 }
