@@ -40,8 +40,7 @@ public class TimerOP{
 		this.elapsedTimers = elapsedTimers;
 	}
 
-	public void startTimer(Type timerType, Room room, int time) {
-		this.setRoom(room);//forse non serve perche la stanza quando viene creata crea a sua volta il timer
+	public void startTimer(Type timerType, int time) {
 		if(timerType.equals(Type.AIR)) {
 			elapsedTimers[1] = false;
 			airThread = new TimerThread(time, Type.AIR);

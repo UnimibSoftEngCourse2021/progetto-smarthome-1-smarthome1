@@ -12,14 +12,10 @@ import domain.Sensor.SensorCategory;
 
 public class Config {
 	
-	private static Config config;
+	private static Config config = null;
 	private DataDescription dataDescription;
 	private List<Room> rooms;
 
-	/**
-	 * 
-	 * @param fileHC
-	 */
 	
 	private Config() {
 		
@@ -40,7 +36,6 @@ public class Config {
 			System.exit(0);
 		}
 		Room room = null;
-		Alarm alarm = null;
 		while(inputStream.hasNextLine()) {
 			String riga = inputStream.nextLine();
 			if(riga.equals(":room")) {
@@ -51,7 +46,7 @@ public class Config {
 			}
 			else if(riga.substring(1).equals(":ALARM")) {
 				String name = inputStream.nextLine();
-				alarm = new Alarm(name);
+				Alarm.getInstance(name);
 			}
 			else if(riga.equals(":LIGHT")
 					|| riga.equals(":WINDOW")
@@ -105,10 +100,6 @@ public class Config {
 		
 	}
 
-	/**
-	 * 
-	 * @param fileHSC
-	 */
 	public void processFileHSC() {
 		Scanner inputStream = null;
 		try {

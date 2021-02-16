@@ -30,7 +30,6 @@ public class Scenario {
 	*/
 	
 	private String[] roomsIDs;
-	private ConflictHandler handler;
 	private TimeScheduleThread thread;
 	
 	public String getNameID() {
@@ -109,7 +108,7 @@ public class Scenario {
 		 if(active == false) {
 			 active = true;
 			 for(int i = 0; i < objectIDList.size(); i++) {
-				 handler.doAction(objectIDList.get(i), (boolean)actionList.get(i));
+				 ConflictHandler.getInstance().doAction(objectIDList.get(i), (boolean)actionList.get(i));
 			 }
 		 }
 	}
