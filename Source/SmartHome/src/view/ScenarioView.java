@@ -5,7 +5,8 @@ import java.util.Scanner;
 
 import application.ScenarioFaçade;
 
-public class ScenarioInterface {
+
+public class ScenarioView {
 	
 	Scanner input = new Scanner(System.in);
 	
@@ -33,6 +34,7 @@ public class ScenarioInterface {
 	public void activateScenario() {
 		System.out.println("Inserire il nome dello scenario da attivare: ");
 		ScenarioFaçade.manageActivateScenario(input.nextLine());
+	
 	}
 	
 	public void createScenario() {
