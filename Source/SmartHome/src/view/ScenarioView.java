@@ -35,8 +35,11 @@ public class ScenarioView {
 			switch(input.nextLine()) {
 			case "create":
 				do {
+					System.out.println("Lista degli oggetti contenuti nella stanza: ");
+					// chiama metodo di DataFaçade e stampa gli oggetti
 					System.out.println("Inserire il nome dell'oggetto su cui effettuare l'azione");
 					String objectName = input.nextLine();
+					// controllo che appartenga alla lista di oggetti stampata prima
 					System.out.println("Inserire lo stato desiderato per l'azione");
 					String newState = input.nextLine();	
 					String[] object = {objectName, newState};
@@ -47,35 +50,35 @@ public class ScenarioView {
 				break;
 			case "modify":
 				do {
-					System.out.println("Selezionare l'oggetto desiderato tra quelli disponibili: ");
-					// ritornare la lista di oggetti nella stanza
-					for(String[] objectName: roomObjects) {
-						System.out.println(objectName[0]);
-					}					
-					String objectName = input.nextLine();
-					for(String[] oldObject: roomObjects) {
-						if(oldObject[0]).equalsIgnoreCase(objectName);
-					}
-					}
-					
-					/*
-					 * prendere indice oggetto dalla lista
-					 * rimuoverlo
-					 * inserire oggetto stesso nome con azione nuova
-					 */
-					
-					roomObjects.indexOf(oldObject);
-					
+					System.out.println("Lista degli oggetti contenuti nella stanza: ");
+					// chiama metodo di DataFaçade e stampa gli oggetti
+					System.out.println("Inserire il nome dell'oggetto da modificare");
+					String objectName = input.nextLine();					
+					// controllo che appartenga alla lista di oggetti stampata prima
 					System.out.println("Inserire lo stato desiderato per l'azione");
-					String newState = input.nextLine();
+					String newState = input.nextLine();	
 					String[] object = {objectName, newState};
-					roomObjects.add(object);
-					System.out.print("inserire altri oggetti? (s/n)");
+					
+					for(String[] oldObject: roomObjects) {
+						if(objectName.equals(oldObject[0]))
+							oldObject = object;
+					} // non ne sono sicuro																			
+					System.out.print("modificare altri oggetti? (s/n)");
 				} while(input.nextLine() != "n");
-				rooms.add(roomObjects);
 				break;
 			case "delete":
-				// prende un oggetto dalla lista come sopra
+				do {
+					System.out.println("Lista degli oggetti contenuti nella stanza: ");
+					// chiama metodo di DataFaçade e stampa gli oggetti
+					System.out.println("Inserire il nome dell'oggetto sda eliminare");
+					String objectName = input.nextLine();					
+					// controllo che appartenga alla lista di oggetti stampata prima
+					for(String[] oldObject: roomObjects) {
+						if(objectName.equals(oldObject[0]))
+							roomObjects.remove(oldObject);
+					} // non ne sono sicuro																			
+					System.out.print("eliminare altri oggetti? (s/n)");
+				} while(input.nextLine() != "n");
 				break;
 			}
 			System.out.println("Effettuare altre operazioni?");
@@ -112,12 +115,14 @@ public class ScenarioView {
 	
 	public void activateScenario() {
 		System.out.println("Inserire il nome dello scenario da attivare: ");
-		ScenarioFaçade.manageActivateScenario(input.nextLine());
+		// ScenarioFaçade.manageActivateScenario(input.nextLine());
 	}
 	
 	public void createScenario() {
+		//restituire la lista degli scenari presenti
 		System.out.println("Inserire il nome dello scenario da creare");
 		String name = input.nextLine();
+		// controllare che lo scenario selezionato esista
 		System.out.println("Si desidera impostare un orario di inizio? (s/n)");
 		if(input.nextLine().equals("s"))
 			setTime();
@@ -142,11 +147,26 @@ public class ScenarioView {
 			addRoom();
 			break;
 		case "change":
-			setTime();
+			System.out.println("Rimuovere la programmazione oraria? (s/n)");
+			if(input.nextLine().equals("s"))
+				setTime();
+			else {
+				hour = null;
+				min =  null;
+			}
+			// inviare dati a controller
 			break;
 		case "modify":
 			// scegliere la stanza da rooms e ritornare la lista della stanza desiderata
 			setAction();			
 		}
+	}
+	
+	public void deleteScenario() {
+		//restituire la lista degli scenari presenti
+		System.out.println("Inserire il nome dello scenario da eliminare");
+		String name = input.nextLine();
+		// controllare che lo scenario selezionato esista
+		// eliminare l'occorrenza con lo stesso nome nella lista
 	}
 }
