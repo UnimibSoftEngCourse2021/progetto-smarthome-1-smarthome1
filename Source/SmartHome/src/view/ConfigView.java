@@ -5,7 +5,7 @@ import application.GenericFaçade;
 import application.RoomFaçade;
 
 public class ConfigView {
-	/*
+	
 	private GenericFaçade genericFacade;
 	//private DataFaçade dataFacade;
 	Scanner input = new Scanner(System.in);
@@ -212,5 +212,5 @@ public class ConfigView {
 					fine = true;
 			}
 	}
-	*/
+	
 }
