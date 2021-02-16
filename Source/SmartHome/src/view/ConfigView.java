@@ -1,6 +1,8 @@
 package view;
 
 import java.util.Scanner;
+import application.GenericFaçade;
+import application.RoomFaçade;
 
 public class ConfigView {
 	
@@ -9,8 +11,14 @@ public class ConfigView {
 	public void roomConfig() {
 		String roomName;
 		String roomFloor;
-		System.out.println("Inserire il nome della stanza che si intende creare: ");
-		roomName = input.nextLine();
+		do {
+			System.out.println("Inserire il nome della stanza che si intende creare: ");
+			roomName = input.nextLine();
+			if(!RoomFaçade.manageRoomConfig(roomName)) {
+				System.out.print("Nome non disponibile");
+			}
+		}while(!RoomFaçade.manageRoomConfig(roomName));
+				
 		System.out.println("Inserire il piano della stanza: ");
 		roomFloor = input.nextLine();
 		// inviare dati
@@ -99,6 +107,38 @@ public class ConfigView {
 	}
 	
 	public void heatSystemConfig () {
-
+		int tempPassiva;
+		int tempAttiva;
+		String giorno;
+		do {
+			System.out.println("Inserire la temperatura passiva: ");
+			tempPassiva = input.nextInt();
+			if(tempPassiva < 7 || tempPassiva > 40) 
+				System.out.print("La temperatura inserita deve essere compresa tra 7 e 40 C");
+		}while(tempPassiva < 7 || tempPassiva > 40);
+		do {
+			System.out.println("Inserire la temperatura attiva: ");
+			tempAttiva = input.nextInt();
+			if(tempAttiva < 7 || tempAttiva > 40) 
+				System.out.print("La temperatura inserita deve essere compresa tra 7 e 40 C");
+		}while(tempAttiva < 7 || tempAttiva > 40);
+		
+		
+			System.out.println("Scegliere il giorno della settimana che si vuole programmare: ");
+			giorno = input.nextLine();
+			boolean fine = false;
+			while(!fine)
+				switch(giorno) {
+				case "lunedi":
+				case "martedi":
+				case "mercoledi":
+				case "giovedi":
+				case "venerdi'":
+				case "sabato":
+				case "domenica":
+					for(int i = 0; i < 24, i++) {
+						System.out.println("Scegliere la ")
+					}
+				}	
 	}
 }

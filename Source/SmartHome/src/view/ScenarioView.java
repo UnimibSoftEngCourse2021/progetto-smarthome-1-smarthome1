@@ -114,27 +114,5 @@ public class ScenarioView {
 			setAction();
 			
 		}
-		System.out.println("Inserire la stanza di cui modificare le azioni");
-		String room = input.nextLine();
-		System.out.println("Inserire il nome dell'oggetto da modificare");
-		String object = input.nextLine();
-		System.out.println("Inserire quale operazione si vuole effettuare sull'oggetto (modificare o eliminare");
-		String action = input.nextLine();
-		String newState;
-		switch(input.nextLine()) {
-		case "modificare":
-			System.out.println("Inserire il nuovo stato desiderato per l'azione");
-			newState = input.nextLine();
-			break;
-		case "eliminare":
-			newState = null;
-			break;
-		}
-		ScenarioFaçade.manageModifyScenario(name, room, object, newState);
-	}
-	
-	public void deleteScenario() {
-		System.out.println("Inserire il nome dello scenario da eliminare: ");
-		ScenarioFaçade.manageDeleteScenario(input.nextLine());
 	}
 }
