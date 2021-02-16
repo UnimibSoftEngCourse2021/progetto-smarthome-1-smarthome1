@@ -2,7 +2,7 @@ package view;
 
 import java.util.Scanner;
 
-public class ConfigInterface {
+public class ConfigView {
 	
 	Scanner input = new Scanner(System.in);
 
