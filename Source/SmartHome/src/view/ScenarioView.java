@@ -96,7 +96,7 @@ public class ScenarioView {
 				time = null;
 				days = null;
 			}
-			// scenarioFaçade.setDateTime(time, days);
+			// scenarioFaçade.setDateTime(scenarioName, time, days);
 			break;
 		case "modify":
 			roomObjects.clear();
@@ -155,11 +155,16 @@ public class ScenarioView {
 					for(String[] objectInRoom: objectsInRoom) {
 						System.out.println(objectInRoom[0]);
 					}
+					String objectID = null;
 					System.out.println("Selezionare l'oggetto");
-					String objectName = input.nextLine();										
+					String objectName = input.nextLine();	
+					for(String[] objectInRoom: objectsInRoom) {
+						if(objectName.equals(objectInRoom[0]))
+							objectID = objectInRoom[1];
+					}					
 					System.out.println("Inserire lo stato desiderato per l'azione");
 					String newState = input.nextLine();	
-					String[] object = {objectName, newState};
+					String[] object = {objectID, newState};
 					roomObjects.add(object);
 					System.out.print("inserire altri oggetti? (s/n)");
 				} while(input.nextLine() != "n");
@@ -173,10 +178,15 @@ public class ScenarioView {
 						System.out.println(object[0]);
 					}
 					System.out.println("Inserire il nome dell'oggetto da modificare");
-					String objectName = input.nextLine();					
+					String objectName = input.nextLine();
+					String objectID = null;
+					for(String[] objectInRoomInScenario: objectsInRoomInScenario) {
+						if(objectName.equals(objectInRoomInScenario[0]))
+							objectID = objectInRoomInScenario[1];
+					}	
 					System.out.println("Inserire lo stato desiderato per l'azione");
 					String newState = input.nextLine();						
-					// scenarioFaçade.manageChangeAction(scenarioName, roomName[0], objectName, newState);
+					// scenarioFaçade.manageChangeAction(scenarioName, objectID, newState);
 					System.out.print("modificare altri oggetti? (s/n)");
 				} while(input.nextLine() != "n");
 				break;
@@ -187,8 +197,14 @@ public class ScenarioView {
 					for(String[] object: objectsInRoomInScenario) {
 						System.out.println(object[0]);
 					}
-					System.out.println("Inserire il nome dell'oggetto da eliminare");																			
-					// scenarioFaçade.manageDeleteAction(scenarioName, roomName[0], input.nextLine());
+					System.out.println("Inserire il nome dell'oggetto da eliminare");
+					String objectName = input.nextLine();
+					String objectID = null;
+					for(String[] objectInRoomInScenario: objectsInRoomInScenario) {
+						if(objectName.equals(objectInRoomInScenario[0]))
+							objectID = objectInRoomInScenario[1];
+					}	
+					// scenarioFaçade.manageDeleteAction(scenarioName, objectID);
 					System.out.print("eliminare altri oggetti? (s/n)");
 				} while(input.nextLine() != "n");
 				break;

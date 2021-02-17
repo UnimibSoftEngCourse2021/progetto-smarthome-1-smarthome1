@@ -12,18 +12,28 @@ public class DataFaçade {
 	Room room;
 
 	public List<String[]> getObjectsInRoom(String roomName) {
-		return room.getObjectList();
+		List<Object> objects = room.getObjectList();
+		List<String[]> objectsInRoom;
+		String name;
+		String id;
+		for(Object object: objects) {
+			name = object.getName();
+			id = object.getObjectID();
+			String[] array = {name, id};
+			objectsInRoom.add(array);
+		}		
+		return objectsInRoom;
 	}
 
 	public List<String[]> getAllObjects() {
 		List<Object> objects = scenariosHandler.getObjects();
 		List<String[]> allObjects;
 		String name;
-		String state;
+		String id;
 		for(Object object: objects) {
 			name = object.getName();
-			state = String.valueOf(object.isActive());
-			String[] array = {name, state};
+			id = object.getObjectID();
+			String[] array = {name, id};
 			allObjects.add(array);
 		}		
 		return allObjects;
@@ -33,11 +43,11 @@ public class DataFaçade {
 		List<Object> objectsInScenario = scenarioHandler.getObjectsInScenario(scenarioName);
 		List<String[]> allObjectsInScenario;
 		String name;
-		String state;
+		String id;
 		for(Object object: objectsInScenario) {
 			name = object.getName();
-			state = String.valueOf(object.isActive());
-			String[] array = {name, state};
+			id = object.getObjectID();
+			String[] array = {name, id};
 			allObjectsInScenario.add(array);
 		}
 		return allObjectsInScenario;
