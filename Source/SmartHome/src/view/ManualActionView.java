@@ -2,13 +2,12 @@ package view;
 
 import java.util.List;
 import java.util.Scanner;
-
 import application.DataFaçade;
-
-// importare handlerFaçade
+import application.HandlerFaçade;
 
 public class ManualActionView {
 	
+	HandlerFaçade handlerFaçade;  
 	DataFaçade dataFaçade;
 	Scanner input = new Scanner(System.in);
 
