@@ -12,27 +12,63 @@ public class Sensor {
 	private String sensorID;
 	private double value;
 	private String communicationType;//BOH in caso da scrivere: in config, in tutti i costruttori di sensor chiamati dagli oggetti
-	//private String roomID;
 	private Room room;
 	private List<Object> publisherList;
 	public enum SensorCategory {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM, SHADER}
 	private SensorCategory category;
 	public enum AirState {POLLUTION, GAS}
 	private AirState airState;
-	
-	private DatabaseCommunicationSystem database;
+
 	private SensorCommunicationAdapter adapter;
 	
-
 	public Sensor(String name, SensorCategory category, Room room) {
 		this.name = name;
 		this.value = 0.00;
 		this.category = category;
 		this.room = room;
 		this.airState = null;
-		if(category.equals(SensorCategory.MOVEMENT))
-			if(Alarm.isCreated())
-				Alarm.setSensors(this);
+	}
+
+	public void attach(Object object) {
+		publisherList.add(object);
+	}
+
+	public void deattach(Object object) {
+		publisherList.remove(object);
+	}
+
+	public void notifies(double value) { 
+		switch (category) {
+		case MOVEMENT:
+			if(value == 1.00) {
+				for (int i = 0; i < publisherList.size(); i++) {
+					if(publisherList.get(i).getObjectType().equals(ObjectType.ALARM))
+						AutomaticControl.getInstance().checkAlarm();
+					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
+						AutomaticControl.getInstance().checkLight(value, room);
+				}
+			}
+			else
+				for (int i = 0; i < publisherList.size(); i++)
+					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
+						AutomaticControl.getInstance().checkLight(value, room);
+			break;
+		case AIR:
+			AutomaticControl.getInstance().checkAirPollution(value, room, airState);
+			break;
+		case LIGHT:
+		case WINDOW:
+		case DOOR:
+		case HEATER:
+		case ALARM:
+		case SHADER:
+			publisherList.get(0).update(value);
+			break;
+		case TEMPERATURE:
+			AutomaticControl.getInstance().checkTempTresholds(value, publisherList);
+			break;
+		// definire un case di default??
+		}
 	}
 	
 	public void concatName(String stringToBeAttached) {
@@ -92,55 +128,5 @@ public class Sensor {
 
 	public void setAirState(AirState airState) {
 		this.airState = airState;
-	}
-
-	/**
-	 * 
-	 * @param object
-	 */
-	public void attach(Object object) {
-		publisherList.add(object);
-	}
-	
-	/**
-	 * 
-	 * @param object
-	 */
-	public void deattach(Object object) {
-		publisherList.remove(object);
-	}
-
-	public void notifies(double value) { // ho dovuto aggiungere come parametro active perchè deve comunicare all'oggetto in quale stato andare
-		switch (category) {
-		case MOVEMENT:
-			if(value == 1.00) {
-				for (int i = 0; i < publisherList.size(); i++) {
-					if(publisherList.get(i).getObjectType().equals(ObjectType.ALARM))
-						AutomaticControl.getInstance().checkAlarm((Alarm)publisherList.get(i));
-					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
-						AutomaticControl.getInstance().checkLight(value, room);
-				}
-			}
-			else
-				for (int i = 0; i < publisherList.size(); i++)
-					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
-						AutomaticControl.getInstance().checkLight(value, room);
-			break;
-		case AIR:
-			AutomaticControl.getInstance().checkAirPollution(value, room, airState);
-			break;
-		case LIGHT:
-		case WINDOW:
-		case DOOR:
-		case HEATER:
-		case ALARM:
-		case SHADER:
-			publisherList.get(0).update(value);
-			break;
-		case TEMPERATURE:
-			AutomaticControl.getInstance().checkTempTresholds(value, publisherList);
-			break;
-		// definire un case di default??
-		}
 	}
 }

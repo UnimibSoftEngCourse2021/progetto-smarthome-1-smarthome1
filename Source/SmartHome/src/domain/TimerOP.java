@@ -16,30 +16,6 @@ public class TimerOP{
 		this.room = room;
 	}
 	
-	public TimerThread getAirThread() {
-		return airThread;
-	}
-
-	public void setAirThread(TimerThread airThread) {
-		this.airThread = airThread;
-	}
-
-	public TimerThread getLightThread() {
-		return lightThread;
-	}
-
-	public void setLightThread(TimerThread lightThread) {
-		this.lightThread = lightThread;
-	}
-
-	public boolean[] getElapsedTimers() {
-		return elapsedTimers;
-	}
-
-	public void setElapsedTimers(boolean[] elapsedTimers) {
-		this.elapsedTimers = elapsedTimers;
-	}
-
 	public void startTimer(Type timerType, int time) {
 		if(timerType.equals(Type.AIR)) {
 			elapsedTimers[1] = false;
@@ -93,6 +69,30 @@ public class TimerOP{
 		}
 	}
 	
+	public TimerThread getAirThread() {
+		return airThread;
+	}
+
+	public void setAirThread(TimerThread airThread) {
+		this.airThread = airThread;
+	}
+
+	public TimerThread getLightThread() {
+		return lightThread;
+	}
+
+	public void setLightThread(TimerThread lightThread) {
+		this.lightThread = lightThread;
+	}
+
+	public boolean[] getElapsedTimers() {
+		return elapsedTimers;
+	}
+
+	public void setElapsedTimers(boolean[] elapsedTimers) {
+		this.elapsedTimers = elapsedTimers;
+	}
+
 	public Room getRoom() {
 		return room;
 	}

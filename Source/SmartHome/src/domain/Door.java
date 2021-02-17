@@ -1,6 +1,5 @@
 package domain;
 
-import domain.Object.ObjectType;
 import domain.Sensor.SensorCategory;
 
 public class Door extends Object {
@@ -11,8 +10,9 @@ public class Door extends Object {
 	public Door(String name, Room room) {
 		super(name, ObjectType.DOOR, room);
 		sensor = new Sensor("sensorOf: ", SensorCategory.DOOR, room);
+		AutomaticControl.getInstance().addSensor(sensor);
 		if(Alarm.isCreated())
-			Alarm.setSensors(sensor);
+			Alarm.getInstance().setSensor(sensor);
 	}
 	public String getCode() {
 		return code;

@@ -14,11 +14,13 @@ public class DataDescription {
 	private DataDescription() {
 		
 	}
+	
 	public static DataDescription getInstance() {
 		if(dataDescription == null)
 			dataDescription = new DataDescription();
 		return dataDescription;
 	}
+	
 	public String getHCFILENAME() {
 		return HCFILENAME;
 	}
@@ -27,10 +29,6 @@ public class DataDescription {
 		return HSCFILENAME;
 	}
 
-	/**
-	 * 
-	 * @param parametersToBeAdded
-	 */
 	public void writeOnFileHC(String attribute, String value) {
 		PrintWriter outputStream = null;
 		try {
@@ -39,11 +37,11 @@ public class DataDescription {
 			System.out.println("errore da gestire durante il debug");
 		}
 		
-		if(attribute.equals("code") || attribute.equals("heaterID")) {
+		if(attribute.equalsIgnoreCase("code") || attribute.equalsIgnoreCase("heaterID") || attribute.equalsIgnoreCase("roomNameSensor")) {
 			outputStream.println(value);
 			outputStream.close();
 		}
-		else if(attribute.equals("end")) {
+		else if(attribute.equalsIgnoreCase("end")) {
 			outputStream.close();
 			Config.getInstance().processFileHC();
 		}	
@@ -56,10 +54,6 @@ public class DataDescription {
 		
 	}
 
-	/**
-	 * 
-	 * @param parametersToBeAdded
-	 */
 	public void writeOnFileHSC(String attribute, double[] values) {
 		PrintWriter outputStream = null;
 		try {
@@ -68,12 +62,11 @@ public class DataDescription {
 			System.out.println("errore da gestire durante il debug");
 		}
 		
-		if(attribute.equals("end")) {
+		if(attribute.equalsIgnoreCase("end")) {
 			outputStream.close();
 			Config.getInstance().processFileHSC();
 		}
 		else{
-			//value puo essere un giorno della settimana tipo: "LUNEDI" oppure un orario tipo: "1" o una temp tipo: "25"
 			outputStream.println(":" + attribute.toUpperCase());
 			outputStream.println(String.valueOf(values[0]));
 			outputStream.println(String.valueOf(values[1]));

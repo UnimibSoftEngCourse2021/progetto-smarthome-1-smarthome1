@@ -3,6 +3,7 @@ package domain;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -56,7 +57,8 @@ public class Config {
 				room.instantiateObject(ObjectType.valueOf(riga.substring(1)), name);	 
 				if(riga.equals(":DOOR")) {
 					String code = inputStream.nextLine();
-					room.setDoorCode(code);
+					Door door = (Door)room.getObjects(ObjectType.DOOR).get(0);
+					door.setCode(code);
 				}
 			} else if(riga.equals(":AIR")
 					|| riga.equals(":MOVEMENT")) {			
@@ -65,21 +67,26 @@ public class Config {
 			}
 			else if(riga.equals(":TEMPERATURE")) {
 				String name = inputStream.nextLine();
-				room.instantiateSensor(SensorCategory.valueOf(riga.substring(1)), name);
-				
+				String roomName = inputStream.nextLine();
+				for(Room sensorRoom: rooms) {
+					if(sensorRoom.getRoomID().equals(roomName)) {
+						sensorRoom.instantiateSensor(SensorCategory.valueOf(riga.substring(1)), name);
+						break;
+					}
+				}
 				String nuovaRiga = inputStream.nextLine();
-				List<String> heatersIDs = null;
+				List<String> heatersIDs = new ArrayList<String>();
 				while(!nuovaRiga.equals("")) {
 					heatersIDs.add(nuovaRiga);
 					nuovaRiga = inputStream.nextLine();
 				}
 				if(!heatersIDs.equals(null)) {
 					for(Room singleRoom: rooms) {
-						List<Object> heaters = singleRoom.getObjectList(ObjectType.HEATER);
+						List<Object> heaters = singleRoom.getObjects(ObjectType.HEATER);
 						for(Object object: heaters) {
 							Heater heater = (Heater)object;
 							if(heatersIDs.contains(heater.getObjectID())) 
-								singleRoom.bindHeater(heater, room.getSensorList(SensorCategory.TEMPERATURE).get(0));								
+								room.getSensors(SensorCategory.TEMPERATURE).get(0).attach(heater);							
 						}					
 					}
 				}
@@ -129,6 +136,10 @@ public class Config {
 				}
 			}
 		}
+	}
+
+	public List<Room> getRooms() {
+		return rooms;
 	}
 
 }

@@ -1,6 +1,5 @@
 package domain;
 
-import domain.Object.ObjectType;
 import domain.Sensor.SensorCategory;
 
 public class Window extends Object {
@@ -13,7 +12,7 @@ public class Window extends Object {
 		sensor = new Sensor("sensorOf: ", SensorCategory.WINDOW, room);
 		shader = new Shader("ShaderOf: " + name, room.getRoomID(), this, room);
 		if(Alarm.isCreated())
-			Alarm.setSensors(sensor);
+			Alarm.getInstance().setSensor(sensor);
 	}
 	
 	public Sensor getSensor() {

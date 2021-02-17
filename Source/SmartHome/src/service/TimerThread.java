@@ -37,6 +37,5 @@ public class TimerThread extends Thread{
 		}
 		if(!interrupted)
 			timer.executeOperations(timerType);
-		//forse devo comunque fare interrupt sul thread perche non so se rimane in active o meno
 	}
 }

@@ -1,6 +1,5 @@
 package domain;
 
-import domain.Object.ObjectType;
 import domain.Sensor.SensorCategory;
 
 public class Shader extends Object {
@@ -11,6 +10,7 @@ public class Shader extends Object {
 	public Shader(String name, String referencedRoomID, Window window, Room room) {
 		super(name, ObjectType.SHADER, room);
 		sensor = new Sensor("sensorOf: ", SensorCategory.SHADER, room);
+		AutomaticControl.getInstance().addSensor(sensor);
 		this.window = window;
 	}
 	
