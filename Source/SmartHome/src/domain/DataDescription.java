@@ -37,11 +37,11 @@ public class DataDescription {
 			System.out.println("errore da gestire durante il debug");
 		}
 		
-		if(attribute.equals("code") || attribute.equals("heaterID")) {
+		if(attribute.equalsIgnoreCase("code") || attribute.equalsIgnoreCase("heaterID") || attribute.equalsIgnoreCase("roomNameSensor")) {
 			outputStream.println(value);
 			outputStream.close();
 		}
-		else if(attribute.equals("end")) {
+		else if(attribute.equalsIgnoreCase("end")) {
 			outputStream.close();
 			Config.getInstance().processFileHC();
 		}	
@@ -62,7 +62,7 @@ public class DataDescription {
 			System.out.println("errore da gestire durante il debug");
 		}
 		
-		if(attribute.equals("end")) {
+		if(attribute.equalsIgnoreCase("end")) {
 			outputStream.close();
 			Config.getInstance().processFileHSC();
 		}

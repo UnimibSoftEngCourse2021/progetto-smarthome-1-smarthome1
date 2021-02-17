@@ -1,6 +1,7 @@
 package service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import domain.Scenario;
 
@@ -15,7 +16,7 @@ public class TimeScheduleThread extends Thread {
 		while(true) {
 			if(!(scenario.getDays().contains(LocalDateTime.now().getDayOfWeek()))) {
 				try {
-					TimeScheduleThread.sleep((24*3600*1000) - this.getMilliseconds(LocalDateTime.now()));
+					TimeScheduleThread.sleep((24*3600*1000) - this.getMilliseconds(LocalTime.now()));
 				} catch (InterruptedException e) {
 					break;
 				}
@@ -36,13 +37,13 @@ public class TimeScheduleThread extends Thread {
 		}
 	}
 	
-	public void init(LocalDateTime startTime) {
+	public void init(LocalTime startTime) {
 		sleepTime = this.getMilliseconds(startTime);
 		waitTime = (24*3600*1000) - sleepTime;
 		this.start();
 	}
 	
-	public long getMilliseconds (LocalDateTime time) {
+	public long getMilliseconds (LocalTime time) {
 		return (time.getHour()*3600 + time.getMinute()*60) * 1000;
 	}
 	

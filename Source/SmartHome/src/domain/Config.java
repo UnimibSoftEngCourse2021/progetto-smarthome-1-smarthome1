@@ -67,8 +67,13 @@ public class Config {
 			}
 			else if(riga.equals(":TEMPERATURE")) {
 				String name = inputStream.nextLine();
-				room.instantiateSensor(SensorCategory.valueOf(riga.substring(1)), name);
-				
+				String roomName = inputStream.nextLine();
+				for(Room sensorRoom: rooms) {
+					if(sensorRoom.getRoomID().equals(roomName)) {
+						sensorRoom.instantiateSensor(SensorCategory.valueOf(riga.substring(1)), name);
+						break;
+					}
+				}
 				String nuovaRiga = inputStream.nextLine();
 				List<String> heatersIDs = new ArrayList<String>();
 				while(!nuovaRiga.equals("")) {
@@ -131,6 +136,10 @@ public class Config {
 				}
 			}
 		}
+	}
+
+	public List<Room> getRooms() {
+		return rooms;
 	}
 
 }

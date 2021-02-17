@@ -1,7 +1,7 @@
 package domain;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +10,7 @@ import service.TimeScheduleThread;
 public class Scenario {
 
 	private String nameID;
-	private LocalDateTime startTime;
+	private LocalTime startTime;
 	private boolean active = false;
 	private List<String> objectIDs;
 	private List<Boolean> actions;
@@ -19,7 +19,7 @@ public class Scenario {
 	private List<String> roomsIDs;
 	private TimeScheduleThread thread;
 	
-	public Scenario(String nameID, LocalDateTime startTime, List<String> objectIDs, List<Boolean> actions, List<DayOfWeek> days, List<String> roomsIDs) {
+	public Scenario(String nameID, LocalTime startTime, List<String> objectIDs, List<Boolean> actions, List<DayOfWeek> days, List<String> roomsIDs) {
 		this.nameID = nameID;
 		this.startTime = startTime;
 		this.objectIDs = objectIDs;
@@ -30,26 +30,11 @@ public class Scenario {
 			handleDateEvent();
 	}
 
-	public void deleteScenario() {
-		objectIDs.clear();
-		actions.clear();
-		thread.interrupt();
-	}
-
 	public void modifyScenario() {
-		//probabilmente non esiste 
+		//probabilmente non esiste (lo stesso per delete e activate)
 		//sara' modifyScenario di ScenariosHandler che chiama i vari setter dello specifico scenario
 	}
 
-	public void activateScenario() {
-		 if(active == false) {
-			 active = true;
-			 for(int i = 0; i < objectIDs.size(); i++) {
-				 ConflictHandler.getInstance().doAction(objectIDs.get(i), (boolean)actions.get(i));
-			 }
-		 }
-	}
-	
 	public void handleDateEvent() {
 		thread = new TimeScheduleThread();
 		thread.init(startTime);
@@ -71,11 +56,11 @@ public class Scenario {
 		this.days = days;
 	}
 
-	public LocalDateTime getStartTime() {
+	public LocalTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(LocalDateTime startTime) {
+	public void setStartTime(LocalTime startTime) {
 		this.startTime = startTime;
 	}
 
@@ -101,5 +86,21 @@ public class Scenario {
 
 	public void setActions(List<Boolean> actions) {
 		this.actions = actions;
+	}
+
+	public TimeScheduleThread getThread() {
+		return thread;
+	}
+
+	public void setThread(TimeScheduleThread thread) {
+		this.thread = thread;
+	}
+
+	public List<String> getRoomsIDs() {
+		return roomsIDs;
+	}
+
+	public void setRoomsIDs(List<String> roomsIDs) {
+		this.roomsIDs = roomsIDs;
 	}
 }

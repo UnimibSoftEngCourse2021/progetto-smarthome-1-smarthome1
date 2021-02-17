@@ -44,17 +44,17 @@ public class Room {
 			Door door= new Door(name, this);
 			door.getSensor().attach(door);
 			objects.add(door);
-			door.setObjectID("DOOR_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(objects.indexOf(door)));
+			door.setObjectID("DOOR_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjects(ObjectType.DOOR).indexOf(door)));
 			door.getSensor().concatName(door.getObjectID());
 			door.getSensor().setSensorID("DOOR_" + door.getObjectID());
 			ConflictHandler.getInstance().addObject(door);
-			ScenariosHandler.getInstance().addObject(door);
+			//ScenariosHandler.getInstance().addObject(door);
 			break;
 		case WINDOW:
 			Window window = new Window(name, this);
 			window.getSensor().attach(window);
 			objects.add(window);
-			window.setObjectID("WINDOW_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(objects.indexOf(window)));
+			window.setObjectID("WINDOW_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjects(ObjectType.WINDOW).indexOf(window)));
 			window.getSensor().concatName(window.getObjectID());
 			window.getSensor().setSensorID("WINDOW_" + window.getObjectID());
 			Shader shader = window.getShader();
@@ -63,30 +63,34 @@ public class Room {
 			shader.getSensor().setSensorID("SHADER_" + shader.getObjectID());
 			ConflictHandler.getInstance().addObject(window);
 			ConflictHandler.getInstance().addObject(shader);
-			ScenariosHandler.getInstance().addObject(window);
-			ScenariosHandler.getInstance().addObject(shader);
+			//ScenariosHandler.getInstance().addObject(window);
+			//ScenariosHandler.getInstance().addObject(shader);
 			break;
 		case LIGHT:
 			Light light= new Light(name, this);
 			light.getSensor().attach(light);
 			objects.add(light);
-			light.setObjectID("LIGHT_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(objects.indexOf(light)));
+			light.setObjectID("LIGHT_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjects(ObjectType.LIGHT).indexOf(light)));
 			light.getSensor().concatName(light.getObjectID());
 			light.getSensor().setSensorID("LIGHT_" + light.getObjectID());
 			ConflictHandler.getInstance().addObject(light);
-			ScenariosHandler.getInstance().addObject(light);
+			//ScenariosHandler.getInstance().addObject(light);
 			break;
 		case HEATER:
 			Heater heater= new Heater(name, this);
 			objects.add(heater);
-			heater.setObjectID("HEATER_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(objects.indexOf(heater)));
+			heater.setObjectID("HEATER_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjects(ObjectType.HEATER).indexOf(heater)));
 			ConflictHandler.getInstance().addObject(heater);
-			ScenariosHandler.getInstance().addObject(heater);
+			//ScenariosHandler.getInstance().addObject(heater);
 			break;
 		default:
 			break;
 		}
 		
+	}
+	
+	public List<Object> getObjectList(){
+		return objects;
 	}
 	
 	public List<Object> getObjects(ObjectType type) {

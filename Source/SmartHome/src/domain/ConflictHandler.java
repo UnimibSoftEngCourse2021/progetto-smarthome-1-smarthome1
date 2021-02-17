@@ -99,6 +99,7 @@ public class ConflictHandler {
 							}
 						}
 						else
+							
 							adapter.triggerAction(object, true);
 						break;
 					case SHADER: // non generano conflitti
