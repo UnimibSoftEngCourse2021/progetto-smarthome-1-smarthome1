@@ -6,11 +6,11 @@ import java.io.PrintWriter;
 
 public class DataDescription {
 
-	private static DataDescription dataDescription = null;
+	//private static DataDescription dataDescription = null;
 	private final String HCFILENAME = "homeConfig.txt";
 	private final String HSCFILENAME = "heatSystemConfig.txt";
 	
-
+/*
 	private DataDescription() {
 		
 	}
@@ -20,7 +20,7 @@ public class DataDescription {
 			dataDescription = new DataDescription();
 		return dataDescription;
 	}
-	
+*/
 	public String getHCFILENAME() {
 		return HCFILENAME;
 	}

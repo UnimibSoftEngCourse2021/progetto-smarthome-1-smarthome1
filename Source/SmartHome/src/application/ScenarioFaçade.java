@@ -2,56 +2,38 @@ package application;
 
 import java.util.List;
 
-import domain.Scenario;
-import domain.ScenarioCreationHandler;
+import domain.ScenariosHandler;
 
 public class ScenarioFaçade {
+
+	private ScenariosHandler handler;
 	
-	private ScenarioCreationHandler handler;
-	private Scenario scenario;
-
-
-
-	/**
-	 * 
-	 * @param ScenarioID
-	 */
-	public void manageActivateScenario(String ScenarioID) {
-		// TODO - implement HomeFaçade.manageActivateScenario
-		throw new UnsupportedOperationException();
+	public void manageActivateScenario(String scenarioID) {
+		handler.activateScenario(scenarioID);
 	}
 
-	/**
-	 * 
-	 * @param scenarioID
-	 */
 	public void manageDeleteScenario(String scenarioID) {
-		// TODO - implement HomeFaçade.manageDeleteScenario
-		throw new UnsupportedOperationException();
+		handler.deleteScenario(scenarioID);
 	}
 
-	/**
-	 * 
-	 * @param roomID
-	 * @param objectID
-	 * @param actionType
-	 * @param actionLIstIndex
-	 */
-	public void manageModifyScenario(String roomID, String objectID, boolean actionType, short actionLIstIndex) {
-		// TODO - implement HomeFaçade.manageModifyScenario
-		throw new UnsupportedOperationException();
+	public void manageCreateScenario(String scenarioID, String dateTime, List<List<String[]>> rooms, List<String> days) {
+		handler.createScenario(scenarioID, dateTime, days, rooms);
 	}
 
-	/**
-	 * 
-	 * @param scenarioID
-	 * @param dateTime
-	 * @param roomsIDs
-	 * @param actionList
-	 */
-	public void manageCreateScenario(String scenarioID, int dateTime, List<List<String[]>> rooms) {
-		// TODO - implement HomeFaçade.manageCreateScenario
-		throw new UnsupportedOperationException();
+	public void manageAddRoomsToScenario(String scenarioID, List<List<String[]>> rooms) {
+		handler.addRoomToScenario(scenarioID, rooms);
+	}
+	
+	public void setDateTime (String scenarioID, String time, List<String> days) {
+		handler.setDateTime(scenarioID, time, days);
+	}
+	
+	public void manageChangeAction(String scenarioID, String objectID, String newState) {
+		handler.changeAction(scenarioID, objectID, newState);
 	}
 
+	public void manageDeleteAction(String scenarioID, String objectID) {
+		handler.deleteAction(scenarioID, objectID);
+		
+	}
 }

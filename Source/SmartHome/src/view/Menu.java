@@ -2,12 +2,9 @@ package view;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 
-import domain.Object;
-
-
+import application.GenericFaçade;
 
 public class Menu {
 
@@ -23,10 +20,12 @@ public class Menu {
 		Scanner input = new Scanner(System.in);
 		switch(input.nextLine()) {
 		case "config":
-			String config;
+			
 			ConfigView configView = new ConfigView();
+			GenericFaçade genericFacade = new GenericFaçade();
 			List<String[]> numHeaterNotBinded = new ArrayList<String[]>();
 			List<String[]> sensorList = new ArrayList<String[]>();
+			String config;
 			
 			configView.alarmConfig();
 			configView.dayMode();
@@ -66,44 +65,44 @@ public class Menu {
 			}while(config.equalsIgnoreCase("s"));
 			
 			
-				// questo controllo lo fa alla fine dell'inserimento di ogni stanza
-				System.out.print("Associare i sensori temp creati con gli oggetti heater: ");
-				// se ho ancora caloriferi da associare
-				do {
-					for(String[] sensor: sensorList) {
-						genericFacade.manageWriteOnFile("temperature", sensor[0]);
-						genericFacade.manageWriteOnFile("roomNameSensor", sensor[1]);
-						
-						do {
-							if(!numHeaterNotBinded.isEmpty()) {
-								System.out.println("Caloriferi disponibili: ");
-								for(String[] heater: numHeaterNotBinded) { 
-									System.out.print(" " + heater[0]);
-								}
-								System.out.println("");
-								System.out.println("Inserire il nome del calorifero da associare al sensore " + sensor);
-								config = input.nextLine();
-								String heaterId = "";
-								for(String[] heater: numHeaterNotBinded) 
-									if(heater[0].equals(config)) {
-										heaterId= heater[1];
-										break;
-									}
-								genericFacade.manageWriteOnFile("heaterID", heaterId);
-								String[] temp = {config, heaterId};
-								numHeaterNotBinded.remove(temp);
-								if(!numHeaterNotBinded.isEmpty()) {
-									System.out.println("Vuoi associare altri caloriferi al sensore " + sensor[0] +" ?");
-									config = input.nextLine();
-								}
-							}
-							
-						}while(config.equalsIgnoreCase("s") || !numHeaterNotBinded.isEmpty());
-					}	
-					if(!numHeaterNotBinded.isEmpty())
-						System.out.println("Alcuni caloriferi devono essere ancora associati");
-				}while(!numHeaterNotBinded.isEmpty());	
+			// questo controllo lo fa alla fine dell'inserimento di ogni stanza
+			System.out.print("Associare i sensori temp creati con gli oggetti heater: ");
+			// se ho ancora caloriferi da associare
+			do {
+				for(String[] sensor: sensorList) {
+					genericFacade.manageWriteOnFile("temperature", sensor[0]);
+					genericFacade.manageWriteOnFile("roomNameSensor", sensor[1]);
 					
+					do {
+						if(!numHeaterNotBinded.isEmpty()) {
+							System.out.println("Caloriferi disponibili: ");
+							for(String[] heater: numHeaterNotBinded) { 
+								System.out.print(" " + heater[0]);
+							}
+							System.out.println("");
+							System.out.println("Inserire il nome del calorifero da associare al sensore " + sensor);
+							config = input.nextLine();
+							String heaterId = "";
+							for(String[] heater: numHeaterNotBinded) 
+								if(heater[0].equals(config)) {
+									heaterId= heater[1];
+									break;
+								}
+							genericFacade.manageWriteOnFile("heaterID", heaterId);
+							String[] temp = {config, heaterId};
+							numHeaterNotBinded.remove(temp);
+							if(!numHeaterNotBinded.isEmpty()) {
+								System.out.println("Vuoi associare altri caloriferi al sensore " + sensor[0] +" ?");
+								config = input.nextLine();
+							}
+						}
+						
+					}while(config.equalsIgnoreCase("s") || !numHeaterNotBinded.isEmpty());
+				}	
+				if(!numHeaterNotBinded.isEmpty())
+					System.out.println("Alcuni caloriferi devono essere ancora associati");
+			}while(!numHeaterNotBinded.isEmpty());	
+				
 			break;
 		case "scenario":
 			break;

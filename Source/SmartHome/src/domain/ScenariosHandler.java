@@ -69,20 +69,28 @@ public class ScenariosHandler {
 		
 	}
 
-	public void changeAction(String scenarioID, String objectID, boolean action) {
+	public void changeAction(String scenarioID, String objectID, String action) {
 		boolean isNotIterated = false;
+		boolean actn = false;
+		if(action.equalsIgnoreCase("true")
+				|| action.equalsIgnoreCase("apri")
+				|| action.equalsIgnoreCase("accendi")
+				|| action.equalsIgnoreCase("vero"))
+			actn = true;
+		else
+			actn = false;
 		for(Scenario scenario: scenarios) {
 			if(scenario.getNameID().equals(scenarioID)) {
 				for(String id: scenario.getObjectIDs()) {
 					if(id.equals(objectID)) {
-						scenario.getActions().set(scenario.getObjectIDs().indexOf(id), action);
+						scenario.getActions().set(scenario.getObjectIDs().indexOf(id), actn);
 						isNotIterated = true;
 						break;
 					}
 				}
 				if(!isNotIterated) {
 					scenario.getObjectIDs().add(objectID);
-					scenario.getActions().add(action);
+					scenario.getActions().add(actn);
 				}
 				break;
 			}
@@ -180,6 +188,14 @@ public class ScenariosHandler {
 		
 	}
 
+	public List<String> getObjectsInScenario(String scenarioID) {
+		Scenario s = null;
+		for(Scenario scenario: scenarios) 
+			if(scenario.getNameID().equals(scenarioID))
+				s = scenario;
+		return s.getObjectIDs();
+	}
+	
 	public List<Scenario> getScenarios() {
 		return scenarios;
 	}

@@ -5,12 +5,15 @@ import java.util.List;
 import domain.Room;
 import domain.Scenario;
 import domain.Config;
+import domain.ConflictHandler;
 import domain.Object;
 import domain.ScenariosHandler;
 
 public class DataFaçade {
 	
-	Room room;
+	private Room room;
+	private ScenariosHandler scenariosHandler;
+	
 
 	public List<String[]> getObjectsInRoom(String roomName) {
 		List<Object> objects = new ArrayList<Object>();
@@ -43,23 +46,28 @@ public class DataFaçade {
 	}
 
 	public List<String[]> getObjectsInScenario(String scenarioName) {		
-		List<Object> objectsInScenario = new ArrayList<Object>();
-		objectsInScenario = scenarioHandler.getObjectsInScenario(scenarioName);
-		List<String[]> allObjectsInScenario = new ArrayList<String[]>();
-		String name;
-		String id;
-		for(Object object: objectsInScenario) {
-			name = object.getName();
-			id = object.getObjectID();
-			String[] array = {name, id};
-			allObjectsInScenario.add(array);
+		List<String> objectsIDsInScenario = scenariosHandler.getObjectsInScenario(scenarioName);
+		List<String[]> objectsInScenario = new ArrayList<String[]>();
+		String name = "";
+		String id = "";
+		List<Object> objects = ConflictHandler.getInstance().getObjects();
+		for(String objectID: objectsIDsInScenario) {
+			for(Object object: objects) {
+				if(object.getObjectID().equals(objectID)) {
+					name = object.getName();
+					id = object.getObjectID();
+					break;
+				}
+			}
+			String[] couple = {name, id};
+			objectsInScenario.add(couple);
 		}
-		return allObjectsInScenario;
+		return objectsInScenario;
 	}
 
 	public List<String> getScenarios() {
 		List<Scenario> scenarios = new ArrayList<Scenario>();
-		scenarios = scenarioHandler.getScenarios();
+		scenarios = scenariosHandler.getScenarios();
 		List<String> allScenarios = new ArrayList<String>();;
 		for(Scenario scenario: scenarios) {
 			allScenarios.add(scenario.getNameID());

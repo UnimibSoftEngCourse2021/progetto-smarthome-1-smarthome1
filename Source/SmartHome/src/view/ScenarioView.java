@@ -8,8 +8,9 @@ import application.ScenarioFaçade;
 
 public class ScenarioView {
 	
-	DataFaçade dataFaçade;
-	ScenarioFaçade scenarioFaçade;
+	//bisogna fare le giuste associazioni (nel main?)
+	private DataFaçade dataFaçade;
+	private ScenarioFaçade scenarioFaçade;
 	
 	List<List<String[]>> rooms = new ArrayList<List<String[]>>();;
 	List<String[]> roomObjects = new ArrayList<String[]>(); // primo valore è nome stanza
@@ -57,7 +58,7 @@ public class ScenarioView {
 			activateScenario();
 		}
 		else		
-			scenarioFaçade.manageActivateScenario(input.nextLine());
+			scenarioFaçade.manageActivateScenario(selected);
 	}
 		
 	
@@ -68,7 +69,7 @@ public class ScenarioView {
 		if(input.nextLine().equals("s"))
 			setDateTime();
 			addRoom(scenarioName);
-		// scenarioFaçade.manageCreateScenario(scenarioName, rooms, time, days);
+		scenarioFaçade.manageCreateScenario(scenarioName, time, rooms, days);
 	}
 	
 	/*
@@ -87,7 +88,7 @@ public class ScenarioView {
 		switch(input.nextLine()) {
 		case "add":
 			addRoom(scenarioName);
-			// scenarioFaçade.manageAddRoomsToScenario(name, rooms);
+			scenarioFaçade.manageAddRoomsToScenario(scenarioName, rooms);
 			break;
 		case "change":
 			System.out.println("Rimuovere la programmazione oraria? (s/n)");
@@ -98,7 +99,7 @@ public class ScenarioView {
 				time = null;
 				days = null;
 			}
-			// scenarioFaçade.setDateTime(scenarioName, time, days);
+			scenarioFaçade.setDateTime(scenarioName, time, days);
 			break;
 		case "modify":
 			roomObjects.clear();
@@ -115,7 +116,9 @@ public class ScenarioView {
 			setAction(scenarioName);
 			// chiamata a controller solo se ha fatto create
 			if(createFlag)
-				scenarioFaçade.manageModifyRooms(scenarioName, rooms);
+				scenarioFaçade.manageAddRoomsToScenario(scenarioName, rooms);
+			//a liv di scenario non ho bisogno di sapere dove stanno le coppie
+			//azioni - objcetID quindi posso riusare il metodo sopra - d.barzio
 		}
 	}
 	
@@ -127,8 +130,7 @@ public class ScenarioView {
 			System.out.println(scenario);
 		}
 		System.out.println("Inserire il nome dello scenario da eliminare");
-		String scenarioName = input.nextLine();
-		// scenarioFaçade.manageDeleteScenario(scenarioName);
+		scenarioFaçade.manageDeleteScenario(input.nextLine());
 	}
 	
 	public void addRoom(String scenarioName) {
@@ -192,7 +194,7 @@ public class ScenarioView {
 					}	
 					System.out.println("Inserire lo stato desiderato per l'azione");
 					String newState = input.nextLine();						
-					// scenarioFaçade.manageChangeAction(scenarioName, objectID, newState);
+					scenarioFaçade.manageChangeAction(scenarioName, objectID, newState);
 					System.out.print("modificare altri oggetti? (s/n)");
 				} while(input.nextLine() != "n");
 				break;
@@ -206,12 +208,12 @@ public class ScenarioView {
 					}
 					System.out.println("Inserire il nome dell'oggetto da eliminare");
 					String objectName = input.nextLine();
-					String objectID = null;
+					String objectID = "";
 					for(String[] objectInRoomInScenario: objectsInRoomInScenario) {
 						if(objectName.equals(objectInRoomInScenario[0]))
 							objectID = objectInRoomInScenario[1];
 					}	
-					// scenarioFaçade.manageDeleteAction(scenarioName, objectID);
+					scenarioFaçade.manageDeleteAction(scenarioName, objectID);
 					System.out.print("eliminare altri oggetti? (s/n)");
 				} while(input.nextLine() != "n");
 				break;
