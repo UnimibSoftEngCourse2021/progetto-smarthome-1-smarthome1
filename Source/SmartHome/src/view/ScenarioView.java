@@ -17,6 +17,8 @@ public class ScenarioView {
 	List<String> days = null;	
 	String time;
 	
+	private boolean createFlag = false; 
+	
 	Scanner input = new Scanner(System.in);
 	
 	public void selectOperation() {
@@ -63,12 +65,7 @@ public class ScenarioView {
 		System.out.println("Si desidera impostare un orario di inizio? (s/n)");
 		if(input.nextLine().equals("s"))
 			setDateTime();
-		do {
-			addRoom();
-			setAction(scenarioName);
-			rooms.add(roomObjects);
-			System.out.print("inserire altre stanze? (s/n)");
-		} while(input.nextLine() != "n");
+			addRoom(scenarioName);
 		// scenarioFaçade.manageCreateScenario(scenarioName, rooms, time, days);
 	}
 	
@@ -78,6 +75,7 @@ public class ScenarioView {
 	 * aggiunta/modifica/elimiazione azioni stanza esistente
 	 */
 	public void modifyScenario() {
+		// lista scenari esistenti
 		System.out.println("Inserire il nome dello scenario da modificare");
 		String scenarioName = input.nextLine();
 		System.out.println("Selezionare l'operazione da effettuare: ");
@@ -86,30 +84,35 @@ public class ScenarioView {
 		System.out.println("modify: modifica stanza esistente");
 		switch(input.nextLine()) {
 		case "add":
-			addRoom();
+			addRoom(scenarioName);
+			// scenarioFaçade.manageAddRoomsToScenario(name, rooms);
 			break;
 		case "change":
 			System.out.println("Rimuovere la programmazione oraria? (s/n)");
 			if(input.nextLine().equals("n")) {
 				setDateTime();
-				// scenarioFaçade.setDateTime(time, days);
 			}
 			else {
 				time = null;
+				days = null;
 			}
+			// scenarioFaçade.setDateTime(time, days);
 			break;
 		case "modify":
 			roomObjects.clear();
 			System.out.println("Lista delle stanze");
-			List<String[]> roomList = dataFaçade.getRooms();
-			for(String[] room: roomList) {
+			List<String> roomList = dataFaçade.getRooms();
+			for(String room: roomList) {
 				System.out.println(room);
 			}
 			System.out.println("Inserire il nome della stanza in cui eseguire le azioni");
 			roomName[0] = input.nextLine();
 			roomName[1] = null;
 			roomObjects.add(roomName);
-			setAction(scenarioName);			
+			setAction(scenarioName);
+			// chiamata a controller solo se ha fatto create
+			if(createFlag)
+				scenarioFaçade.manageModifyRooms(scenarioName, rooms);
 		}
 	}
 	
@@ -124,12 +127,17 @@ public class ScenarioView {
 		// scenarioFaçade.manageDeleteScenario(scenarioName);
 	}
 	
-	public void addRoom() {
+	public void addRoom(String scenarioName) {
+		do {	
 			roomObjects.clear();
 			System.out.println("Inserire il nome della stanza in cui eseguire le azioni");
 			roomName[0] = input.nextLine();
 			roomName[1] = null;
 			roomObjects.add(roomName);
+			setAction(scenarioName);
+			System.out.print("inserire altre stanze? (s/n)");
+		} while(input.nextLine() != "n");
+		rooms.add(roomObjects);
 	}
 	
 	public void setAction(String scenarioName) {
@@ -139,7 +147,8 @@ public class ScenarioView {
 			System.out.println("modify: modificarne una esistente");
 			System.out.println("delete: eliminarne una esistente");
 			switch(input.nextLine()) {
-			case "create":				
+			case "create":
+				createFlag = true;
 				do {
 					System.out.println("Lista degli oggetti contenuti nella stanza: ");
 					List<String[]> objectsInRoom = dataFaçade.getObjectsInRoom(roomName[0]);
@@ -197,6 +206,5 @@ public class ScenarioView {
 			System.out.println("Inserire altri giorni? (s/n)");
 		} while(input.nextLine().equals("s"));
 	}
-	
-	
+		
 }
