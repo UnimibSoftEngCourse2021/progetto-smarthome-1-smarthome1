@@ -16,16 +16,18 @@ public class Scenario {
 	private List<Boolean> actions;
 	private List<DayOfWeek> days;
 	
-	private String[] roomsIDs;
+	private List<String> roomsIDs;
 	private TimeScheduleThread thread;
 	
-	public Scenario(String nameID, LocalDateTime startTime, List<String> objectIDList, List<Boolean> actionList) {
+	public Scenario(String nameID, LocalDateTime startTime, List<String> objectIDs, List<Boolean> actions, List<DayOfWeek> days, List<String> roomsIDs) {
 		this.nameID = nameID;
 		this.startTime = startTime;
-		objectIDs = new ArrayList<String>();
-		actions = new ArrayList<Boolean>();
-		days = new ArrayList<DayOfWeek>();
-		handleDateEvent();
+		this.objectIDs = objectIDs;
+		this.actions = actions;
+		this.days = days;
+		this.roomsIDs = roomsIDs;
+		if(startTime != null)
+			handleDateEvent();
 	}
 
 	public void deleteScenario() {
@@ -34,10 +36,9 @@ public class Scenario {
 		thread.interrupt();
 	}
 
-	public void modifyScenario(int parametersToBeModified) {
-		/*
-		 * modifica tramite interfaccia
-		 */
+	public void modifyScenario() {
+		//probabilmente non esiste 
+		//sara' modifyScenario di ScenariosHandler che chiama i vari setter dello specifico scenario
 	}
 
 	public void activateScenario() {
@@ -100,13 +101,5 @@ public class Scenario {
 
 	public void setActions(List<Boolean> actions) {
 		this.actions = actions;
-	}
-
-	public String[] getRoomsIDs() {
-		return roomsIDs;
-	}
-
-	public void setRoomsIDs(String[] roomsIDs) {
-		this.roomsIDs = roomsIDs;
 	}
 }
