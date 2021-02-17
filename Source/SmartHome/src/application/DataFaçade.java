@@ -20,12 +20,17 @@ public class DataFaçade {
 		return null;
 	}
 
-	public List<String[]> getScenarios() {
+	public List<String> getScenarios() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<String[]> getRooms() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<String[]> getObjectsInRoomInScenario(String string, String scenarioName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
