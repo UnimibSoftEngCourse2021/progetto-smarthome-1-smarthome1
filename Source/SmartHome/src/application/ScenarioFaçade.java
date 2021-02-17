@@ -1,17 +1,16 @@
 package application;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class HomeFaçade {
+import domain.Scenario;
+import domain.ScenarioCreationHandler;
 
-	/**
-	 * 
-	 * @param function
-	 */
-	public void manageStatisticOperations(String function) {
-		// TODO - implement HomeFaçade.manageStatisticOperations
-		throw new UnsupportedOperationException();
-	}
+public class ScenarioFaçade {
+	
+	private ScenarioCreationHandler handler;
+	private Scenario scenario;
+
+
 
 	/**
 	 * 
@@ -50,7 +49,7 @@ public class HomeFaçade {
 	 * @param roomsIDs
 	 * @param actionList
 	 */
-	public void manageCreateScenario(String scenarioID, int dateTime, String[] roomsIDs, ArrayList actionList) {
+	public void manageCreateScenario(String scenarioID, int dateTime, List<List<String[]>> rooms) {
 		// TODO - implement HomeFaçade.manageCreateScenario
 		throw new UnsupportedOperationException();
 	}

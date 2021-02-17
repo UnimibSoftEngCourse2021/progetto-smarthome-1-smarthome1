@@ -8,6 +8,6 @@ public interface ObjectCommunicationAdapter {
 	 * @param objectID
 	 * @param actionValue
 	 */
-	void triggerAction(String roomID, String objectID, boolean actionValue);
+	void triggerAction(Object object, boolean actionValue);
 
 }

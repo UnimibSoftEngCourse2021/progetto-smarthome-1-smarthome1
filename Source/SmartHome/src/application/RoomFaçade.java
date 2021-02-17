@@ -1,6 +1,12 @@
 package application;
 
+import domain.ConflictHandler;
+import domain.Room;
+
 public class RoomFaçade {
+	
+	private ConflictHandler handler;
+	private Room room;
 
 	/**
 	 * 

@@ -1,6 +1,14 @@
 package application;
 
-public class SettingFaçade {
+import domain.AutomaticControl;
+import domain.DataDescription;
+import domain.Statistic;
+
+public class GenericFaçade {
+	
+	private AutomaticControl automaticControl;
+	private DataDescription dataDescription;
+	private Statistic statistic;
 
 	/**
 	 * 
@@ -20,6 +28,15 @@ public class SettingFaçade {
 	 */
 	public void manageFlagSettings(String flagName, boolean flagValue) {
 		// TODO - implement SettingFaçade.manageFlagSettings
+		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * 
+	 * @param function
+	 */
+	public void manageStatisticOperations(String function) {
+		// TODO - implement HomeFaçade.manageStatisticOperations
 		throw new UnsupportedOperationException();
 	}
 
