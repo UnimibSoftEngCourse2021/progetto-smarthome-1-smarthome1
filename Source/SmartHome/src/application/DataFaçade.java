@@ -1,5 +1,6 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.List;
 import domain.Room;
 import domain.Scenario;
@@ -12,8 +13,9 @@ public class DataFaçade {
 	Room room;
 
 	public List<String[]> getObjectsInRoom(String roomName) {
-		List<Object> objects = room.getObjectList();
-		List<String[]> objectsInRoom;
+		List<Object> objects = new ArrayList<Object>();
+		objects = room.getObjectList();
+		List<String[]> objectsInRoom = new ArrayList<String[]>();;
 		String name;
 		String id;
 		for(Object object: objects) {
@@ -26,8 +28,9 @@ public class DataFaçade {
 	}
 
 	public List<String[]> getAllObjects() {
-		List<Object> objects = scenariosHandler.getObjects();
-		List<String[]> allObjects;
+		List<Object> objects = new ArrayList<Object>();
+		objects = scenariosHandler.getObjects();
+		List<String[]> allObjects = new ArrayList<String[]>();;
 		String name;
 		String id;
 		for(Object object: objects) {
@@ -40,8 +43,9 @@ public class DataFaçade {
 	}
 
 	public List<String[]> getObjectsInScenario(String scenarioName) {		
-		List<Object> objectsInScenario = scenarioHandler.getObjectsInScenario(scenarioName);
-		List<String[]> allObjectsInScenario;
+		List<Object> objectsInScenario = new ArrayList<Object>();
+		objectsInScenario = scenarioHandler.getObjectsInScenario(scenarioName);
+		List<String[]> allObjectsInScenario = new ArrayList<String[]>();
 		String name;
 		String id;
 		for(Object object: objectsInScenario) {
@@ -54,8 +58,9 @@ public class DataFaçade {
 	}
 
 	public List<String> getScenarios() {
-		List<Scenario> scenarios = scenarioHandler.getScenarios();
-		List<String> allScenarios;
+		List<Scenario> scenarios = new ArrayList<Scenario>();
+		scenarios = scenarioHandler.getScenarios();
+		List<String> allScenarios = new ArrayList<String>();;
 		for(Scenario scenario: scenarios) {
 			allScenarios.add(scenario.getNameID());
 		}
@@ -64,8 +69,9 @@ public class DataFaçade {
 
 	public List<String> getRooms() {
 		// cicla sulle stanze
-		List<Room> rooms = Config.getInstance().getRooms();
-		List<String> allRooms;
+		List<Room> rooms = new ArrayList<Room>();
+		rooms = Config.getInstance().getRooms();
+		List<String> allRooms = new ArrayList<String>();;
 		for(Room room: rooms) {
 			allRooms.add(room.getRoomID());
 		}
@@ -73,9 +79,11 @@ public class DataFaçade {
 	}
 
 	public List<String[]> getObjectsInRoomInScenario(String roomName, String scenarioName) {
-		List<String[]> allObjectsInScenario = getObjectsInScenario(scenarioName);
-		List<String[]> objectsInRoom = getObjectsInRoom(roomName); 
-		List<String[]> allObjectsInRoomInScenario = null;
+		List<String[]> allObjectsInScenario = new ArrayList<String[]>();
+		allObjectsInScenario = getObjectsInScenario(scenarioName);
+		List<String[]> objectsInRoom = new ArrayList<String[]>();
+		objectsInRoom = getObjectsInRoom(roomName); 
+		List<String[]> allObjectsInRoomInScenario = new ArrayList<String[]>();;
 		for(String[] object: objectsInRoom) {
 			if(allObjectsInScenario.contains(object))
 				allObjectsInRoomInScenario.add(object);

@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import application.DataFaçade;
@@ -10,11 +11,11 @@ public class ScenarioView {
 	DataFaçade dataFaçade;
 	ScenarioFaçade scenarioFaçade;
 	
-	List<List<String[]>> rooms;
-	List<String[]> roomObjects; // primo valore è nome stanza
+	List<List<String[]>> rooms = new ArrayList<List<String[]>>();;
+	List<String[]> roomObjects = new ArrayList<String[]>(); // primo valore è nome stanza
 	String[] roomName;
 	
-	List<String> days = null;	
+	List<String> days = new ArrayList<String>();	
 	String time;
 	
 	private boolean createFlag = false; 
@@ -44,7 +45,8 @@ public class ScenarioView {
 	
 	public void activateScenario() {
 		System.out.println("Lista degli scenari: ");
-		List<String> scenarios = dataFaçade.getScenarios();
+		List<String> scenarios = new ArrayList<String>();
+		scenarios = dataFaçade.getScenarios();
 		for(String scenario: scenarios) {
 			System.out.println(scenario);
 		}
@@ -101,7 +103,8 @@ public class ScenarioView {
 		case "modify":
 			roomObjects.clear();
 			System.out.println("Lista delle stanze");
-			List<String> roomList = dataFaçade.getRooms();
+			List<String> roomList = new ArrayList<String>();
+			roomList = dataFaçade.getRooms();
 			for(String room: roomList) {
 				System.out.println(room);
 			}
@@ -118,7 +121,8 @@ public class ScenarioView {
 	
 	public void deleteScenario() {
 		System.out.println("Lista degli scenari");
-		List<String> scenariosList = dataFaçade.getScenarios();
+		List<String> scenariosList = new ArrayList<String>();
+		scenariosList = dataFaçade.getScenarios();
 		for(String scenario: scenariosList) {
 			System.out.println(scenario);
 		}
@@ -151,7 +155,8 @@ public class ScenarioView {
 				createFlag = true;
 				do {
 					System.out.println("Lista degli oggetti contenuti nella stanza: ");
-					List<String[]> objectsInRoom = dataFaçade.getObjectsInRoom(roomName[0]);
+					List<String[]> objectsInRoom = new ArrayList<String[]>();
+					objectsInRoom = dataFaçade.getObjectsInRoom(roomName[0]);
 					for(String[] objectInRoom: objectsInRoom) {
 						System.out.println(objectInRoom[0]);
 					}
@@ -173,7 +178,8 @@ public class ScenarioView {
 			case "modify":
 				do {
 					System.out.println("Lista degli oggetti modificabili nella stanza: ");
-					List<String[]> objectsInRoomInScenario = dataFaçade.getObjectsInRoomInScenario(roomName[0], scenarioName);
+					List<String[]> objectsInRoomInScenario = new ArrayList<String[]>();
+					objectsInRoomInScenario = dataFaçade.getObjectsInRoomInScenario(roomName[0], scenarioName);
 					for(String[] object: objectsInRoomInScenario) {
 						System.out.println(object[0]);
 					}
@@ -193,7 +199,8 @@ public class ScenarioView {
 			case "delete":
 				do {
 					System.out.println("Lista degli oggetti eliminabili nella stanza: ");
-					List<String[]> objectsInRoomInScenario = dataFaçade.getObjectsInRoomInScenario(roomName[0], scenarioName);
+					List<String[]> objectsInRoomInScenario = new ArrayList<String[]>();
+					objectsInRoomInScenario = dataFaçade.getObjectsInRoomInScenario(roomName[0], scenarioName);
 					for(String[] object: objectsInRoomInScenario) {
 						System.out.println(object[0]);
 					}
