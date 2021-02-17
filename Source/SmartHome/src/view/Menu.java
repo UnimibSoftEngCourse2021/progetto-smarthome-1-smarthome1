@@ -5,7 +5,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import application.DataFaçade;
+import application.GenericFaçade;
+import application.HandlerFaçade;
+import application.RoomFaçade;
+import application.ScenarioFaçade;
+import domain.DataDescription;
 import domain.Object;
+import domain.ScenariosHandler;
 
 public class Menu {
 
@@ -13,11 +20,23 @@ public class Menu {
 		
 		Scanner input = new Scanner(System.in);
 		
-		ConfigView configView;
-		ScenarioView scenarioView;
-		ObjectStateView objectStateView;
-		ManualActionView manualActionView;
-		IsAtHome isAtHome;
+		//inizializzazione oggetti di dominio singoli
+		DataDescription dd = new DataDescription();
+		ScenariosHandler sh = new ScenariosHandler();
+		//inizializzazione oggetti facade
+		DataFaçade df = new DataFaçade(sh);
+		GenericFaçade gf = new GenericFaçade(dd);
+		ScenarioFaçade sf = new ScenarioFaçade(sh);
+		//da vedere
+		HandlerFaçade hf = new HandlerFaçade();
+		RoomFaçade rf = new RoomFaçade();
+		
+		//inizializzazione oggetti view
+		ConfigView configView = new ConfigView(df, gf);
+		ScenarioView scenarioView = new ScenarioView(df, sf);
+		ObjectStateView objectStateView = new ObjectStateView(df);
+		ManualActionView manualActionView = new ManualActionView(df, hf); 
+		IsAtHome isAtHome = new IsAtHome(hf);
 		
 		do {
 			System.out.println("Selezionare l'operazione desiderata scrivendo la parola chiave tra quelle presentate qui sotto");
@@ -30,14 +49,15 @@ public class Menu {
 		
 			switch(input.nextLine()) {
 			case "config":
+				
 				String config;
-				configView = new ConfigView();
 				List<String[]> numHeaterNotBinded = new ArrayList<String[]>();
 				List<String[]> sensorList = new ArrayList<String[]>();
 				
 				configView.alarmConfig();
 				configView.dayMode();
 				do {
+					
 					String room = configView.roomConfig();
 					String floor = configView.floorConfig();
 					System.out.println("Inserire gli oggetti e sensori che si vuole inserire");

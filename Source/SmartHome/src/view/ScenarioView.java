@@ -15,13 +15,16 @@ public class ScenarioView {
 	List<List<String[]>> rooms = new ArrayList<List<String[]>>();;
 	List<String[]> roomObjects = new ArrayList<String[]>(); // primo valore è nome stanza
 	String[] roomName;
-	
 	List<String> days = new ArrayList<String>();	
 	String time;
-	
 	private boolean createFlag = false; 
 	
 	Scanner input = new Scanner(System.in);
+	
+	public ScenarioView(DataFaçade dataFaçade, ScenarioFaçade scenarioFaçade) {
+		this.dataFaçade = dataFaçade;
+		this.scenarioFaçade = scenarioFaçade;
+	}
 	
 	public void selectOperation() {
 		System.out.println("Selezionare l'operazione desiderata: (scrivere la parola chiave tra parentesi)");

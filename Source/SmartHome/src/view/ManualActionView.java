@@ -11,6 +11,11 @@ public class ManualActionView {
 	DataFaçade dataFaçade;
 	Scanner input = new Scanner(System.in);
 
+	public ManualActionView(DataFaçade dataFaçade, HandlerFaçade handlerFaçade) {
+		this.dataFaçade = dataFaçade;
+		this.handlerFaçade = handlerFaçade;
+	}
+	
 	public void performAction() {
 		System.out.println("Oggetti disponibili: ");
 		List<String[]> objectsList = dataFaçade.getAllObjects();

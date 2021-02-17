@@ -8,6 +8,9 @@ public class ScenarioFaçade {
 
 	private ScenariosHandler handler;
 	
+	public ScenarioFaçade(ScenariosHandler handler) {
+		this.handler = handler;
+	}
 	public void manageActivateScenario(String scenarioID) {
 		handler.activateScenario(scenarioID);
 	}

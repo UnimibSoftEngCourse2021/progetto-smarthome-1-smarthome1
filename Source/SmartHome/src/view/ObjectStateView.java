@@ -10,6 +10,9 @@ public class ObjectStateView {
 	DataFaçade dataFaçade;
 	Scanner input = new Scanner(System.in);
 
+	public ObjectStateView(DataFaçade dataFaçade) {
+		this.dataFaçade = dataFaçade; 
+	}
 	public void getObjectState() {
 		do {
 			System.out.println("Lista degli oggetti: ");

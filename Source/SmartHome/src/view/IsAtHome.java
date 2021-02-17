@@ -9,6 +9,9 @@ public class IsAtHome {
 	HandlerFaçade handlerFaçade;
 	Scanner input = new Scanner(System.in);
 
+	public IsAtHome(HandlerFaçade handlerFaçade) {
+		this.handlerFaçade = handlerFaçade;
+	}
 	public void changeFlag() {
 		System.out.println("Stai uscendo o entrando? (home/away)");
 		if(input.nextLine().equals("away"))
