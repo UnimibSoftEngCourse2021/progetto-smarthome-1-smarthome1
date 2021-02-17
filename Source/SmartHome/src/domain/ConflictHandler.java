@@ -10,15 +10,10 @@ import service.ObjectCommunicationAdapter;
 public class ConflictHandler {
 	
 	private static ConflictHandler conflictHandler = null; //singleton instance
-	/*
-	 * variabile per identificare modalità giorno/notte per accensione luci
-	 * gli orari sono flessibili e devono essere scelti dall'utente
-	 */
 	private boolean atHome = true;
 	
-	private AutomaticControl automaticControl; // da levare (causa navigabilita)
-	private static List<Object> objects;
-	private List<Scenario> scenario;
+	private List<Object> objects;
+	private List<Scenario> scenario; //non credo serva (sono gli scenari a chiamare this, non il contrario)
 	private ObjectCommunicationAdapter adapter;
 	
 	private ConflictHandler() {
@@ -30,40 +25,12 @@ public class ConflictHandler {
 			conflictHandler = new ConflictHandler();
 		return conflictHandler;
 	}
-	public boolean isAtHome() {
-		return atHome;
-	}
 
-	public void setAtHome(boolean atHome) {
-		this.atHome = atHome;
-	}
-	
-	public List<Object> getObjects() {
-		return objects;
-	}
-
-	public static void addObjects(Object object) {
-		objects.add(object);
-	}
-
-	/**
-	 * 
-	 * @param alarmID
-	 * @param doorID
-	 */
 	public void isAway(String alarmID, String doorID) {
 		if(atHome) {
 			atHome = false;
-			// allarme armato		
-			for(Object object: objects) {
-				Alarm alarm = (Alarm)object;
-				if(alarm.getObjectType().equals(ObjectType.ALARM))
-					alarm.setArmed(true);
-			}
-			/*
-			 * non chiama l'adapter perchè imposta un flag e non cambia lo stato dell'oggetto
-			 */
-			// blocca porta
+			// allarme armato
+			Alarm.getInstance().setArmed(true);
 			doAction(doorID, false);
 			/*
 			 *  chiusura/spegnimento forzata di tutti gli oggetti
@@ -75,12 +42,6 @@ public class ConflictHandler {
 		}
 	}
 
-	/**
-	 * 
-	 * @param alarmID
-	 * @param doorID
-	 * @param code
-	 */
 	public void isHome(String alarmID, String doorID, String code) {
 		if(!atHome) {
 			int i = 0;
@@ -96,15 +57,9 @@ public class ConflictHandler {
 						//richiedere codice all'utente
 						i++; // contatore degli accessi errati
 					}
-				}				
-				for(Object object: objects) {
-					// disarmare allarme
-					if(object.getObjectID().equals(alarmID)) {
-						Alarm alarm = (Alarm)object;
-						alarm.setArmed(false);	
-						break;
-					}
 				}
+				// disarmare allarme
+				Alarm.getInstance().setArmed(false);
 			} while (i < 5 || atHome);
 			if (i >= 5) {
 				System.out.println("Numero massimo di tentativi superato. Chiamare l'assistenza");
@@ -113,14 +68,9 @@ public class ConflictHandler {
 		}
 	}
 
-	/**
-	 * 
-	 * @param objectID
-	 * @param changeState
-	 */
 	public void doAction(String objectID, boolean changeState) {
 		for(Object object: objects) {
-			if(object.getObjectID().equals(objectID)) { // associo l'id dell'oggetto passato all'oggetto attuale del for
+			if(object.getObjectID().equals(objectID)) { 
 				if(changeState) {
 					switch(object.getObjectType()) {
 					case ALARM:
@@ -133,7 +83,7 @@ public class ConflictHandler {
 						 * invio notifica all'utente per chiedere cosa fare
 						 */
 						boolean windowOpen = false;	
-						ArrayList<Object> windows = getSpecificObjectsInRoom(object.getRoom().getRoomID(), ObjectType.WINDOW);
+						List<Object> windows = object.getRoom().getObjects(ObjectType.WINDOW);
 						for(Object window: objects) {
 							if(window.isActive() == true) {							
 								windowOpen = true;
@@ -151,12 +101,12 @@ public class ConflictHandler {
 						else
 							adapter.triggerAction(object, true);
 						break;
-					case SHADER: // non genera conflitti
+					case SHADER: // non generano conflitti
 					case LIGHT:
 						adapter.triggerAction(object, true);
 						break;
 					case WINDOW:
-						if(!Alarm.isArmed())							
+						if(Alarm.isCreated() && !Alarm.getInstance().isArmed())							
 							adapter.triggerAction(object, true);
 						else if(true/* controller.userNotify()*/)
 								adapter.triggerAction(object, true);
@@ -174,12 +124,12 @@ public class ConflictHandler {
 	
 	public void doAction(String lightID, boolean dayMode, boolean changeState) {
 		for(Object object: objects) {
-			if(object.getObjectID().equals(lightID)) { // associo l'id dell'oggetto passato all'oggetto attuale del for
+			if(object.getObjectID().equals(lightID)) { 
 				if(changeState) {
 					if(!dayMode)
 						adapter.triggerAction(object, true);
 					else {
-						ArrayList<Object> shaders = getSpecificObjectsInRoom(object.getRoom().getRoomID(), ObjectType.SHADER);
+						List<Object> shaders = object.getRoom().getObjects(ObjectType.SHADER);
 						boolean shaderOpen = false; 
 						for(Object shader: shaders) {
 							if(!shader.isActive()) { // is active = fermano la luce
@@ -198,23 +148,17 @@ public class ConflictHandler {
 			}
 		}
 	}
-	
-	/**
-	 * 
-	 * @param objectID
-	 * @param airState
-	 * @param changeState
-	 */
+
 	public void doAction(String windowID, AirState airState, boolean changeState) {
 		// a seconda di airState azione ha priorità diversa
 		for(Object object: objects) {
 			Window window = (Window)object;
-			if(window.getObjectID().equals(windowID)) // associo l'id dell'oggetto passato all'oggetto attuale del for
+			if(window.getObjectID().equals(windowID))
 				if(changeState) {			
 					if(airState.equals(AirState.POLLUTION)) {
-						if(!Alarm.isArmed()) {
+						if(Alarm.isCreated() && !Alarm.getInstance().isArmed()) {
 							boolean userDecision = false;
-							ArrayList<Object> heaters = getSpecificObjectsInRoom(window.getRoom().getRoomID(), ObjectType.HEATER);
+							List<Object> heaters = window.getRoom().getObjects(ObjectType.HEATER);
 							for(Object heater: heaters)
 								if(heater.isActive()) {
 									// controller.notifyUser(...) : boolean true se l'utente vuole aprire le finestre
@@ -232,10 +176,10 @@ public class ConflictHandler {
 						 * nel caso ci sia una fuga di gas aprire sempre le finestre
 						 * considerare un possibile comportamento diverso per allarme
 						 */
-						ArrayList<Object> lights = getSpecificObjectsInRoom(window.getRoom().getRoomID(), ObjectType.LIGHT);
+						List<Object> lights = window.getRoom().getObjects(ObjectType.LIGHT);
 						for(Object light: lights)
 							adapter.triggerAction(light, false);
-						if(!Alarm.isArmed()) {
+						if(Alarm.isCreated() && !Alarm.getInstance().isArmed()) {
 							if(window.getShader().isActive())
 								adapter.triggerAction(window.getShader(), false);
 							adapter.triggerAction(window, true);
@@ -249,10 +193,6 @@ public class ConflictHandler {
 		}
 	}
 
-	/**
-	 * 
-	 * @param objectID
-	 */
 	public void doManualAction(String objectID) {
 		for(Object object: objects) {
 			if(object.getObjectID().equals(objectID))
@@ -260,14 +200,15 @@ public class ConflictHandler {
 		}
 	}
 	
-	public ArrayList<Object> getSpecificObjectsInRoom(String roomID, ObjectType type) {
-		ArrayList<Object> roomObjects = new ArrayList<>();
-		for(Object object: objects) {
-			if(object.getObjectType().equals(type) && object.getRoom().getRoomID().equals(roomID)) {
-				roomObjects.add(object);
-			}
-		}
-		return roomObjects;
+	public boolean isAtHome() {
+		return atHome;
 	}
 	
+	public List<Object> getObjects() {
+		return objects;
+	}
+
+	public void addObject(Object object) {
+		objects.add(object);
+	}
 }

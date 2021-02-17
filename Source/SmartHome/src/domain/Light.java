@@ -1,6 +1,5 @@
 package domain;
 
-import domain.Object.ObjectType;
 import domain.Sensor.SensorCategory;
 
 public class Light extends Object {
@@ -10,6 +9,7 @@ public class Light extends Object {
 	public Light(String name, Room room) {
 		super(name, ObjectType.LIGHT, room);
 		sensor = new Sensor("sensorOf: ", SensorCategory.LIGHT, room);
+		AutomaticControl.getInstance().addSensor(sensor);
 	}
 
 	public Sensor getSensor() {

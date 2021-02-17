@@ -1,6 +1,6 @@
 package application;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import domain.Scenario;
 import domain.ScenarioCreationHandler;
@@ -49,7 +49,7 @@ public class ScenarioFaçade {
 	 * @param roomsIDs
 	 * @param actionList
 	 */
-	public void manageCreateScenario(String scenarioID, int dateTime, String[] roomsIDs, ArrayList actionList) {
+	public void manageCreateScenario(String scenarioID, int dateTime, List<List<String[]>> rooms) {
 		// TODO - implement HomeFaçade.manageCreateScenario
 		throw new UnsupportedOperationException();
 	}
