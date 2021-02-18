@@ -18,6 +18,7 @@ public class TimeScheduleThread extends Thread {
 				try {
 					TimeScheduleThread.sleep((24*3600*1000) - this.getMilliseconds(LocalTime.now()));
 				} catch (InterruptedException e) {
+					this.interrupt();
 					break;
 				}
 			}
@@ -25,12 +26,14 @@ public class TimeScheduleThread extends Thread {
 				try {
 					TimeScheduleThread.sleep(sleepTime);
 				} catch (InterruptedException e) {
+					this.interrupt();
 					break;
 				}
 				scenario.activateScenario();
 				try {
 					TimeScheduleThread.sleep(waitTime);
 				} catch (InterruptedException e) {
+					this.interrupt();
 					break;
 				}
 			}
@@ -44,7 +47,7 @@ public class TimeScheduleThread extends Thread {
 	}
 	
 	public long getMilliseconds (LocalTime time) {
-		return (time.getHour()*3600 + time.getMinute()*60) * 1000;
+		return (long)(time.getHour()*3600 + time.getMinute()*60) * 1000;
 	}
 	
 }

@@ -38,6 +38,7 @@ public class ScenarioView {
 			break;
 		case "create":
 			createScenario();
+			break;
 		case "modify":
 			modifyScenario();
 			break;
@@ -145,7 +146,7 @@ public class ScenarioView {
 			roomObjects.add(roomName);
 			setAction(scenarioName);
 			System.out.print("inserire altre stanze? (s/n)");
-		} while(input.nextLine() != "n");
+		} while(!input.nextLine().equals("n"));
 		rooms.add(roomObjects);
 	}
 	
@@ -177,7 +178,7 @@ public class ScenarioView {
 					String[] object = {objectID, newState};
 					roomObjects.add(object);
 					System.out.print("inserire altri oggetti? (s/n)");
-				} while(input.nextLine() != "n");
+				} while(!input.nextLine().equals("n"));
 				rooms.add(roomObjects);
 				break;
 			case "modify":
@@ -199,7 +200,7 @@ public class ScenarioView {
 					String newState = input.nextLine();						
 					scenarioFaçade.manageChangeAction(scenarioName, objectID, newState);
 					System.out.print("modificare altri oggetti? (s/n)");
-				} while(input.nextLine() != "n");
+				} while(!input.nextLine().equals("n"));
 				break;
 			case "delete":
 				do {
@@ -218,11 +219,11 @@ public class ScenarioView {
 					}	
 					scenarioFaçade.manageDeleteAction(scenarioName, objectID);
 					System.out.print("eliminare altri oggetti? (s/n)");
-				} while(input.nextLine() != "n");
+				} while(!input.nextLine().equals("n"));
 				break;
 			}
 			System.out.println("Effettuare altre operazioni?");
-		} while(input.nextLine() != "n");
+		} while(!input.nextLine().equals("n"));
 	}
 	
 	public void setDateTime() {

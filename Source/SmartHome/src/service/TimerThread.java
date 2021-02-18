@@ -31,9 +31,10 @@ public class TimerThread extends Thread{
 
 	public void run() {
 		try {
-			Thread.sleep(time * 1000);
+			Thread.sleep((long)time * 1000);
 		} catch (InterruptedException e) {
 			interrupted = true;
+			this.interrupt();
 		}
 		if(!interrupted)
 			timer.executeOperations(timerType);

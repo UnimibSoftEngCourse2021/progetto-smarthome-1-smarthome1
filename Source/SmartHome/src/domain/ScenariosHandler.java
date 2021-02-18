@@ -24,7 +24,7 @@ public class ScenariosHandler {
 	public void createScenario(String scenarioID, String dateTime, List<String> days, List<List<String[]>> rooms) {
 		
 		List<DayOfWeek> daysOfWeek = new ArrayList<DayOfWeek>();
-		if(!days.equals(null)) {
+		if(days != null) {
 			for(String day: days) {
 				if(day.equalsIgnoreCase("LUNEDI"))
 					daysOfWeek.add(DayOfWeek.MONDAY);
@@ -98,7 +98,7 @@ public class ScenariosHandler {
 	}
 
 	public void deleteAction(String scenarioID, String objectID) {
-		Scenario scenario = null;
+		Scenario scenario = new Scenario();
 		for(Scenario s: scenarios) {
 			if(s.getNameID().equals(scenarioID)) {
 				scenario = s;
@@ -146,7 +146,7 @@ public class ScenariosHandler {
 	}
 	public void addRoomToScenario(String scenarioID, List<List<String[]>> rooms) {
 
-		Scenario scenario = null;
+		Scenario scenario = new Scenario();
 		for(Scenario s: scenarios) {
 			if(s.getNameID().equals(scenarioID)) {
 				scenario = s;
@@ -189,7 +189,7 @@ public class ScenariosHandler {
 	}
 
 	public List<String> getObjectsInScenario(String scenarioID) {
-		Scenario s = null;
+		Scenario s = new Scenario();
 		for(Scenario scenario: scenarios) 
 			if(scenario.getNameID().equals(scenarioID))
 				s = scenario;

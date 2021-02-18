@@ -18,7 +18,7 @@ public class DataFaçade {
 		this.scenariosHandler = scenariosHandler;
 	}
 	public List<String[]> getObjectsInRoom(String roomName) {
-		Room room = null;
+		Room room = new Room();
 		for(Room r: Config.getInstance().getRooms()) {
 			if(roomName.equals(r.getRoomID()))
 				room = r;
@@ -38,7 +38,7 @@ public class DataFaçade {
 
 	public List<String[]> getAllObjects() {
 		List<Object> objects = ConflictHandler.getInstance().getObjects();
-		List<String[]> allObjects = new ArrayList<String[]>();;
+		List<String[]> allObjects = new ArrayList<String[]>();
 		String name;
 		String id;
 		for(Object object: objects) {

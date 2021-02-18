@@ -59,11 +59,11 @@ public class TimerOP{
 	
 	public boolean isFinished(Type timerType) {
 		if(timerType.equals(Type.AIR)) {
-			if(airThread.equals(null)) 
+			if(airThread == null) 
 				return true;
 			return false;
 		} else {
-			if(lightThread.equals(null))
+			if(lightThread == null)
 				return true;
 			return false;
 		}

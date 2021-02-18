@@ -28,6 +28,10 @@ public class Room {
 		objects = new ArrayList<Object>();
 	}
 
+	public Room() {
+		
+	}
+
 	public void instantiateSensor(SensorCategory category, String name) {
 		Sensor sensor = new Sensor(name, category, this);
 		sensors.add(sensor);

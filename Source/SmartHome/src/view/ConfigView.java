@@ -55,7 +55,7 @@ public class ConfigView {
 			lightName = input.nextLine();
 			genericFaçade.manageWriteOnHCFile("light", lightName);
 			System.out.print("continuare? (s/n)");
-		} while (input.nextLine() != "n");
+		} while (!input.nextLine().equals("n"));
 	}
 	
 	public void windowConfig() {
@@ -65,7 +65,7 @@ public class ConfigView {
 			windowName = input.nextLine();
 			genericFaçade.manageWriteOnHCFile("window", windowName);
 			System.out.print("continuare? (s/n)");
-		} while (input.nextLine() != "n");
+		} while (!input.nextLine().equals("n"));
 	}
 	
 	public void doorConfig() {
@@ -79,7 +79,7 @@ public class ConfigView {
 			genericFaçade.manageWriteOnHCFile("door", doorName);
 			genericFaçade.manageWriteOnHCFile("code", doorCode);
 			System.out.print("continuare? (s/n)");
-		} while (input.nextLine() != "n");
+		} while (!input.nextLine().equals("n"));
 	}
 	
 	public List<String[]> heaterConfig(String roomName, String roomFloor, List<String[]> heaterNotBinded) {
@@ -93,7 +93,7 @@ public class ConfigView {
 			heaterNotBinded.add(temp);
 			genericFaçade.manageWriteOnHCFile("heaterID", id);
 			System.out.print("continuare? (s/n)");
-		} while (input.nextLine() != "n");
+		} while (!input.nextLine().equals("n"));
 		return heaterNotBinded;
 	}
 	

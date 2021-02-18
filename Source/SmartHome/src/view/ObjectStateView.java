@@ -31,7 +31,7 @@ public class ObjectStateView {
 					System.out.println("Stato dell'oggetto: " + object[1]);
 			}
 			System.out.print("inserire altri oggetti? (s/n)");
-		} while(input.nextLine() != "n");
+		} while(!input.nextLine().equals("n"));
 		
 	}
 }

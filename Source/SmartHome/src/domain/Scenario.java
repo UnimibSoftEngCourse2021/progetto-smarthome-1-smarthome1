@@ -28,10 +28,18 @@ public class Scenario {
 		if(startTime != null)
 			handleDateEvent();
 	}
+	
+	public Scenario() {
+		
+	}
 
-	public void modifyScenario() {
-		//probabilmente non esiste (lo stesso per delete e activate)
-		//sara' modifyScenario di ScenariosHandler che chiama i vari setter dello specifico scenario
+	public void activateScenario() {
+		if(isActive() == false) {
+			active = false; 
+			 for(int i = 0; i < getObjectIDs().size(); i++) {
+				 ConflictHandler.getInstance().doAction(getObjectIDs().get(i), (boolean)getActions().get(i));
+			 }
+		 }
 	}
 
 	public void handleDateEvent() {
