@@ -29,8 +29,7 @@ public class Config {
 	}
 	
 	public void processFileHC() {  //home config		
-		try {
-			Scanner inputStream = new Scanner(new File (dataDescription.getHCFILENAME()));		
+		try (Scanner inputStream = new Scanner(new File (dataDescription.getHCFILENAME()))){					
 			Room room = new Room();
 			while(inputStream.hasNextLine()) {
 				String riga = inputStream.nextLine();
