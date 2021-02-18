@@ -1,32 +1,54 @@
- <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>SmartHome</groupId>
-  <artifactId>SmartHome</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <properties>
-  <sonar.projectKey>UnimibSoftEngCourse2021_progetto-smarthome-1-smarthome1</sonar.projectKey>
-  <sonar.organization>unimibsoftengcourse2021</sonar.organization>
-  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>SmartHome</groupId>
+<artifactId>SmartHome</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+<properties>
+	<sonar.projectKey>UnimibSoftEngCourse2021_progetto-smarthome-1-smarthome1</sonar.projectKey>
+	<sonar.organization>unimibsoftengcourse2021</sonar.organization>
+	<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 </properties>
-  <build>
-    <sourceDirectory>src/main/java</sourceDirectory>
+<build>
+	<sourceDirectory>src/main/java</sourceDirectory>
     <pluginManagement>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-         <release>11</release>
-        </configuration>
-      </plugin>
-    </plugins>
+    	<plugins>
+      		<plugin>
+        		<artifactId>maven-compiler-plugin</artifactId>
+        		<version>3.8.1</version>
+        		<configuration>
+         			<release>11</release>
+        		</configuration>
+      		</plugin>
+      		
+     		<plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.6</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>prepare-agent</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>report</id>
+            <phase>prepare-package</phase>
+            <goals>
+                <goal>report</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+
+    	</plugins>
     </pluginManagement>	
-  </build>
-	  <dependencies>
-    <dependency>
-		  <groupId>junit</groupId>
-		  <artifactId>junit</artifactId>
-		  <version>4.13.1</version>
-		</dependency>
+</build>
+<dependencies>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.13.1</version>
+	</dependency>
 </dependencies>
+
 </project>
