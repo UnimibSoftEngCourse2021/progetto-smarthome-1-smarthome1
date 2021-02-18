@@ -15,6 +15,7 @@ public class Menu {
 	private ObjectStateView objectStateView;
 	private ManualActionView manualActionView; 
 	private IsAtHomeView isAtHomeView;
+	private HSConfigView hsConfigView;
 	
 	public Menu(DataFacade df, GenericFacade gf, ScenarioFacade sf, HandlerFacade hf) {
 		configView = new ConfigView(df, gf);
@@ -25,6 +26,7 @@ public class Menu {
 		hf.setIsAtHomeView(isAtHomeView);
 		isAtHomeView.setHandlerFaçade(hf);
 		ConflictHandler.getInstance().setHandlerFaçade(hf);
+		hsConfigView = new HSConfigView(gf);
 	}
 	public void start() {	
 		Scanner input = new Scanner(System.in);
@@ -36,14 +38,14 @@ public class Menu {
 			System.out.println("stati: visualizzare informazioni relative agli stati degli oggetti.");
 			System.out.println("azioni: effettuare manualmente azioni sugli oggetti.");
 			System.out.println("isAtHome: impostare lo stato di home oppure di away.");
-			System.out.println("fin: chiusura del simulatore.");
+			System.out.println("fine: chiusura del simulatore.");
 		
 			switch(input.nextLine()) {
 			case "config":
 				configView.config();							
 				break;
 			case "heat":
-				configView.heatSystemConfig();
+				hsConfigView.heatSystemConfig();
 				break;
 			case "scenario":
 				scenarioView.selectOperation();
@@ -57,7 +59,7 @@ public class Menu {
 			case "isAtHome":
 				isAtHomeView.changeFlag();
 				break;
-			case "fin":
+			case "fine":
 				System.exit(0);
 				break;
 			default:

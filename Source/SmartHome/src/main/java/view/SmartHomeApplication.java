@@ -24,7 +24,6 @@ public class SmartHomeApplication {
 		HandlerFacade hf = new HandlerFacade();
 		menu = new Menu(df, gf, sf, hf);
 		menu.start();
-		//problemone: capire perche il menu non richiede mai una nuova istruzione, forse c'e' un ciclo infinito?
 		
 		
 	}				
