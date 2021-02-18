@@ -9,8 +9,8 @@ public class DataDescription {
 
 	private final String HCFILENAME = "homeConfig.txt";
 	private final String HSCFILENAME = "heatSystemConfig.txt";
-	private File fileHC;
-	private File fileHSC;
+	private File fileHC = new File(HCFILENAME);
+	private File fileHSC = new File(HSCFILENAME);
 	public String getHCFILENAME() {
 		return HCFILENAME;
 	}
@@ -21,8 +21,6 @@ public class DataDescription {
 
 	public void writeOnFileHC(String attribute, String value) {
 		try {
-			if(fileHC == null) 
-				fileHC = new File(HCFILENAME);
 			FileOutputStream f = new FileOutputStream(fileHC, true);
 			PrintWriter outputStream = new PrintWriter(f);
 		
@@ -36,7 +34,9 @@ public class DataDescription {
 			else if(attribute.equalsIgnoreCase("end")) {
 				outputStream.close();
 				Config.getInstance().processFileHC();
-				fileHC.delete();
+				if(fileHC.delete());
+					fileHC = new File(HCFILENAME);
+				
 			}	
 			else {
 			//in generale per ogni attributo ho sempre il nome
@@ -53,14 +53,13 @@ public class DataDescription {
 
 	public void writeOnFileHSC(String attribute, double[] values) {
 		try {
-			if(fileHSC == null)
-				fileHSC = new File(HSCFILENAME);
 			FileOutputStream f = new FileOutputStream(fileHSC, true);
 			PrintWriter outputStream = new PrintWriter(f);				
 			if(attribute.equalsIgnoreCase("end")) {
 				outputStream.close();
 				Config.getInstance().processFileHSC();
-				fileHSC.delete();
+				if(fileHSC.delete());
+					fileHSC = new File(HSCFILENAME);
 			}
 			else{
 				outputStream.println(":" + attribute.toUpperCase());
