@@ -1,40 +1,32 @@
 package view;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Scanner;
 import application.DataFaçade;
 import application.GenericFaçade;
 import application.HandlerFaçade;
 import application.ScenarioFaçade;
 import domain.ConflictHandler;
-import domain.DataDescription;
-import domain.ScenariosHandler;
 
 public class Menu {
 
-	public static void main(String[] args) {
-		
-		Scanner input = new Scanner(System.in);
-		
-		//inizializzazione oggetti di dominio singoli
-		DataDescription dd = new DataDescription();
-		ScenariosHandler sh = new ScenariosHandler();
-		//inizializzazione oggetti facade
-		DataFaçade df = new DataFaçade(sh);
-		GenericFaçade gf = new GenericFaçade(dd);
-		ScenarioFaçade sf = new ScenarioFaçade(sh);
-		HandlerFaçade hf = new HandlerFaçade();		
-		//inizializzazione oggetti view
-		ConfigView configView = new ConfigView(df, gf);
-		ScenarioView scenarioView = new ScenarioView(df, sf);
-		ObjectStateView objectStateView = new ObjectStateView(df);
-		ManualActionView manualActionView = new ManualActionView(df, hf); 
-		IsAtHomeView isAtHomeView = new IsAtHomeView(hf, df);
+	private ConfigView configView;
+	private ScenarioView scenarioView;
+	private ObjectStateView objectStateView;
+	private ManualActionView manualActionView; 
+	private IsAtHomeView isAtHomeView;
+	
+	public Menu(DataFaçade df, GenericFaçade gf, ScenarioFaçade sf, HandlerFaçade hf) {
+		configView = new ConfigView(df, gf);
+		scenarioView = new ScenarioView(df, sf);
+		objectStateView = new ObjectStateView(df);
+		manualActionView = new ManualActionView(df, hf);
+		isAtHomeView = new IsAtHomeView(hf, df);
 		hf.setIsAtHomeView(isAtHomeView);
 		isAtHomeView.setHandlerFaçade(hf);
 		ConflictHandler.getInstance().setHandlerFaçade(hf);
-				
+	}
+	public void start() {	
+		Scanner input = new Scanner(System.in);
 		do {			
 			System.out.println("Selezionare l'operazione desiderata scrivendo la parola chiave tra quelle presentate qui sotto");
 			System.out.println("config: configurazione dei parametri relativi al sistema");
@@ -46,84 +38,7 @@ public class Menu {
 		
 			switch(input.nextLine()) {
 			case "config":
-				
-				String config;
-				List<String[]> numHeaterNotBinded = new ArrayList<String[]>();
-				List<String[]> sensorList = new ArrayList<String[]>();
-				
-				configView.alarmConfig();
-				configView.dayMode();
-				do {
-					
-					String room = configView.roomConfig();
-					String floor = configView.floorConfig();
-					System.out.println("Inserire gli oggetti e sensori che si vuole inserire");
-					System.out.println("Oggetti: light, window, door, heater");
-					System.out.println("Sensori: air, movement, temperature");
-					config = input.nextLine(); 
-					switch(config) {
-					case "light":
-						configView.lightConfig();
-						break;
-					case "window":
-						configView.windowConfig();
-						break;
-					case "door":
-						configView.doorConfig();
-						break;
-					case "heater":
-						numHeaterNotBinded = configView.heaterConfig(room, floor, numHeaterNotBinded);
-						break;
-					case "air":
-						configView.airSensorConfig();
-						break;
-					case "movement":
-						configView.movementSensorConfig();
-						break;
-					case "temperature":
-						sensorList = configView.temperatureSensorConfig(room, sensorList);
-						break;
-					}
-					System.out.println("Inserire altre stanze? (s/n)");
-					config = input.nextLine();
-					
-				}while(config.equalsIgnoreCase("s"));
-				
-				
-				// questo controllo lo fa alla fine dell'inserimento di ogni stanza
-				System.out.print("Associare i sensori temp creati con gli oggetti heater: ");
-				// se ho ancora caloriferi da associare
-				
-					for(String[] sensor: sensorList) {
-						gf.manageWriteOnHCFile("temperature", sensor[0]);
-						gf.manageWriteOnHCFile("roomNameSensor", sensor[1]);						
-						do {
-							if(!numHeaterNotBinded.isEmpty()) {
-								System.out.println("Caloriferi disponibili: ");
-								for(String[] heater: numHeaterNotBinded) { 
-									System.out.print(" " + heater[0]);
-								}
-								System.out.println("");
-								System.out.println("Inserire il nome del calorifero da associare al sensore " + sensor);
-								config = input.nextLine();
-								String heaterId = "";
-								for(String[] heater: numHeaterNotBinded) 
-									if(heater[0].equals(config)) {
-										heaterId= heater[1];
-										break;
-									}
-								gf.manageWriteOnHCFile("heaterID", heaterId);
-								String[] temp = {config, heaterId};
-								numHeaterNotBinded.remove(temp);
-								if(!numHeaterNotBinded.isEmpty()) {
-									System.out.println("Vuoi associare altri caloriferi al sensore " + sensor[0] +" ?");
-									config = input.nextLine();
-								}
-							}							
-						} while(config.equalsIgnoreCase("s") || !numHeaterNotBinded.isEmpty());
-						gf.manageWriteOnHCFile("heaterID", "");
-					}
-					gf.manageWriteOnHCFile("end", null);							
+				configView.config();							
 				break;
 			case "heat":
 				configView.heatSystemConfig();

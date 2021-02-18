@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,26 +11,104 @@ public class ConfigView {
 	
 // aggiungere a tutte i metodi controllo di roomconfig
 	
-	private GenericFaçade genericFaçade;
-	private DataFaçade dataFaçade;
+	private GenericFaçade gf;
+	private DataFaçade df;
 	
 	public ConfigView(DataFaçade dataFaçade, GenericFaçade genericFaçade) {
-		this.dataFaçade = dataFaçade;
-		this.genericFaçade = genericFaçade;
+		this.df = dataFaçade;
+		this.gf = genericFaçade;
  	}
 	Scanner input = new Scanner(System.in);
 
+	public void config() {
+		String config;
+		List<String[]> numHeaterNotBinded = new ArrayList<String[]>();
+		List<String[]> sensorList = new ArrayList<String[]>();		
+		alarmConfig();
+		dayMode();
+		do {			
+			String room = roomConfig();
+			String floor = floorConfig();
+			System.out.println("Inserire gli oggetti e sensori che si vuole inserire");
+			System.out.println("Oggetti: light, window, door, heater");
+			System.out.println("Sensori: air, movement, temperature");
+			config = input.nextLine(); 
+			switch(config) {
+			case "light":
+				lightConfig();
+				break;
+			case "window":
+				windowConfig();
+				break;
+			case "door":
+				doorConfig();
+				break;
+			case "heater":
+				numHeaterNotBinded = heaterConfig(room, floor, numHeaterNotBinded);
+				break;
+			case "air":
+				airSensorConfig();
+				break;
+			case "movement":
+				movementSensorConfig();
+				break;
+			case "temperature":
+				sensorList = temperatureSensorConfig(room, sensorList);
+				break;
+			}
+			System.out.println("Inserire altre stanze? (s/n)");
+			config = input.nextLine();
+			
+		} while(config.equalsIgnoreCase("s"));
+		
+		
+		// questo controllo lo fa alla fine dell'inserimento di ogni stanza
+		System.out.print("Associare i sensori temp creati con gli oggetti heater: ");
+		// se ho ancora caloriferi da associare
+		
+			for(String[] sensor: sensorList) {
+				gf.manageWriteOnHCFile("temperature", sensor[0]);
+				gf.manageWriteOnHCFile("roomNameSensor", sensor[1]);						
+				do {
+					if(!numHeaterNotBinded.isEmpty()) {
+						System.out.println("Caloriferi disponibili: ");
+						for(String[] heater: numHeaterNotBinded) { 
+							System.out.print(" " + heater[0]);
+						}
+						System.out.println("");
+						System.out.println("Inserire il nome del calorifero da associare al sensore " + sensor);
+						config = input.nextLine();
+						String heaterId = "";
+						for(String[] heater: numHeaterNotBinded) 
+							if(heater[0].equals(config)) {
+								heaterId= heater[1];
+								break;
+							}
+						gf.manageWriteOnHCFile("heaterID", heaterId);
+						String[] temp = {config, heaterId};
+						numHeaterNotBinded.remove(temp);
+						if(!numHeaterNotBinded.isEmpty()) {
+							System.out.println("Vuoi associare altri caloriferi al sensore " + sensor[0] +" ?");
+							config = input.nextLine();
+						}
+					}							
+				} while(config.equalsIgnoreCase("s") || !numHeaterNotBinded.isEmpty());
+				gf.manageWriteOnHCFile("heaterID", "");
+			}
+			gf.manageWriteOnHCFile("end", null);
+	}
+	
 	public String roomConfig() {
 		String roomName;
 		
 		do {
 			System.out.println("Inserire il nome della stanza che si intende creare: ");
 			roomName = input.nextLine();
-			if(dataFaçade.getRooms().contains(roomName)) {
+			if(df.getRooms().contains(roomName)) {
 				System.out.print("Nome già esistente");
 			}
-		} while(dataFaçade.getRooms().contains(roomName));
-		genericFaçade.manageWriteOnHCFile("room", roomName);
+		} while(df.getRooms().contains(roomName));
+		gf.manageWriteOnHCFile("room", roomName);
 		return roomName;
 	}
 	
@@ -37,7 +116,7 @@ public class ConfigView {
 		String roomFloor;
 		System.out.println("Inserire il piano della stanza: ");
 		roomFloor = input.nextLine();
-		genericFaçade.manageWriteOnHCFile("floor", roomFloor);
+		gf.manageWriteOnHCFile("floor", roomFloor);
 		return roomFloor;
 	}
  	
@@ -45,7 +124,7 @@ public class ConfigView {
 		String alarmName = "";
 		System.out.println("Inserire il nome dell'allarme che si intende creare: (premere invio per non inserire allarmi)");
 		alarmName = input.nextLine();
-		genericFaçade.manageWriteOnHCFile("alarm", alarmName);
+		gf.manageWriteOnHCFile("alarm", alarmName);
 	}
 	
 	public void lightConfig() {
@@ -53,7 +132,7 @@ public class ConfigView {
 			String lightName;
 			System.out.println("Inserire il nome della luce che si intende creare: (premere invio per non inserire luci)");
 			lightName = input.nextLine();
-			genericFaçade.manageWriteOnHCFile("light", lightName);
+			gf.manageWriteOnHCFile("light", lightName);
 			System.out.print("continuare? (s/n)");
 		} while (!input.nextLine().equals("n"));
 	}
@@ -63,7 +142,7 @@ public class ConfigView {
 			String windowName;
 			System.out.println("Inserire il nome della finestra che si intende creare: (premere invio per non inserire finestre)");
 			windowName = input.nextLine();
-			genericFaçade.manageWriteOnHCFile("window", windowName);
+			gf.manageWriteOnHCFile("window", windowName);
 			System.out.print("continuare? (s/n)");
 		} while (!input.nextLine().equals("n"));
 	}
@@ -76,8 +155,8 @@ public class ConfigView {
 			doorName = input.nextLine();
 			System.out.println("Inserire il codice della porta: ");
 			doorCode = input.nextLine();
-			genericFaçade.manageWriteOnHCFile("door", doorName);
-			genericFaçade.manageWriteOnHCFile("code", doorCode);
+			gf.manageWriteOnHCFile("door", doorName);
+			gf.manageWriteOnHCFile("code", doorCode);
 			System.out.print("continuare? (s/n)");
 		} while (!input.nextLine().equals("n"));
 	}
@@ -91,7 +170,7 @@ public class ConfigView {
 			String id = "HEATER_" + roomName +"_" + roomFloor + "_" + n;
 			String[] temp = {heaterName, id};
 			heaterNotBinded.add(temp);
-			genericFaçade.manageWriteOnHCFile("heaterID", id);
+			gf.manageWriteOnHCFile("heaterID", id);
 			System.out.print("continuare? (s/n)");
 		} while (!input.nextLine().equals("n"));
 		return heaterNotBinded;
@@ -101,14 +180,14 @@ public class ConfigView {
 		String airSensorName;
 		System.out.println("Inserire il nome del sensore dell'aria che si intende creare: (premere invio per non inserirlo)");
 		airSensorName = input.nextLine();
-		genericFaçade.manageWriteOnHCFile("airSensor", airSensorName);
+		gf.manageWriteOnHCFile("airSensor", airSensorName);
 	}
 	
 	public void movementSensorConfig() {
 		String movementSensorName;
 		System.out.println("Inserire il nome del sensore di movimento che si intende creare: (premere invio per non inserirlo)");
 		movementSensorName = input.nextLine();
-		genericFaçade.manageWriteOnHCFile("movementSensor", movementSensorName);
+		gf.manageWriteOnHCFile("movementSensor", movementSensorName);
 	}
 	
 	public List<String[]> temperatureSensorConfig(String room, List<String[]> sensorList) {
@@ -132,8 +211,8 @@ public class ConfigView {
 			if(stopDayMode.equalsIgnoreCase(startDayMode))
 				System.out.println("gli orari non possono coincidere, reinserire i due valori");
 		}while(stopDayMode.equalsIgnoreCase(startDayMode));
-		genericFaçade.manageWriteOnHCFile("startDayMode", startDayMode);
-		genericFaçade.manageWriteOnHCFile("stopDayMode", stopDayMode);
+		gf.manageWriteOnHCFile("startDayMode", startDayMode);
+		gf.manageWriteOnHCFile("stopDayMode", stopDayMode);
 	}
 	
 	public void heatSystemConfig () {
@@ -187,7 +266,7 @@ public class ConfigView {
 								System.out.println("Valore non valido!");
 						} while(sceltaTemp != 0 || sceltaTemp != 1);
 					}					
-					genericFaçade.manageWriteOnHSCFile(giorno, setProgDay);					
+					gf.manageWriteOnHSCFile(giorno, setProgDay);					
 					switch(giorno) {
 					case "lunedi":
 						checkProgDay[0] = true;
