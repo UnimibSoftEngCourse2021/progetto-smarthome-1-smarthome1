@@ -2,11 +2,11 @@ package main.java.view;
 
 import java.util.Scanner;
 
-import main.java.application.DataFaçade;
-import main.java.application.GenericFaçade;
-import main.java.application.HandlerFaçade;
-import main.java.application.ScenarioFaçade;
-import main.java.domain.ConflictHandler;
+import application.DataFaçade;
+import application.GenericFaçade;
+import application.HandlerFaçade;
+import application.ScenarioFaçade;
+import domain.ConflictHandler;
 
 public class Menu {
 

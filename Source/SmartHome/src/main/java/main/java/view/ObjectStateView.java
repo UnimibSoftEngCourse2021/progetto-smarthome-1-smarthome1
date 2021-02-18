@@ -3,7 +3,7 @@ package main.java.view;
 import java.util.List;
 import java.util.Scanner;
 
-import main.java.application.DataFaçade;
+import application.DataFaçade;
 
 public class ObjectStateView {
 	

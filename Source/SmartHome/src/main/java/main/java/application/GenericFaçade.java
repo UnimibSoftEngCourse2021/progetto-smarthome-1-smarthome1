@@ -1,6 +1,6 @@
 package main.java.application;
 
-import main.java.domain.DataDescription;
+import domain.DataDescription;
 
 public class GenericFaçade {
 	

@@ -2,7 +2,7 @@ package main.java.application;
 
 import java.util.List;
 
-import main.java.domain.ScenariosHandler;
+import domain.ScenariosHandler;
 
 public class ScenarioFaçade {
 

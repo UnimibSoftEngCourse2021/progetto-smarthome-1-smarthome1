@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import main.java.domain.AutomaticControl.ChoosenMatrix;
-import main.java.domain.Object.ObjectType;
-import main.java.domain.Sensor.SensorCategory;
+import domain.AutomaticControl.ChoosenMatrix;
+import domain.Sensor.SensorCategory;
 
 public class Config {
 	

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.java.domain.Object.ObjectType;
-import main.java.service.DatabaseCommunicationSystem;
 import main.java.service.SensorCommunicationAdapter;
+
 
 public class Sensor {
 

@@ -4,7 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 
-import main.java.service.TimeScheduleThread;
+import service.TimeScheduleThread;
 
 public class Scenario {
 

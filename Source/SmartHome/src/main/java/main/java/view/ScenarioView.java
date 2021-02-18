@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import main.java.application.DataFaçade;
-import main.java.application.ScenarioFaçade;
+import application.DataFaçade;
+import application.ScenarioFaçade;
 
 public class ScenarioView {
 	

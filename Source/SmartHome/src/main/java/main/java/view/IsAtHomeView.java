@@ -2,8 +2,8 @@ package main.java.view;
 
 import java.util.Scanner;
 
-import main.java.application.DataFaçade;
-import main.java.application.HandlerFaçade;
+import application.DataFaçade;
+import application.HandlerFaçade;
 
 public class IsAtHomeView {
 	

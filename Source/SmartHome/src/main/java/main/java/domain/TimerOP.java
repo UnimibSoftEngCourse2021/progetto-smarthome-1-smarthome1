@@ -1,8 +1,8 @@
 package main.java.domain;
 
 
-import main.java.domain.Sensor.AirState;
-import main.java.service.TimerThread;
+import domain.Sensor.AirState;
+import service.TimerThread;
 
 public class TimerOP{
 

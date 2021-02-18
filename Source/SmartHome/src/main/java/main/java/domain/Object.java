@@ -1,7 +1,5 @@
 package main.java.domain;
 
-import java.util.List;
-
 public abstract class Object {
 
 	private String name;

@@ -1,6 +1,6 @@
 package main.java.domain;
 
-import main.java.service.DatabaseCommunicationSystem;
+import service.DatabaseCommunicationSystem;
 
 public class Statistic {
 	

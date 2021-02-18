@@ -4,10 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.domain.Object.ObjectType;
 import main.java.domain.Sensor.AirState;
 import main.java.domain.Sensor.SensorCategory;
-import main.java.domain.TimerOP.Type;
 
 public class AutomaticControl {
 

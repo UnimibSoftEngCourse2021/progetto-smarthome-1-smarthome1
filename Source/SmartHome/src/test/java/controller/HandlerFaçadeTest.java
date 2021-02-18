@@ -1,14 +1,12 @@
 package test.java.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import main.java.application.HandlerFaçade;
-import main.java.domain.ConflictHandler;
-import main.java.domain.Room;
-import main.java.domain.Object.ObjectType;
+import application.HandlerFaçade;
+import domain.ConflictHandler;
+import domain.Room;
 
 class HandlerFaçadeTest {
 	
@@ -24,10 +22,4 @@ class HandlerFaçadeTest {
 		hf.manageHomeFlagSettings(state, "code", doorID);
 		assertEquals(true, ConflictHandler.getInstance().isAtHome());
 	}
-
-	@Test
-	public void isAwayTest() {
-		
-	}
-
 }

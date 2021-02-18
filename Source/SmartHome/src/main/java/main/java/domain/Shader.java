@@ -1,6 +1,6 @@
 package main.java.domain;
 
-import main.java.domain.Sensor.SensorCategory;
+import domain.Sensor.SensorCategory;
 
 public class Shader extends Object {
 	

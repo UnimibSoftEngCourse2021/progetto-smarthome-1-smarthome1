@@ -1,11 +1,11 @@
 package main.java.view;
 
-import main.java.application.DataFaçade;
-import main.java.application.GenericFaçade;
-import main.java.application.HandlerFaçade;
-import main.java.application.ScenarioFaçade;
-import main.java.domain.DataDescription;
-import main.java.domain.ScenariosHandler;
+import application.DataFaçade;
+import application.GenericFaçade;
+import application.HandlerFaçade;
+import application.ScenarioFaçade;
+import domain.DataDescription;
+import domain.ScenariosHandler;
 
 public class SmartHomeApplication {
 	

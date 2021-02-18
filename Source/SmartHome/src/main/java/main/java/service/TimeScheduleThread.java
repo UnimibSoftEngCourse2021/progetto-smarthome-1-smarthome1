@@ -3,7 +3,7 @@ package main.java.service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import main.java.domain.Scenario;
+import domain.Scenario;
 
 public class TimeScheduleThread extends Thread {
 	

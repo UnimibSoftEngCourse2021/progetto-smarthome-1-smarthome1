@@ -1,9 +1,8 @@
 package main.java.application;
 
-import main.java.domain.Alarm;
-import main.java.domain.ConflictHandler;
-import main.java.view.IsAtHomeView;
-import main.java.view.NotifiesView;
+import domain.ConflictHandler;
+import view.IsAtHomeView;
+import view.NotifiesView;
 
 public class HandlerFaçade {
 	

@@ -3,10 +3,9 @@ package main.java.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.application.HandlerFaçade;
-import main.java.domain.Object.ObjectType;
-import main.java.domain.Sensor.AirState;
-import main.java.service.ObjectCommunicationAdapter;
+import application.HandlerFaçade;
+import domain.Sensor.AirState;
+import service.ObjectCommunicationAdapter;
 
 public class ConflictHandler {
 	

@@ -1,7 +1,6 @@
 package main.java.service;
 
-import main.java.domain.TimerOP;
-import main.java.domain.TimerOP.Type;
+import domain.TimerOP;
 
 public class TimerThread extends Thread{
 	

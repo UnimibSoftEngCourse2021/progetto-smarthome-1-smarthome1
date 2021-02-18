@@ -5,10 +5,10 @@ import java.util.List;
 
 import main.java.domain.Config;
 import main.java.domain.ConflictHandler;
-import main.java.domain.Object;
 import main.java.domain.Room;
 import main.java.domain.Scenario;
 import main.java.domain.ScenariosHandler;
+import main.java.domain.Object;
 import main.java.domain.Object.ObjectType;
 
 public class DataFaçade {
