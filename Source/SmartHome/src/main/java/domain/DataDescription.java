@@ -1,5 +1,6 @@
 package domain;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -8,7 +9,8 @@ public class DataDescription {
 
 	private final String HCFILENAME = "homeConfig.txt";
 	private final String HSCFILENAME = "heatSystemConfig.txt";
-	
+	private File fileHC;
+	private File fileHSC;
 	public String getHCFILENAME() {
 		return HCFILENAME;
 	}
@@ -19,8 +21,10 @@ public class DataDescription {
 
 	public void writeOnFileHC(String attribute, String value) {
 		try {
-			PrintWriter outputStream = new PrintWriter(new FileOutputStream(HCFILENAME, true));
-		
+			if(fileHC == null) 
+				fileHC = new File(HCFILENAME);
+			FileOutputStream f = new FileOutputStream(fileHC, true);
+			PrintWriter outputStream = new PrintWriter(f);
 		
 			if(attribute.equalsIgnoreCase("code") 
 					|| attribute.equalsIgnoreCase("heaterID") 
@@ -32,6 +36,7 @@ public class DataDescription {
 			else if(attribute.equalsIgnoreCase("end")) {
 				outputStream.close();
 				Config.getInstance().processFileHC();
+				fileHC.delete();
 			}	
 			else {
 			//in generale per ogni attributo ho sempre il nome
@@ -48,10 +53,14 @@ public class DataDescription {
 
 	public void writeOnFileHSC(String attribute, double[] values) {
 		try {
-			PrintWriter outputStream = new PrintWriter(new FileOutputStream(HSCFILENAME, true));				
+			if(fileHSC == null)
+				fileHSC = new File(HSCFILENAME);
+			FileOutputStream f = new FileOutputStream(fileHSC, true);
+			PrintWriter outputStream = new PrintWriter(f);				
 			if(attribute.equalsIgnoreCase("end")) {
 				outputStream.close();
 				Config.getInstance().processFileHSC();
+				fileHSC.delete();
 			}
 			else{
 				outputStream.println(":" + attribute.toUpperCase());
@@ -66,5 +75,13 @@ public class DataDescription {
 			System.err.println("Errore: il file non è stato trovato");
 			System.exit(0);
 		}
+	}
+
+	public File getFileHC() {
+		return fileHC;
+	}
+
+	public File getFileHSC() {
+		return fileHSC;
 	}
 }

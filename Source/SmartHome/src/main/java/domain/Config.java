@@ -1,6 +1,5 @@
 package domain;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public class Config {
 	
 	private static Config config = null;
 	private DataDescription dataDescription;
-	private List<Room> rooms;
+	private List<Room> rooms = new ArrayList<Room>();
 	private Room tempRoom;
 
 	
@@ -30,7 +29,7 @@ public class Config {
 	}
 	
 	public void processFileHC() {  //home config		
-		try (Scanner inputStream = new Scanner(new File (dataDescription.getHCFILENAME()))){					
+		try (Scanner inputStream = new Scanner(dataDescription.getFileHC())){					
 			while(inputStream.hasNextLine()) {
 				String riga = inputStream.nextLine();
 				if(riga.equals(":ROOM")) {
@@ -92,21 +91,21 @@ public class Config {
 					String sdm = inputStream.nextLine();
 					AutomaticControl.setStopDayMode(sdm);
 				} 				
-				}
-				for(Room r: rooms) {
-					r.setDoorsNum();
-					r.setLightsNum();
-					r.setHeatersNum();
-					r.setWindowsNum();
-				}
-			} catch (FileNotFoundException e) {
-				System.err.println("error");
-				System.exit(0);
-			}		
+			}
+			for(Room r: rooms) {
+				r.setDoorsNum();
+				r.setLightsNum();
+				r.setHeatersNum();
+				r.setWindowsNum();
+			}
+		} catch (FileNotFoundException e) {
+			System.err.println("error");
+			System.exit(0);
+		}		
 	}
 
 	public void processFileHSC() {
-		try (Scanner inputStream = new Scanner(new File (dataDescription.getHSCFILENAME()))) {
+		try (Scanner inputStream = new Scanner(dataDescription.getFileHSC())) {
 			while(!inputStream.hasNextLine()) {
 				AutomaticControl.setChoosenMatrix(ChoosenMatrix.USER);
 				String riga = inputStream.nextLine();

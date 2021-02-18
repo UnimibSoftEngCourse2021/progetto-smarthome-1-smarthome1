@@ -33,7 +33,7 @@ public class Room {
 		sensors = new ArrayList<Sensor>();
 		objects = new ArrayList<Object>();
 	}
-
+	
 	public void instantiateSensor(SensorCategory category, String name) {
 		Sensor sensor = new Sensor(name, category, this);
 		sensors.add(sensor);
