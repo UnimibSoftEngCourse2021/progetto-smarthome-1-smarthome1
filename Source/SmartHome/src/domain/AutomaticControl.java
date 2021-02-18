@@ -1,6 +1,7 @@
 package domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import domain.Object.ObjectType;
@@ -19,7 +20,7 @@ public class AutomaticControl {
 	//private boolean activeAirControl = false;
 	private static int startDayMode;
 	private static int stopDayMode;
-	private List<Sensor> sensors;
+	private List<Sensor> sensors = new ArrayList<Sensor>();
 	
 	private AutomaticControl() {
 		initStandardMatrix();

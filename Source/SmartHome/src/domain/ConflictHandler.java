@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import application.HandlerFaçade;
@@ -15,11 +16,11 @@ public class ConflictHandler {
 	private boolean atHome = true;
 	
 	private List<Object> objects;
-	private List<Scenario> scenario; //non credo serva (sono gli scenari a chiamare this, non il contrario)
+	//private List<Scenario> scenario; non credo serva (sono gli scenari a chiamare this, non il contrario)
 	private ObjectCommunicationAdapter adapter;
 	
 	private ConflictHandler() {
-		
+		objects = new ArrayList<Object>();
 	}
 	
 	public static ConflictHandler getInstance() {
@@ -28,7 +29,7 @@ public class ConflictHandler {
 		return conflictHandler;
 	}
 
-	public void isAway(String alarmID, String doorID) {
+	public void isAway(String doorID) {
 		if(atHome) {
 			atHome = false;
 			// allarme armato
@@ -44,18 +45,20 @@ public class ConflictHandler {
 		}
 	}
 
-	public void isHome(String alarmID, String doorID, String code) {
+	public void isHome(String doorID, String code) {
 		if(!atHome) {
-				for(Object object: objects) {
-					Door door = (Door)object;
-					if (door.getObjectID().equals(doorID) && code.equals(door.getCode())) {
-						atHome = true; // flag attivo			
-						doAction(doorID, true); // sbloccare porta
-						break;
-					}
-					else if (door.getObjectID().equals(doorID)) {
-						//richiedere codice all'utente
-						handler.manageWrongCode();
+				for(Object object: objects) {					
+					if (object.getObjectID().equals(doorID)) {
+						Door door = (Door)object;
+						if(code.equals(door.getCode())) {
+							atHome = true; // flag attivo			
+							doAction(doorID, true); // sbloccare porta
+							break;
+						}
+						else {
+							//richiedere codice all'utente
+							handler.manageWrongCode();
+						}					
 					}
 				}
 				// disarmare allarme

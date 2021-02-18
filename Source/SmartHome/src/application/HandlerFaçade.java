@@ -15,9 +15,9 @@ public class HandlerFaçade {
 	}
 	public void manageHomeFlagSettings(String state, String code, String doorID) {
 		if(state.equals("home"))
-			ConflictHandler.getInstance().isHome(Alarm.getInstance().getObjectID(), doorID, code);
+			ConflictHandler.getInstance().isHome(doorID, code);
 		else
-			ConflictHandler.getInstance().isAway(Alarm.getInstance().getObjectID(), doorID);		
+			ConflictHandler.getInstance().isAway(doorID);		
 	}
 
 	public void manageManualAction(String objectID) {

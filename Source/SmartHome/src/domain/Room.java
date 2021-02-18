@@ -29,7 +29,8 @@ public class Room {
 	}
 
 	public Room() {
-		
+		sensors = new ArrayList<Sensor>();
+		objects = new ArrayList<Object>();
 	}
 
 	public void instantiateSensor(SensorCategory category, String name) {
@@ -91,6 +92,11 @@ public class Room {
 			break;
 		}
 		
+	}
+	
+	public void setDoorCode(String code) {
+		Door door = (Door)getObjects(ObjectType.DOOR).get(0);
+		door.setCode(code);
 	}
 	
 	public List<Object> getObjectList(){

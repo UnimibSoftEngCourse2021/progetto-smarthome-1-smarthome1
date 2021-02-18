@@ -51,8 +51,9 @@ public class Config {
 					room.instantiateObject(ObjectType.valueOf(riga.substring(1)), name);	 
 					if(riga.equals(":DOOR")) {
 						String code = inputStream.nextLine();
-						Door door = (Door)room.getObjects(ObjectType.DOOR).get(0);
-						door.setCode(code);
+						//Door door = (Door)room.getObjects(ObjectType.DOOR).get(0);
+						room.setDoorCode(code);
+						//door.setCode(code);
 					}
 				} else if(riga.equals(":AIR")
 						|| riga.equals(":MOVEMENT")) {			

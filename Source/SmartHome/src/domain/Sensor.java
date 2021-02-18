@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import domain.Object.ObjectType;
@@ -27,6 +28,7 @@ public class Sensor {
 		this.category = category;
 		this.room = room;
 		this.airState = null;
+		publisherList = new ArrayList<Object>();
 	}
 
 	public void attach(Object object) {
