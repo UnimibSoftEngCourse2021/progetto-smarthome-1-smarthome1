@@ -94,11 +94,13 @@ public class DataFacade {
 	public List<String> getRooms() {
 		// cicla sulle stanze
 		List<Room> rooms =Config.getInstance().getRooms();
-		List<String> allRooms = new ArrayList<String>();
-		for(Room room: rooms) {
-			allRooms.add(room.getRoomID());
+		List<String> allRoomsIDs = new ArrayList<String>();
+		if(rooms != null) {
+			for(Room room: rooms) {
+				allRoomsIDs.add(room.getRoomID());
+			}
 		}
-		return allRooms;
+		return allRoomsIDs;
 	}
 
 	public List<String[]> getObjectsInRoomInScenario(String roomName, String scenarioName) {

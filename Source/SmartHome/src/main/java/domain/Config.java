@@ -16,6 +16,7 @@ public class Config {
 	private static Config config = null;
 	private DataDescription dataDescription;
 	private List<Room> rooms;
+	private Room tempRoom;
 
 	
 	private Config() {
@@ -30,14 +31,13 @@ public class Config {
 	
 	public void processFileHC() {  //home config		
 		try (Scanner inputStream = new Scanner(new File (dataDescription.getHCFILENAME()))){					
-			Room room = new Room();
 			while(inputStream.hasNextLine()) {
 				String riga = inputStream.nextLine();
-				if(riga.equals(":room")) {
+				if(riga.equals(":ROOM")) {
 					String name = inputStream.nextLine();
 					String floor = inputStream.nextLine();
-					room = new Room(name, Short.parseShort(floor));
-					rooms.add(room);
+					tempRoom = new Room(name, Short.parseShort(floor));
+					rooms.add(tempRoom);
 				}
 				else if(riga.substring(1).equals(":ALARM")) {
 					String name = inputStream.nextLine();
@@ -48,17 +48,17 @@ public class Config {
 						|| riga.equals(":DOOR")
 						|| riga.equals(":HEATER")) {
 					String name = inputStream.nextLine();
-					room.instantiateObject(ObjectType.valueOf(riga.substring(1)), name);	 
+					tempRoom.instantiateObject(ObjectType.valueOf(riga.substring(1)), name);	 
 					if(riga.equals(":DOOR")) {
 						String code = inputStream.nextLine();
 						//Door door = (Door)room.getObjects(ObjectType.DOOR).get(0);
-						room.setDoorCode(code);
+						tempRoom.setDoorCode(code);
 						//door.setCode(code);
 					}
 				} else if(riga.equals(":AIR")
 						|| riga.equals(":MOVEMENT")) {			
 					String name = inputStream.nextLine();
-					room.instantiateSensor(SensorCategory.valueOf(riga.substring(1)), name);
+					tempRoom.instantiateSensor(SensorCategory.valueOf(riga.substring(1)), name);
 				}
 				else if(riga.equals(":TEMPERATURE")) {
 					String name = inputStream.nextLine();
@@ -81,7 +81,7 @@ public class Config {
 							for(Object object: heaters) {
 								Heater heater = (Heater)object;
 								if(heatersIDs.contains(heater.getObjectID())) 
-									room.getSensors(SensorCategory.TEMPERATURE).get(0).attach(heater);							
+									tempRoom.getSensors(SensorCategory.TEMPERATURE).get(0).attach(heater);							
 							}					
 						}
 					}
@@ -135,6 +135,14 @@ public class Config {
 
 	public List<Room> getRooms() {
 		return rooms;
+	}
+
+	public DataDescription getDataDescription() {
+		return dataDescription;
+	}
+
+	public void setDataDescription(DataDescription dataDescription) {
+		this.dataDescription = dataDescription;
 	}
 
 }

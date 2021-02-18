@@ -26,12 +26,14 @@ public class ConfigView {
 		List<String[]> sensorList = new ArrayList<String[]>();		
 		alarmConfig();
 		dayMode();
+		//BISOGNA POTER RICHIEDERE ALTRI OGGETTI NELLA STESSA STANZA -d.barzio
 		do {			
 			String room = roomConfig();
 			String floor = floorConfig();
-			System.out.println("Inserire gli oggetti e sensori che si vuole inserire");
-			System.out.println("Oggetti: light, window, door, heater");
-			System.out.println("Sensori: air, movement, temperature");
+			System.out.println("Inserire il tipo di sensore o oggetto che si vuole aggiungere.");
+			System.out.println("Scegliere una delle opzioni seguenti:");
+			System.out.println("\tOggetti: light, window, door, heater.");
+			System.out.println("\tSensori: air, movement, temperature.");
 			config = input.nextLine(); 
 			switch(config) {
 			case "light":
@@ -61,41 +63,42 @@ public class ConfigView {
 			
 		} while(config.equalsIgnoreCase("s"));
 		
-		
-		// questo controllo lo fa alla fine dell'inserimento di ogni stanza
-		System.out.print("Associare i sensori temp creati con gli oggetti heater: ");
-		// se ho ancora caloriferi da associare
-		
-			for(String[] sensor: sensorList) {
-				gf.manageWriteOnHCFile("temperature", sensor[0]);
-				gf.manageWriteOnHCFile("roomNameSensor", sensor[1]);						
-				do {
-					if(!numHeaterNotBinded.isEmpty()) {
-						System.out.println("Caloriferi disponibili: ");
-						for(String[] heater: numHeaterNotBinded) { 
-							System.out.print(" " + heater[0]);
-						}
-						System.out.println("");
-						System.out.println("Inserire il nome del calorifero da associare al sensore " + sensor);
-						config = input.nextLine();
-						String heaterId = "";
-						for(String[] heater: numHeaterNotBinded) 
-							if(heater[0].equals(config)) {
-								heaterId= heater[1];
-								break;
-							}
-						gf.manageWriteOnHCFile("heaterID", heaterId);
-						String[] temp = {config, heaterId};
-						numHeaterNotBinded.remove(temp);
+		if(!numHeaterNotBinded.isEmpty()) {
+			// questo controllo lo fa alla fine dell'inserimento di ogni stanza
+			System.out.print("Associare i sensori temp creati con gli oggetti heater: ");
+			// se ho ancora caloriferi da associare
+			
+				for(String[] sensor: sensorList) {
+					gf.manageWriteOnHCFile("temperature", sensor[0]);
+					gf.manageWriteOnHCFile("roomNameSensor", sensor[1]);						
+					do {
 						if(!numHeaterNotBinded.isEmpty()) {
-							System.out.println("Vuoi associare altri caloriferi al sensore " + sensor[0] +" ?");
+							System.out.println("Caloriferi disponibili: ");
+							for(String[] heater: numHeaterNotBinded) { 
+								System.out.print(" " + heater[0]);
+							}
+							System.out.println("");
+							System.out.println("Inserire il nome del calorifero da associare al sensore " + sensor);
 							config = input.nextLine();
-						}
-					}							
-				} while(config.equalsIgnoreCase("s") || !numHeaterNotBinded.isEmpty());
-				gf.manageWriteOnHCFile("heaterID", "");
+							String heaterId = "";
+							for(String[] heater: numHeaterNotBinded) 
+								if(heater[0].equals(config)) {
+									heaterId= heater[1];
+									break;
+								}
+							gf.manageWriteOnHCFile("heaterID", heaterId);
+							String[] temp = {config, heaterId};
+							numHeaterNotBinded.remove(temp);
+							if(!numHeaterNotBinded.isEmpty()) {
+								System.out.println("Vuoi associare altri caloriferi al sensore " + sensor[0] +" ?");
+								config = input.nextLine();
+							}
+						}							
+					} while(config.equalsIgnoreCase("s") || !numHeaterNotBinded.isEmpty());
+					gf.manageWriteOnHCFile("heaterID", "");
+				}
 			}
-			gf.manageWriteOnHCFile("end", null);
+		gf.manageWriteOnHCFile("end", null);
 	}
 	
 	public String roomConfig() {
@@ -104,10 +107,10 @@ public class ConfigView {
 		do {
 			System.out.println("Inserire il nome della stanza che si intende creare: ");
 			roomName = input.nextLine();
-			if(df.getRooms().contains(roomName)) {
+			if(df.getRooms() != null &&  df.getRooms().contains(roomName)) {
 				System.out.print("Nome già esistente");
 			}
-		} while(df.getRooms().contains(roomName));
+		} while(df.getRooms() != null && df.getRooms().contains(roomName));
 		gf.manageWriteOnHCFile("room", roomName);
 		return roomName;
 	}

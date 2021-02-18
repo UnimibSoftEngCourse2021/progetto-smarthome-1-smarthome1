@@ -30,12 +30,13 @@ public class Menu {
 		Scanner input = new Scanner(System.in);
 		do {			
 			System.out.println("Selezionare l'operazione desiderata scrivendo la parola chiave tra quelle presentate qui sotto");
-			System.out.println("config: configurazione dei parametri relativi al sistema");
-			System.out.println("heat: configurazione sistema di riscaldamento");
-			System.out.println("scenario: attivazione, modifica e eliminazione di scenari");
-			System.out.println("stati: visualizzare informazioni relative agli stati degli oggetti");
-			System.out.println("azioni: effettuare manualmente azioni sugli oggetti");
-			System.out.println("isAtHome: impostare lo stato di home oppure di away");
+			System.out.println("config: configurazione dei parametri relativi al sistema.");
+			System.out.println("heat: configurazione sistema di riscaldamento.");
+			System.out.println("scenario: attivazione, modifica e eliminazione di scenari.");
+			System.out.println("stati: visualizzare informazioni relative agli stati degli oggetti.");
+			System.out.println("azioni: effettuare manualmente azioni sugli oggetti.");
+			System.out.println("isAtHome: impostare lo stato di home oppure di away.");
+			System.out.println("fin: chiusura del simulatore.");
 		
 			switch(input.nextLine()) {
 			case "config":
@@ -55,6 +56,9 @@ public class Menu {
 				break;
 			case "isAtHome":
 				isAtHomeView.changeFlag();
+				break;
+			case "fin":
+				System.exit(0);
 				break;
 			default:
 				System.out.println("Input non valido");

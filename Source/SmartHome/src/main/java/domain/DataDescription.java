@@ -22,7 +22,10 @@ public class DataDescription {
 			PrintWriter outputStream = new PrintWriter(new FileOutputStream(HCFILENAME, true));
 		
 		
-			if(attribute.equalsIgnoreCase("code") || attribute.equalsIgnoreCase("heaterID") || attribute.equalsIgnoreCase("roomNameSensor")) {
+			if(attribute.equalsIgnoreCase("code") 
+					|| attribute.equalsIgnoreCase("heaterID") 
+					|| attribute.equalsIgnoreCase("roomNameSensor")
+					|| attribute.equalsIgnoreCase("floor")) {
 				outputStream.println(value);
 				outputStream.close();
 			}
