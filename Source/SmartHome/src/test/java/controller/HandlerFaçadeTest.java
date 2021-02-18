@@ -1,11 +1,12 @@
-package test.java.controller;
+package controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import application.HandlerFaçade;
+import application.HandlerFacade;
 import domain.ConflictHandler;
+import domain.Object.ObjectType;
 import domain.Room;
 
 class HandlerFaçadeTest {
@@ -16,7 +17,7 @@ class HandlerFaçadeTest {
 		room.instantiateObject(ObjectType.DOOR, "door1");
 		room.setDoorCode("code");
 		System.out.println(room.getObjectList());
-		HandlerFaçade hf = new HandlerFaçade();
+		HandlerFacade hf = new HandlerFacade();
 		String state = "home";
 		String doorID = "door1";		
 		hf.manageHomeFlagSettings(state, "code", doorID);
