@@ -1,13 +1,15 @@
 package domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import application.HandlerFaçade;
 import domain.Object.ObjectType;
 import domain.Sensor.AirState;
 import service.ObjectCommunicationAdapter;
 
 public class ConflictHandler {
+	
+	private HandlerFaçade handler;
 	
 	private static ConflictHandler conflictHandler = null; //singleton instance
 	private boolean atHome = true;
@@ -44,8 +46,6 @@ public class ConflictHandler {
 
 	public void isHome(String alarmID, String doorID, String code) {
 		if(!atHome) {
-			int i = 0;
-			do {
 				for(Object object: objects) {
 					Door door = (Door)object;
 					if (door.getObjectID().equals(doorID) && code.equals(door.getCode())) {
@@ -55,16 +55,11 @@ public class ConflictHandler {
 					}
 					else if (door.getObjectID().equals(doorID)) {
 						//richiedere codice all'utente
-						i++; // contatore degli accessi errati
+						handler.manageWrongCode();
 					}
 				}
 				// disarmare allarme
-				Alarm.getInstance().setArmed(false);
-			} while (i < 5 || atHome);
-			if (i >= 5) {
-				System.out.println("Numero massimo di tentativi superato. Chiamare l'assistenza");
-				// bloccare la richiesta di codice
-			}
+				Alarm.getInstance().setArmed(false);			
 		}
 	}
 
@@ -91,8 +86,8 @@ public class ConflictHandler {
 							}															
 						}
 						if(windowOpen) {
-							if(true/*controller.userNotify(heater)*/) {
-								if(true/*controller.userNotify(window)*/)
+							if(handler.userNotifies("Le finestre sono aperte.\nIl sistema vorrebbe accendere i caloriferi, confermi?")) {
+								if(handler.userNotifies("Vuoi anche chiudere le finestre?"))
 									for(Object window: windows) 
 										adapter.triggerAction(window, false);
 								adapter.triggerAction(object, true);
@@ -109,7 +104,9 @@ public class ConflictHandler {
 					case WINDOW:
 						if(Alarm.isCreated() && !Alarm.getInstance().isArmed())							
 							adapter.triggerAction(object, true);
-						else if(true/* controller.userNotify()*/)
+						else if(handler.userNotifies("L'allarme è armato.\nVuoi comunque aprire le finestre?"))
+							if(handler.userNotifies("Sei sicuro?"))
+								if(handler.userNotifies("Sei proprio sicuro?"))
 								adapter.triggerAction(object, true);
 						break;
 					default:
@@ -162,7 +159,7 @@ public class ConflictHandler {
 							List<Object> heaters = window.getRoom().getObjects(ObjectType.HEATER);
 							for(Object heater: heaters)
 								if(heater.isActive()) {
-									// controller.notifyUser(...) : boolean true se l'utente vuole aprire le finestre
+									userDecision = handler.userNotifies("L'aria è sporca.\nPerò i caloriferi sono accesi.\nVuoi comunque aprire le finestre?");
 									break;
 								}
 							if(window.getShader().isActive() && userDecision) {
@@ -185,8 +182,12 @@ public class ConflictHandler {
 								adapter.triggerAction(window.getShader(), false);
 							adapter.triggerAction(window, true);
 						}
-						else {
-							// if(controller.notifyUser(...)) apri finestre + controllo shader						
+						else if(Alarm.isCreated()) {
+							if(handler.userNotifies("C'è una fuga di gas.\nPerò l'allarme è armato.\nApro comunque le finestre?")) {
+								if(window.getShader().isActive())
+									adapter.triggerAction(window.getShader(), false);
+								adapter.triggerAction(window, true);			
+							}
 						}
 						break;
 					}
@@ -211,5 +212,13 @@ public class ConflictHandler {
 
 	public void addObject(Object object) {
 		objects.add(object);
+	}
+
+	public HandlerFaçade getHandlerFaçade() {
+		return handler;
+	}
+
+	public void setHandlerFaçade(HandlerFaçade handlerFaçade) {
+		this.handler = handlerFaçade;
 	}
 }

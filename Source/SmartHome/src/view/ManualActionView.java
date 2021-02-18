@@ -23,16 +23,10 @@ public class ManualActionView {
 			System.out.println(object[0]);
 		System.out.println("Selezionare l'oggetto");
 		String objectName = input.nextLine();
-		String objectID;
+		String objectID = "";
 		for(String[] object: objectsList)
 			if(object[0].contains(objectName))
 				objectID = object[1];		
-		System.out.println("Selezionare l'azione da effettuare (on/off)");
-		String action = input.nextLine();
-		if(action.equals("on"))
-			HandlerFaçade.manageManualAction(objectID, true);
-		else
-			HandlerFaçade.manageManualAction(objectID, false);
+			handlerFaçade.manageManualAction(objectID);
 	}
-	
 }

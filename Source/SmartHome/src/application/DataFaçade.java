@@ -7,6 +7,7 @@ import domain.Scenario;
 import domain.Config;
 import domain.ConflictHandler;
 import domain.Object;
+import domain.Object.ObjectType;
 import domain.ScenariosHandler;
 
 public class DataFaçade {
@@ -46,6 +47,17 @@ public class DataFaçade {
 			String[] array = {name, id};
 			allObjects.add(array);
 		}		
+		return allObjects;
+	}
+	
+	public List<String> getObjectsTypeID(String objectType) {
+		List<String> allObjects = new ArrayList<String>();
+		List<Room> rooms = Config.getInstance().getRooms();
+		for(Room room: rooms) {
+			for(Object object: room.getObjects(ObjectType.valueOf(objectType))) {
+				allObjects.add(object.getObjectID());
+			}
+		}
 		return allObjects;
 	}
 

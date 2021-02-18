@@ -2,16 +2,13 @@ package view;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
-
 import application.DataFaçade;
 import application.GenericFaçade;
 import application.HandlerFaçade;
-import application.RoomFaçade;
 import application.ScenarioFaçade;
+import domain.ConflictHandler;
 import domain.DataDescription;
-import domain.Object;
 import domain.ScenariosHandler;
 
 public class Menu {
@@ -27,18 +24,18 @@ public class Menu {
 		DataFaçade df = new DataFaçade(sh);
 		GenericFaçade gf = new GenericFaçade(dd);
 		ScenarioFaçade sf = new ScenarioFaçade(sh);
-		//da vedere
-		HandlerFaçade hf = new HandlerFaçade();
-		RoomFaçade rf = new RoomFaçade();
-		
+		HandlerFaçade hf = new HandlerFaçade();		
 		//inizializzazione oggetti view
 		ConfigView configView = new ConfigView(df, gf);
 		ScenarioView scenarioView = new ScenarioView(df, sf);
 		ObjectStateView objectStateView = new ObjectStateView(df);
 		ManualActionView manualActionView = new ManualActionView(df, hf); 
-		IsAtHome isAtHome = new IsAtHome(hf);
-		
-		do {
+		IsAtHomeView isAtHomeView = new IsAtHomeView(hf, df);
+		hf.setIsAtHomeView(isAtHomeView);
+		isAtHomeView.setHandlerFaçade(hf);
+		ConflictHandler.getInstance().setHandlerFaçade(hf);
+				
+		do {			
 			System.out.println("Selezionare l'operazione desiderata scrivendo la parola chiave tra quelle presentate qui sotto");
 			System.out.println("config: configurazione dei parametri relativi al sistema");
 			System.out.println("heat: configurazione sistema di riscaldamento");
@@ -98,8 +95,8 @@ public class Menu {
 				// se ho ancora caloriferi da associare
 				
 					for(String[] sensor: sensorList) {
-						genericFacade.manageWriteOnFile("temperature", sensor[0]);
-						genericFacade.manageWriteOnFile("roomNameSensor", sensor[1]);						
+						gf.manageWriteOnHCFile("temperature", sensor[0]);
+						gf.manageWriteOnHCFile("roomNameSensor", sensor[1]);						
 						do {
 							if(!numHeaterNotBinded.isEmpty()) {
 								System.out.println("Caloriferi disponibili: ");
@@ -115,7 +112,7 @@ public class Menu {
 										heaterId= heater[1];
 										break;
 									}
-								genericFacade.manageWriteOnFile("heaterID", heaterId);
+								gf.manageWriteOnHCFile("heaterID", heaterId);
 								String[] temp = {config, heaterId};
 								numHeaterNotBinded.remove(temp);
 								if(!numHeaterNotBinded.isEmpty()) {
@@ -124,9 +121,9 @@ public class Menu {
 								}
 							}							
 						} while(config.equalsIgnoreCase("s") || !numHeaterNotBinded.isEmpty());
-						genericFacade.manageWriteOnFile("heaterID", "");
+						gf.manageWriteOnHCFile("heaterID", "");
 					}
-					genericFacade.manageWriteOnFile("end", null);							
+					gf.manageWriteOnHCFile("end", null);							
 				break;
 			case "heat":
 				configView.heatSystemConfig();
@@ -141,7 +138,7 @@ public class Menu {
 				manualActionView.performAction();
 				break;
 			case "isAtHome":
-				isAtHome.changeFlag();
+				isAtHomeView.changeFlag();
 				break;
 			default:
 				System.out.println("Input non valido");
