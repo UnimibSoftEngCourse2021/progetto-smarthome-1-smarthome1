@@ -6,7 +6,7 @@ import org.junit.Test;
 import application.HandlerFacade;
 import domain.Alarm;
 import domain.ConflictHandler;
-import domain.Object.ObjectType;
+import domain.Obj.ObjType;
 import domain.Room;
 
 
@@ -21,9 +21,9 @@ public class HandlerFacadeTest {
 		String state = "home";
 		
 		Room room = new Room("room1", (short)1);		
-		room.instantiateObject(ObjectType.DOOR, "door1");
+		room.instantiateObj(ObjType.DOOR, "door1");
 		room.setDoorCode("1234");
-		String doorID = room.getObjects(ObjectType.DOOR).get(0).getObjectID();
+		String doorID = room.getObjs(ObjType.DOOR).get(0).getObjID();
 		
 		hf.manageHomeFlagSettings(state, code, doorID);
 		assertEquals(true, ConflictHandler.getInstance().isAtHome());
@@ -37,7 +37,7 @@ public class HandlerFacadeTest {
 		 */
 		ConflictHandler.getInstance().setAtHome(true);
 		Room room = new Room("room2", (short)1);		
-		room.instantiateObject(ObjectType.DOOR, "door2");		
+		room.instantiateObj(ObjType.DOOR, "door2");		
 		HandlerFacade hf = new HandlerFacade();
 		String state = "away";
 		String doorID = "door2";		
@@ -51,14 +51,14 @@ public class HandlerFacadeTest {
 	@Test
 	public void manageManualActionTest() {
 		Room room = new Room("room3", (short)1);
-		room.instantiateObject(ObjectType.LIGHT, "light1");
+		room.instantiateObj(ObjType.LIGHT, "light1");
 		HandlerFacade hf = new HandlerFacade();
-		hf.manageManualAction(room.getObjects(ObjectType.LIGHT).get(0).getObjectID());
-		assertEquals(true, room.getObjects(ObjectType.LIGHT).get(0).isActive());
+		hf.manageManualAction(room.getObjs(ObjType.LIGHT).get(0).getObjID());
+		assertEquals(true, room.getObjs(ObjType.LIGHT).get(0).isActive());
 		
-		room.getObjects(ObjectType.LIGHT).get(0).setActive(true);
-		hf.manageManualAction(room.getObjects(ObjectType.LIGHT).get(0).getObjectID());
-		assertEquals(false, room.getObjects(ObjectType.LIGHT).get(0).isActive());
+		room.getObjs(ObjType.LIGHT).get(0).setActive(true);
+		hf.manageManualAction(room.getObjs(ObjType.LIGHT).get(0).getObjID());
+		assertEquals(false, room.getObjs(ObjType.LIGHT).get(0).isActive());
 	}
 
 	/*@Test
@@ -80,10 +80,10 @@ public class HandlerFacadeTest {
 		String state = "home";
 		String wrongCode = "4321";
 		Room room = new Room("room1", (short)1);		
-		room.instantiateObject(ObjectType.DOOR, "door1");
+		room.instantiateObj(ObjType.DOOR, "door1");
 		Config.getInstance().getRooms().add(room);
 		room.setDoorCode(code);
-		String doorID = room.getObjects(ObjectType.DOOR).get(0).getObjectID();
+		String doorID = room.getObjs(ObjType.DOOR).get(0).getObjID();
 		
 		
 		hf.manageHomeFlagSettings(state, wrongCode, doorID);
