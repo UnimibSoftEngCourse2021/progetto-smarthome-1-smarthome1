@@ -136,6 +136,10 @@ public class Config {
 		return rooms;
 	}
 
+	public void setRooms(Room room) {
+		this.rooms.add(room);
+	}
+
 	public DataDescription getDataDescription() {
 		return dataDescription;
 	}
