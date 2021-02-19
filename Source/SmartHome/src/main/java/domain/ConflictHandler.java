@@ -52,9 +52,8 @@ public class ConflictHandler {
 		if(!atHome) {
 				for(Object object: objects) {	
 					Door door = (Door)object;
-					if(object.getObjectID().equals(doorID)) {
-						
-						if(code.equals(door.getCode())) {
+					if(object.getObjectID().equals(doorID)) {						
+						if(code.equalsIgnoreCase(door.getCode())) {
 							atHome = true; // flag attivo			
 							doAction(doorID, true); // sbloccare porta
 							break;

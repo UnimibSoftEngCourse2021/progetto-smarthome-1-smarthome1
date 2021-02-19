@@ -17,12 +17,13 @@ public class HandlerFaçadeTest {
 		ConflictHandler.getInstance().setAtHome(false);
 		Room room = new Room("room1", (short)1);		
 		room.instantiateObject(ObjectType.DOOR, "door1");
-		room.setDoorCode("code");
+		String code = "code";
+		room.setDoorCode(code);
 		HandlerFacade hf = new HandlerFacade();
 		String state = "home";
 		String doorID = "door1";
 		Alarm.getInstance("alarm1");
-		hf.manageHomeFlagSettings(state, "code", doorID);
+		hf.manageHomeFlagSettings(state, code, doorID);
 		assertEquals(true, ConflictHandler.getInstance().isAtHome());
 		assertEquals(false, Alarm.getInstance().isArmed());
 	}
@@ -42,6 +43,7 @@ public class HandlerFaçadeTest {
 		Alarm.getInstance("alarm2");
 		assertEquals(false, ConflictHandler.getInstance().isAtHome());
 		assertEquals(true, Alarm.getInstance().isArmed());
+		
 	}
 	
 	@Test
