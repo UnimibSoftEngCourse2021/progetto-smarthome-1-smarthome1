@@ -42,9 +42,9 @@ public class ConflictHandler {
 			 *  non influisce su allarme perchè il fatto che sia armato non c'entra con lo stato
 			 *  CONTROLLARE COLLEGAMENTO CON ADAPTER
 			 */
-			/*for(Object object: objects) {
+			for(Object object: objects) {
 					adapter.triggerAction(object, false);
-			}*/
+			}
 		}
 	}
 
@@ -121,7 +121,7 @@ public class ConflictHandler {
 					}
 				}
 				else // se si vuole spegnere qualcosa non ci sono conflitti
-					//adapter.triggerAction(object, false);
+					adapter.triggerAction(object, false);
 				break;
 			}
 		}
