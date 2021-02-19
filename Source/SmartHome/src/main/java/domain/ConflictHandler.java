@@ -231,4 +231,8 @@ public class ConflictHandler {
 	public void setHandlerFacade(HandlerFacade handlerFacade) {
 		this.handler = handlerFacade;
 	}
+	
+	public void clean() {
+		conflictHandler = null;
+	}
 }

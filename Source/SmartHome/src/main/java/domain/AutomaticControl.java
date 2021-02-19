@@ -205,4 +205,8 @@ public class AutomaticControl {
 		
 		return categorySensors;
 	}
+	
+	public void clean() {
+		automaticControl = null;
+	}
 }

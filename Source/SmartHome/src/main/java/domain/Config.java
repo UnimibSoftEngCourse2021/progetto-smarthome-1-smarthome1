@@ -147,5 +147,9 @@ public class Config {
 	public void setDataDescription(DataDescription dataDescription) {
 		this.dataDescription = dataDescription;
 	}
+	
+	public void clean() {
+		config = null;
+	}
 
 }

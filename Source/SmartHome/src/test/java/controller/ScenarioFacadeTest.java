@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Test;
 
 import application.ScenarioFacade;
@@ -15,6 +16,9 @@ import domain.Scenario;
 import domain.ScenariosHandler;
 import domain.Obj.ObjType;
 import service.TimeScheduleThread;
+import domain.AutomaticControl;
+import domain.Config;
+import domain.ConflictHandler;
 import domain.Obj;
 
 public class ScenarioFacadeTest {
@@ -172,5 +176,12 @@ public class ScenarioFacadeTest {
 		sf.manageDeleteAction("scenario1", "light1");
 		assertEquals(false, sh.getObjsInScenario("scenario1").contains("light1"));
 		assertEquals(false, sh.getActionsInScenario("scenario1").get(0));
+	}
+	
+	@After
+	public void clean() {
+		Config.getInstance().clean();
+		AutomaticControl.getInstance().clean();
+		ConflictHandler.getInstance().clean();
 	}
 }

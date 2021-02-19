@@ -54,5 +54,9 @@ public class Alarm extends Obj {
 	public Sensor getSensor() {
 		return sensor;
 	}
+	
+	public void clean() {
+			alarm = null;
+	}
 
 }

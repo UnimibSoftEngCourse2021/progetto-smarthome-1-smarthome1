@@ -2,6 +2,7 @@ package controller;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
 import org.junit.Test;
 
 import application.GenericFacade;
@@ -62,6 +63,8 @@ public class GenericFacadeTest {
 		assertArrayEquals(ioHeatersIDs, heatersIDs);
 		assertNotNull(dd.getFileHC());
 		
+		Alarm.getInstance().clean();
+		
 	}
 	
 	@Test
@@ -100,8 +103,14 @@ public class GenericFacadeTest {
 		}
 		System.out.println();*/
 		assertArrayEquals(expectedMatrix, AutomaticControl.getInstance().getUserMatrix());
+		
 	}
 		
-	
+	@After
+	public void clean() {
+		Config.getInstance().clean();
+		AutomaticControl.getInstance().clean();
+		ConflictHandler.getInstance().clean();
+	}
 
 }

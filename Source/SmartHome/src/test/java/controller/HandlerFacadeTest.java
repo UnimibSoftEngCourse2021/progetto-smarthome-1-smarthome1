@@ -2,10 +2,13 @@ package controller;
 
 import static org.junit.Assert.*;
 
+import org.junit.After;
 import org.junit.Test;
 
 import application.HandlerFacade;
 import domain.Alarm;
+import domain.AutomaticControl;
+import domain.Config;
 import domain.ConflictHandler;
 import domain.Obj.ObjType;
 import domain.Room;
@@ -28,6 +31,8 @@ public class HandlerFacadeTest {
 		hf.manageHomeFlagSettings(state, code, doorID);
 		assertEquals(true, ConflictHandler.getInstance().isAtHome());
 		assertEquals(false, Alarm.getInstance().isArmed());
+		
+		Alarm.getInstance().clean();
 	}
 	
 	@Test
@@ -46,6 +51,7 @@ public class HandlerFacadeTest {
 		assertEquals(false, ConflictHandler.getInstance().isAtHome());
 		assertEquals(true, Alarm.getInstance().isArmed());
 		
+		Alarm.getInstance().clean();
 	}
 	
 	@Test
@@ -59,6 +65,7 @@ public class HandlerFacadeTest {
 		room.getObjs(ObjType.LIGHT).get(0).setActive(true);
 		hf.manageManualAction(room.getObjs(ObjType.LIGHT).get(0).getObjID());
 		assertEquals(false, room.getObjs(ObjType.LIGHT).get(0).isActive());
+		
 	}
 
 	/*@Test
@@ -91,5 +98,11 @@ public class HandlerFacadeTest {
 		
 	}*/
 	
+	@After
+	public void clean() {
+		Config.getInstance().clean();
+		AutomaticControl.getInstance().clean();
+		ConflictHandler.getInstance().clean();
+	}
 	
 }

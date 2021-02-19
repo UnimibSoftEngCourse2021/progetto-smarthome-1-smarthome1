@@ -108,7 +108,7 @@ public class DataFacade {
 		List<String[]> objsInRoom = getObjsInRoom(roomName); 
 		List<String[]> allObjsInRoomInScenario = new ArrayList<String[]>();
 		for(String[] obj: objsInRoom) {
-			if(allObjsInScenario.contains(obj))
+			if(!allObjsInScenario.contains(obj))
 				allObjsInRoomInScenario.add(obj);
 		}
  		return allObjsInRoomInScenario;
