@@ -11,7 +11,7 @@ public class Sensor {
 	private String sensorID;
 	private double value;
 	private Room room;
-	private List<Obj> publisherList = new ArrayList<Obj>();
+	private List<Obj> publisherList;
 	public enum SensorCategory {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM, SHADER}
 	private SensorCategory category;
 	public enum AirState {POLLUTION, GAS}
@@ -23,7 +23,7 @@ public class Sensor {
 		this.category = category;
 		this.room = room;
 		this.airState = null;
-		//publisherList = 
+		publisherList = new ArrayList<Obj>();
 	}
 
 	public void attach(Obj obj) {

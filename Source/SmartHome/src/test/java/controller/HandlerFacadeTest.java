@@ -3,12 +3,12 @@ package controller;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
 import application.HandlerFacade;
 import domain.Alarm;
 import domain.ConflictHandler;
 import domain.Obj.ObjType;
 import domain.Room;
-
 
 public class HandlerFacadeTest {
 	
@@ -41,8 +41,8 @@ public class HandlerFacadeTest {
 		HandlerFacade hf = new HandlerFacade();
 		String state = "away";
 		String doorID = "door2";		
-		hf.manageHomeFlagSettings(state, "code", doorID);
 		Alarm.getInstance("alarm2");
+		hf.manageHomeFlagSettings(state, "code", doorID);		
 		assertEquals(false, ConflictHandler.getInstance().isAtHome());
 		assertEquals(true, Alarm.getInstance().isArmed());
 		

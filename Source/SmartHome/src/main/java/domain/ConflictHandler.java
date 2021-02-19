@@ -50,8 +50,9 @@ public class ConflictHandler {
 	public void isHome(String doorID, String code) {
 		if(!atHome) {
 				for(Obj obj: objs) {	
-					Door door = (Door)obj;
-					if(obj.getObjID().equals(doorID)) {						
+					
+					if(obj.getObjID().equals(doorID)) {	
+						Door door = (Door)obj;
 						if(code.equalsIgnoreCase(door.getCode())) {
 							atHome = true; // flag attivo			
 							doAction(doorID, true); // sbloccare porta
