@@ -12,6 +12,7 @@ public class HandlerFacade {
 	public HandlerFacade() {
 		notifies = new NotifiesView();
 	}
+	
 	public void manageHomeFlagSettings(String state, String code, String doorID) {
 		if(state.equals("home"))
 			ConflictHandler.getInstance().isHome(doorID, code);

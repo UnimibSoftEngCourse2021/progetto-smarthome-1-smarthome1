@@ -12,9 +12,9 @@ public class ManualActionView {
 	DataFacade dataFacade;
 	Scanner input = new Scanner(System.in);
 
-	public ManualActionView(DataFacade dataFaçade, HandlerFacade handlerFaçade) {
-		this.dataFacade = dataFaçade;
-		this.handlerFacade = handlerFaçade;
+	public ManualActionView(DataFacade dataFacade, HandlerFacade handlerFacade) {
+		this.dataFacade = dataFacade;
+		this.handlerFacade = handlerFacade;
 	}
 	
 	public void performAction() {

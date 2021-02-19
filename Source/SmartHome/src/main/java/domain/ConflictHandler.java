@@ -17,7 +17,6 @@ public class ConflictHandler {
 	private boolean atHome = true;
 	
 	private List<Object> objects;
-	//private List<Scenario> scenario; non credo serva (sono gli scenari a chiamare this, non il contrario)
 	private ObjectCommunicationSystem adapter;
 	
 	private ConflictHandler() {
@@ -224,11 +223,11 @@ public class ConflictHandler {
 		objects.add(object);
 	}
 
-	public HandlerFacade getHandlerFaçade() {
+	public HandlerFacade getHandlerFacade() {
 		return handler;
 	}
 
-	public void setHandlerFaçade(HandlerFacade handlerFaçade) {
-		this.handler = handlerFaçade;
+	public void setHandlerFacade(HandlerFacade handlerFacade) {
+		this.handler = handlerFacade;
 	}
 }
