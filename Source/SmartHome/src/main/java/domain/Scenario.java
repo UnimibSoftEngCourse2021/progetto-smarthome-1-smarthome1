@@ -45,7 +45,9 @@ public class Scenario {
 
 	public void handleDateEvent() {
 		thread = new TimeScheduleThread();
+		thread.setScenario(this);
 		thread.init(startTime);
+		thread.start();
 	}
 
 	public String getNameID() {

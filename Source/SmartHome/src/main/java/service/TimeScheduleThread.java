@@ -16,7 +16,7 @@ public class TimeScheduleThread extends Thread {
 		while(true) {
 			if(!(scenario.getDays().contains(LocalDateTime.now().getDayOfWeek()))) {
 				try {
-					TimeScheduleThread.sleep((24*3600*1000) - this.getMilliseconds(LocalTime.now()));
+					TimeScheduleThread.sleep((24*3600*1000) - getMilliseconds(LocalTime.now()));
 				} catch (InterruptedException e) {
 					this.interrupt();
 					break;
@@ -31,7 +31,7 @@ public class TimeScheduleThread extends Thread {
 				}
 				scenario.activateScenario();
 				try {
-					TimeScheduleThread.sleep(waitTime);
+					TimeScheduleThread.sleep(waitTime);					
 				} catch (InterruptedException e) {
 					this.interrupt();
 					break;
@@ -41,13 +41,23 @@ public class TimeScheduleThread extends Thread {
 	}
 	
 	public void init(LocalTime startTime) {
-		sleepTime = this.getMilliseconds(startTime);
+		sleepTime = getMilliseconds(startTime) - getMilliseconds(LocalTime.now());
 		waitTime = (24*3600*1000) - sleepTime;
-		this.start();
+		
 	}
 	
 	public long getMilliseconds (LocalTime time) {
 		return (long)(time.getHour()*3600 + time.getMinute()*60) * 1000;
 	}
+
+	public Scenario getScenario() {
+		return scenario;
+	}
+
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
+	}
+	
+
 	
 }

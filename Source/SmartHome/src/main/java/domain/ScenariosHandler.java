@@ -8,17 +8,12 @@ import java.util.List;
 public class ScenariosHandler {
 	
 	private List<Scenario> scenarios;
-	private List<Object> objects; //non e' necessario (quindi neanche l'associazione nel modello di prog) tanto lo scenario conosce gli objectID che poi passa al ConflictHandler
+	//private List<Object> objects; //non e' necessario (quindi neanche l'associazione nel modello di prog) 
+	//tanto lo scenario conosce gli objectID che poi passa al ConflictHandler
 	//cancellare quindi anceh getter e setter per objects
 	
-	//definire un costruttore, deve esistere una singola istanza di questa classe ma non e necessario usare il singleton
-	
-	public List<Object> getObjects(){
-		return objects;
-	}
-	
-	public void addObject(Object object) {
-		objects.add(object);
+	public ScenariosHandler() {
+		scenarios = new ArrayList<Scenario>();
 	}
 	
 	public void createScenario(String scenarioID, String dateTime, List<String> days, List<List<String[]>> rooms) {
@@ -139,9 +134,12 @@ public class ScenariosHandler {
 					if(day.equalsIgnoreCase("DOMENICA"))
 						daysOfWeek.add(DayOfWeek.SUNDAY);
 				}
+				scenario.setDays(daysOfWeek);
 				break;
 			}
+			
 		}
+		
 		
 	}
 	public void addRoomToScenario(String scenarioID, List<List<String[]>> rooms) {
@@ -170,7 +168,10 @@ public class ScenariosHandler {
 			if(scenario.getNameID().equals(nameID)) {
 				scenario.getObjectIDs().clear();
 				scenario.getActions().clear();
-				scenario.getThread().interrupt();
+				if(scenario.getStartTime() != null)
+					scenario.getThread().interrupt();
+				scenarios.remove(scenario);
+				break;
 			}
 		}
 	}
@@ -179,7 +180,7 @@ public class ScenariosHandler {
 		for(Scenario scenario: scenarios) {
 			if(scenario.getNameID().equals(nameID))
 				if(scenario.isActive() == false) {
-					 scenario.setActive(false); 
+					 scenario.setActive(true); 
 					 for(int i = 0; i < scenario.getObjectIDs().size(); i++) {
 						 ConflictHandler.getInstance().doAction(scenario.getObjectIDs().get(i), (boolean)scenario.getActions().get(i));
 					 }
@@ -203,9 +204,13 @@ public class ScenariosHandler {
 	public void addScenario(Scenario scenario) {
 		scenarios.add(scenario);
 	}
-
-	public void setObjects(List<Object> objects) {
-		this.objects = objects;
+	
+	public List<Boolean> getActionsInScenario(String scenarioID) {
+		Scenario s = new Scenario();
+		for(Scenario scenario: scenarios) 
+			if(scenario.getNameID().equals(scenarioID))
+				s = scenario;
+		return s.getActions();
 	}
 	
 }
