@@ -194,6 +194,7 @@ public class AutomaticControl {
 		sensors.add(sensor);
 	}
 	
+	//prob da eliminare
 	public List<Sensor> searchSensorByID(SensorCategory sc){
 		List<Sensor> categorySensors = new ArrayList<Sensor>();
 		for(Sensor sensor: sensors) {
@@ -201,6 +202,7 @@ public class AutomaticControl {
 				categorySensors.add(sensor);
 			}
 		}
+		
 		return categorySensors;
 	}
 }

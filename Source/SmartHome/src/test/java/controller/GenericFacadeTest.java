@@ -10,6 +10,7 @@ import domain.AutomaticControl;
 import domain.Config;
 import domain.ConflictHandler;
 import domain.DataDescription;
+import domain.Heater;
 import domain.Room;
 import domain.Sensor;
 import domain.Sensor.SensorCategory;
@@ -35,7 +36,6 @@ public class GenericFacadeTest {
 		gf.manageWriteOnHCFile("air", "air1");
 		gf.manageWriteOnHCFile("movement", "movement1");
 		gf.manageWriteOnHCFile("temperature", "temp1");
-		//assertEquals("temp1", AutomaticControl.getInstance().searchSensorByID(SensorCategory.TEMPERATURE).get(0).getName());
 		gf.manageWriteOnHCFile("roomNameSensor", "room1");
 		gf.manageWriteOnHCFile("heaterID", "HEATER_ROOM1_1_0");
 		gf.manageWriteOnHCFile("heaterID", "HEATER_ROOM1_1_1");
@@ -49,16 +49,59 @@ public class GenericFacadeTest {
 		assertEquals(600, AutomaticControl.getInstance().getStopDayMode());
 		assertEquals("light1", ConflictHandler.getInstance().getObjs().get(0).getName());
 		Sensor sTemp = room.getSensors(SensorCategory.TEMPERATURE).get(0);
-		/*Obj[] heaters = sTemp.getPublisherList().toArray();
+		Object[] heaters = sTemp.getPublisherList().toArray();
 		String[] heatersIDs = new String[2];
-		for(int i = 0; i < heaters.length; i++) 
-			heatersIDs[i] = heaters[i].getObjID();
-		String[] ioHeatersIDs = {"HEATER_ROOM1_1_1_0", "HEATER_ROOM1_1_1_1"};*/
+		Heater heater = (Heater)heaters[0];
+		for(int i = 0; i < heaters.length; i++) {
+			heater = (Heater)heaters[i];
+			heatersIDs[i] = heater.getObjID();
+		}
+		String[] ioHeatersIDs = {"HEATER_ROOM1_1_0", "HEATER_ROOM1_1_1"};
 		assertEquals("temp1", sTemp.getName());
 		assertEquals("room1", sTemp.getRoom().getRoomID());
-		//assertArrayEquals(ioHeatersIDs, heatersIDs);
+		assertArrayEquals(ioHeatersIDs, heatersIDs);
 		assertNotNull(dd.getFileHC());
 		
 	}
+	
+	@Test
+	public void manageWriteOnHSCFile() {
+		DataDescription dd = new DataDescription();
+		GenericFacade gf = new GenericFacade(dd);
+		Config.getInstance().setDataDescription(dd);
+		double[] monday = {18.00, 21.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 1.00, 0.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00};
+		double[] sunday = {18.00, 21.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 1.00, 0.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00};
+		double[] friday = {18.00, 21.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 1.00, 0.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00};
+		double[]  other = {18.00, 21.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
+		gf.manageWriteOnHSCFile("monday", monday);
+		gf.manageWriteOnHSCFile("Tuesday", other);
+		gf.manageWriteOnHSCFile("wednesday", other);
+		gf.manageWriteOnHSCFile("thursday", other);
+		gf.manageWriteOnHSCFile("saturday", other);
+		gf.manageWriteOnHSCFile("sunday", sunday);
+		gf.manageWriteOnHSCFile("friday", friday);
+		gf.manageWriteOnHSCFile("end", null);
+		double[][] expectedMatrix = {
+				{0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 1.00, 0.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 18.00, 21.00},
+				{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 18.00, 21.00},
+				{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 18.00, 21.00},
+				{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 18.00, 21.00},
+				{0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 1.00, 0.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 18.00, 21.00},
+				{0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 18.00, 21.00},
+				{0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 1.00, 0.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 18.00, 21.00}
+				
+		};
+		/*double[][] m = AutomaticControl.getInstance().getUserMatrix();
+		for(int i = 0; i < m.length; i++) {
+			for(int j = 0; j < m[i].length; j++) {
+				System.out.print(m[i][j] + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();*/
+		assertArrayEquals(expectedMatrix, AutomaticControl.getInstance().getUserMatrix());
+	}
+		
+	
 
 }

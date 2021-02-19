@@ -106,20 +106,20 @@ public class Config {
 
 	public void processFileHSC() {
 		try (Scanner inputStream = new Scanner(dataDescription.getFileHSC())) {
-			while(!inputStream.hasNextLine()) {
+			while(inputStream.hasNextLine()) {
 				AutomaticControl.setChoosenMatrix(ChoosenMatrix.USER);
 				String riga = inputStream.nextLine();
-				if(riga.equals(":LUNEDI")
-					|| riga.equals(":MARTEDI")
-					|| riga.equals(":MERCOLEDI")
-					|| riga.equals(":GIOVEDI")
-					|| riga.equals(":VENERDI")
-					|| riga.equals(":SABATO")
-					|| riga.equals(":DOMENICA")) {
-					String activeTemp = inputStream.nextLine();
+				if(riga.equals(":MONDAY")
+					|| riga.equals(":TUESDAY")
+					|| riga.equals(":WEDNESDAY")
+					|| riga.equals(":THURSDAY")
+					|| riga.equals(":FRIDAY")
+					|| riga.equals(":SATURDAY")
+					|| riga.equals(":SUNDAY")) {
 					String passiveTemp = inputStream.nextLine();
-					AutomaticControl.initUserMatrix(DayOfWeek.valueOf(riga.substring(1)).ordinal(), 24, Double.parseDouble(activeTemp));
-					AutomaticControl.initUserMatrix(DayOfWeek.valueOf(riga.substring(1)).ordinal(), 25, Double.parseDouble(passiveTemp));
+					String  activeTemp = inputStream.nextLine();
+					AutomaticControl.initUserMatrix(DayOfWeek.valueOf(riga.substring(1)).ordinal(), 24, Double.parseDouble(passiveTemp));
+					AutomaticControl.initUserMatrix(DayOfWeek.valueOf(riga.substring(1)).ordinal(), 25, Double.parseDouble(activeTemp));
 					for(int j = 0; j < 24; j++) {
 						String temp = inputStream.nextLine();
 						AutomaticControl.initUserMatrix(DayOfWeek.valueOf(riga.substring(1)).ordinal(), j, Double.parseDouble(temp));

@@ -66,7 +66,7 @@ public class DataDescription {
 				outputStream.println(":" + attribute.toUpperCase());
 				outputStream.println(String.valueOf(values[0]));
 				outputStream.println(String.valueOf(values[1]));
-				for(int i = 2;i < 26; i++) {
+				for(int i = 2;i < values.length; i++) {
 					outputStream.println(String.valueOf(values[i]));
 				}
 				outputStream.close();
