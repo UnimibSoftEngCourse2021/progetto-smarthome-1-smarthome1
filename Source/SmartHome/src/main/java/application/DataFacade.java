@@ -18,6 +18,7 @@ public class DataFacade {
 	public DataFacade(ScenariosHandler scenariosHandler) {
 		this.scenariosHandler = scenariosHandler;
 	}
+	
 	public List<String[]> getObjsInRoom(String roomName) {
 		List<Obj> objs = new ArrayList<Obj>();
 		List<String[]> objsInRoom = new ArrayList<String[]>();
