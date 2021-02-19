@@ -5,11 +5,11 @@ import java.util.List;
 
 import domain.Config;
 import domain.ConflictHandler;
-import domain.Room;
-import domain.Scenario;
 import domain.ScenariosHandler;
 import domain.Object;
 import domain.Object.ObjectType;
+import domain.Room;
+import domain.Scenario;
 
 public class DataFacade {
 	
@@ -19,13 +19,13 @@ public class DataFacade {
 		this.scenariosHandler = scenariosHandler;
 	}
 	public List<String[]> getObjectsInRoom(String roomName) {
-		Room room = new Room();
+		List<Object> objects = new ArrayList<Object>();
+		List<String[]> objectsInRoom = new ArrayList<String[]>();
 		for(Room r: Config.getInstance().getRooms()) {
-			if(roomName.equals(r.getRoomID()))
-				room = r;
+			if(roomName.equals(r.getRoomID())) {
+				objects = r.getObjectList();
+			}
 		}
-		List<Object> objects = room.getObjectList();
-		List<String[]> objectsInRoom = new ArrayList<String[]>();;
 		String name;
 		String id;
 		for(Object object: objects) {
@@ -83,9 +83,8 @@ public class DataFacade {
 	}
 
 	public List<String> getScenarios() {
-		List<Scenario> scenarios = scenariosHandler.getScenarios();
 		List<String> allScenarios = new ArrayList<String>();
-		for(Scenario scenario: scenarios) {
+		for(Scenario scenario: scenariosHandler.getScenarios()) {
 			allScenarios.add(scenario.getNameID());
 		}
 		return allScenarios;
