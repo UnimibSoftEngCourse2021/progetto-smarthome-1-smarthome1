@@ -10,15 +10,12 @@ public class Sensor {
 	private String name;
 	private String sensorID;
 	private double value;
-	private String communicationType;//BOH in caso da scrivere: in config, in tutti i costruttori di sensor chiamati dagli oggetti
 	private Room room;
 	private List<Object> publisherList;
 	public enum SensorCategory {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM, SHADER}
 	private SensorCategory category;
 	public enum AirState {POLLUTION, GAS}
 	private AirState airState;
-
-	//private SensorCommunicationAdapter adapter;
 	
 	public Sensor(String name, SensorCategory category, Room room) {
 		this.name = name;
@@ -37,24 +34,25 @@ public class Sensor {
 		publisherList.remove(object);
 	}
 
-	public void notifies(double value) { 
+	public void notifies(double newValue) { 
+		value = newValue;
 		switch (category) {
 		case MOVEMENT:
-			if(value == 1.00) {
+			if(newValue == 1.00) {
 				for (int i = 0; i < publisherList.size(); i++) {
 					if(publisherList.get(i).getObjectType().equals(ObjectType.ALARM))
 						AutomaticControl.getInstance().checkAlarm();
 					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
-						AutomaticControl.getInstance().checkLight(value, room);
+						AutomaticControl.getInstance().checkLight(newValue, room);
 				}
 			}
 			else
 				for (int i = 0; i < publisherList.size(); i++)
 					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
-						AutomaticControl.getInstance().checkLight(value, room);
+						AutomaticControl.getInstance().checkLight(newValue, room);
 			break;
 		case AIR:
-			AutomaticControl.getInstance().checkAirPollution(value, room, airState);
+			AutomaticControl.getInstance().checkAirPollution(newValue, room, airState);
 			break;
 		case LIGHT:
 		case WINDOW:
@@ -62,12 +60,13 @@ public class Sensor {
 		case HEATER:
 		case ALARM:
 		case SHADER:
-			publisherList.get(0).update(value);
+			publisherList.get(0).update(newValue);
 			break;
 		case TEMPERATURE:
-			AutomaticControl.getInstance().checkTempTresholds(value, publisherList);
+			AutomaticControl.getInstance().checkTempTresholds(newValue, publisherList);
 			break;
-		// definire un case di default??
+		default:
+			break;
 		}
 	}
 	
@@ -96,14 +95,6 @@ public class Sensor {
 
 	public void setValue(double value) {
 		this.value = value;
-	}
-
-	public String getCommunicationType() {
-		return communicationType;
-	}
-
-	public void setCommunicationType(String communicationType) {
-		this.communicationType = communicationType;
 	}
 	
 	public List<Object> getPublisherList() {

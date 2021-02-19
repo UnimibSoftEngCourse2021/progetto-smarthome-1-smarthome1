@@ -24,7 +24,8 @@ public class IsAtHomeView {
 			handlerFacade.manageHomeFlagSettings("away", null, doorID);
 		else {
 			System.out.println("Inserire il codice di sicurezza");
-			handlerFacade.manageHomeFlagSettings("home", state, doorID);
+			String code = input.nextLine();
+			handlerFacade.manageHomeFlagSettings("home", code, doorID);
 		}
 	}
 	
@@ -33,6 +34,7 @@ public class IsAtHomeView {
 		System.out.println("Codice errato. Reinserirlo");
 		handlerFacade.manageHomeFlagSettings("home", input.nextLine(), doorID);
 	}
+	
 	public void setHandlerFaçade(HandlerFacade handlerFacade) {
 		this.handlerFacade = handlerFacade;		
 	}

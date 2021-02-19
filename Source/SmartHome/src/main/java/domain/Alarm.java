@@ -1,17 +1,22 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import domain.Sensor.SensorCategory;
 
 public class Alarm extends Object {
 
 	private static Alarm alarm = null;
 	private boolean armed;
-	private List<Sensor> sensors;
+	private List<Sensor> sensors = new ArrayList<Sensor>();
+	private Sensor sensor;
 	
 	private Alarm(String name) {
 		super(null, ObjectType.ALARM, null);
 		armed = false;
 		setObjectID(name);
+		sensor = new Sensor("sensorOf: ", SensorCategory.ALARM, null);
 	}
 	
 	public static Alarm getInstance(String name) {
@@ -44,6 +49,10 @@ public class Alarm extends Object {
 
 	public void setSensor(Sensor sensor) {
 		sensors.add(sensor);
+	}
+
+	public Sensor getSensor() {
+		return sensor;
 	}
 
 }

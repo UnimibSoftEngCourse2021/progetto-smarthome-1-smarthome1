@@ -67,7 +67,7 @@ public class Menu {
 				break;	
 			}		
 			System.out.println("Si desidera effettuare altre operazioni? (s/n)");		
-		} while (input.nextLine().equals("n"));
+		} while (input.nextLine().equals("s"));
 			input.close();
 	}
 }

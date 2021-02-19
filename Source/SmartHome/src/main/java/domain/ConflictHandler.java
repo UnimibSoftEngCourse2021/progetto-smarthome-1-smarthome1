@@ -6,7 +6,7 @@ import java.util.List;
 import application.HandlerFacade;
 import domain.Object.ObjectType;
 import domain.Sensor.AirState;
-import service.ObjectCommunicationAdapter;
+import service.ObjectCommunicationSystem;
 
 
 public class ConflictHandler {
@@ -18,10 +18,11 @@ public class ConflictHandler {
 	
 	private List<Object> objects;
 	//private List<Scenario> scenario; non credo serva (sono gli scenari a chiamare this, non il contrario)
-	private ObjectCommunicationAdapter adapter;
+	private ObjectCommunicationSystem adapter;
 	
 	private ConflictHandler() {
 		objects = new ArrayList<Object>();
+		adapter = new ObjectCommunicationSystem();
 	}
 	
 	public static ConflictHandler getInstance() {
@@ -39,18 +40,20 @@ public class ConflictHandler {
 			/*
 			 *  chiusura/spegnimento forzata di tutti gli oggetti
 			 *  non influisce su allarme perchè il fatto che sia armato non c'entra con lo stato
+			 *  CONTROLLARE COLLEGAMENTO CON ADAPTER
 			 */
-			for(Object object: objects) {
-				adapter.triggerAction(object, false);
-			}
+			/*for(Object object: objects) {
+					adapter.triggerAction(object, false);
+			}*/
 		}
 	}
 
 	public void isHome(String doorID, String code) {
 		if(!atHome) {
-				for(Object object: objects) {					
-					if (object.getObjectID().equals(doorID)) {
-						Door door = (Door)object;
+				for(Object object: objects) {	
+					Door door = (Door)object;
+					if(object.getObjectID().equals(doorID)) {
+						
 						if(code.equals(door.getCode())) {
 							atHome = true; // flag attivo			
 							doAction(doorID, true); // sbloccare porta
@@ -118,7 +121,7 @@ public class ConflictHandler {
 					}
 				}
 				else // se si vuole spegnere qualcosa non ci sono conflitti
-					adapter.triggerAction(object, false);
+					//adapter.triggerAction(object, false);
 				break;
 			}
 		}
@@ -210,6 +213,10 @@ public class ConflictHandler {
 		return atHome;
 	}
 	
+	public void setAtHome(boolean atHome) {
+		this.atHome = atHome;
+	}
+
 	public List<Object> getObjects() {
 		return objects;
 	}

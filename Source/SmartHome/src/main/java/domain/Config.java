@@ -38,7 +38,7 @@ public class Config {
 					tempRoom = new Room(name, Short.parseShort(floor));
 					rooms.add(tempRoom);
 				}
-				else if(riga.substring(1).equals(":ALARM")) {
+				else if(riga.equals(":ALARM")) {
 					String name = inputStream.nextLine();
 					Alarm.getInstance(name);
 				}
