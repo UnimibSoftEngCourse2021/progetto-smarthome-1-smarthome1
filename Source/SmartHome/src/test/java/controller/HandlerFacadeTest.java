@@ -3,22 +3,14 @@ package controller;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
-import application.DataFacade;
-import application.GenericFacade;
 import application.HandlerFacade;
-import application.ScenarioFacade;
 import domain.Alarm;
-import domain.Config;
 import domain.ConflictHandler;
-import domain.DataDescription;
-import domain.Light;
 import domain.Object.ObjectType;
-import view.Menu;
 import domain.Room;
-import domain.ScenariosHandler;
 
-public class HandlerFaçadeTest {
+
+public class HandlerFacadeTest {
 	
 	@Test
 	public void isHomeTest() {

@@ -12,17 +12,17 @@ public class Scenario {
 	private String nameID;
 	private LocalTime startTime;
 	private boolean active = false;
-	private List<String> objectIDs;
+	private List<String> objIDs;
 	private List<Boolean> actions;
 	private List<DayOfWeek> days;
 	
 	private List<String> roomsIDs;
 	private TimeScheduleThread thread;
 	
-	public Scenario(String nameID, LocalTime startTime, List<String> objectIDs, List<Boolean> actions, List<DayOfWeek> days, List<String> roomsIDs) {
+	public Scenario(String nameID, LocalTime startTime, List<String> objIDs, List<Boolean> actions, List<DayOfWeek> days, List<String> roomsIDs) {
 		this.nameID = nameID;
 		this.startTime = startTime;
-		this.objectIDs = objectIDs;
+		this.objIDs = objIDs;
 		this.actions = actions;
 		this.days = days;
 		this.roomsIDs = roomsIDs;
@@ -37,8 +37,8 @@ public class Scenario {
 	public void activateScenario() {
 		if(isActive() == false) {
 			active = false; 
-			 for(int i = 0; i < getObjectIDs().size(); i++) {
-				 ConflictHandler.getInstance().doAction(getObjectIDs().get(i), (boolean)getActions().get(i));
+			 for(int i = 0; i < getObjIDs().size(); i++) {
+				 ConflictHandler.getInstance().doAction(getObjIDs().get(i), (boolean)getActions().get(i));
 			 }
 		 }
 	}
@@ -82,12 +82,12 @@ public class Scenario {
 		this.active = active;
 	}
 
-	public List<String> getObjectIDs() {
-		return objectIDs;
+	public List<String> getObjIDs() {
+		return objIDs;
 	}
 
-	public void setObjectIDs(List<String> objectIDs) {
-		this.objectIDs = objectIDs;
+	public void setObjIDs(List<String> objIDs) {
+		this.objIDs = objIDs;
 	}
 
 	public List<Boolean> getActions() {

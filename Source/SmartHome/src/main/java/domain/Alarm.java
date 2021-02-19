@@ -5,7 +5,7 @@ import java.util.List;
 
 import domain.Sensor.SensorCategory;
 
-public class Alarm extends Object {
+public class Alarm extends Obj {
 
 	private static Alarm alarm = null;
 	private boolean armed;
@@ -13,9 +13,9 @@ public class Alarm extends Object {
 	private Sensor sensor;
 	
 	private Alarm(String name) {
-		super(null, ObjectType.ALARM, null);
+		super(name, ObjType.ALARM, null);
 		armed = false;
-		setObjectID(name);
+		setObjID(name);
 		sensor = new Sensor("sensorOf: ", SensorCategory.ALARM, null);
 	}
 	

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.Object.ObjectType;
+import domain.Obj.ObjType;
 import domain.Sensor.AirState;
 import domain.Sensor.SensorCategory;
 import domain.TimerOP.Type;
@@ -20,10 +20,11 @@ public class AutomaticControl {
 	//private boolean activeAirControl = false;
 	private static int startDayMode;
 	private static int stopDayMode;
-	private List<Sensor> sensors = new ArrayList<Sensor>();
+	private List<Sensor> sensors;
 	
 	private AutomaticControl() {
 		initStandardMatrix();
+		sensors = new ArrayList<Sensor>();
 	}
 	
 	public static AutomaticControl getInstance() {
@@ -53,7 +54,7 @@ public class AutomaticControl {
 		}
 	}
 	
-	public void checkTempTresholds(double currentTemp, List<Object> publisherList) {
+	public void checkTempTresholds(double currentTemp, List<Obj> publisherList) {
 		int i = LocalDateTime.now().getDayOfWeek().getValue() - 1; // giorno della settimana
 		int j = LocalDateTime.now().getHour(); // ora attuale
 		int treshold = 0;
@@ -72,18 +73,18 @@ public class AutomaticControl {
 		if(choosenMatrix.equals(ChoosenMatrix.USER)) {
 			if(userMatrix[i][treshold] > currentTemp) {
 				for(int k = 0; k < publisherList.size(); k++) 
-					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjectID(), true);
+					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjID(), true);
 			} else {
 				for(int k = 0; k < publisherList.size(); k++) 
-					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjectID(), false);
+					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjID(), false);
 			}	
 		} else {
 			if (standardMatrix[i][treshold] > currentTemp) {
 				for(int k = 0; k < publisherList.size(); k++) 
-					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjectID(), true);
+					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjID(), true);
 			} else {
 				for(int k = 0; k < publisherList.size(); k++) 
-					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjectID(), false);
+					ConflictHandler.getInstance().doAction(publisherList.get(k).getObjID(), false);
 			}
 		}
 	}
@@ -95,18 +96,18 @@ public class AutomaticControl {
 						|| sensor.getCategory().equals(SensorCategory.DOOR) 
 						|| sensor.getCategory().equals(SensorCategory.WINDOW))
 						&& sensor.getValue() == 1.00) {
-					ConflictHandler.getInstance().doAction(Alarm.getInstance().getObjectID(), true);
+					ConflictHandler.getInstance().doAction(Alarm.getInstance().getObjID(), true);
 					break;
 				}
 	}
 	
 	//controllare la logica del timer
 	public void checkAirPollution(double currentPollutionValue, Room room, AirState airState) {
-		List<Object> windows = room.getObjects(ObjectType.WINDOW);
+		List<Obj> windows = room.getObjs(ObjType.WINDOW);
 		TimerOP timer = room.getTimer();
 		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION)) {
 			for(int i = 0; i < room.getWindowsNum(); i++)
-				ConflictHandler.getInstance().doAction(room.getObjects(ObjectType.WINDOW).get(i).getObjectID(), airState, true);
+				ConflictHandler.getInstance().doAction(room.getObjs(ObjType.WINDOW).get(i).getObjID(), airState, true);
 			timer.resetTimer(Type.AIR);
 		} else {
 			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
@@ -114,21 +115,21 @@ public class AutomaticControl {
 			else if(!timer.isWorking(Type.LIGHT))
 				for(int j = 0; j < room.getWindowsNum(); j++) 
 					if(windows.get(j).isActive() == true) 
-						ConflictHandler.getInstance().doAction(windows.get(j).getObjectID(), airState, true);
+						ConflictHandler.getInstance().doAction(windows.get(j).getObjID(), airState, true);
 		}
 		if (currentPollutionValue > 30.00 && airState.equals(AirState.GAS))
 			for(int i = 0; i < room.getWindowsNum(); i++)
-				ConflictHandler.getInstance().doAction(room.getObjects(ObjectType.WINDOW).get(i).getObjectID(), airState, true);
+				ConflictHandler.getInstance().doAction(room.getObjs(ObjType.WINDOW).get(i).getObjID(), airState, true);
 
 	}
 
 	public void checkLight(double movementValue, Room room) {
-		List<Object> lights = room.getObjects(ObjectType.LIGHT);
+		List<Obj> lights = room.getObjs(ObjType.LIGHT);
 		TimerOP timer = room.getTimer();
 		if(movementValue == 1.00) {
 			for(int i = 0; i < room.getLightsNum(); i++) 
 				if(lights.get(i).isActive() == false) 
-					ConflictHandler.getInstance().doAction(lights.get(i).getObjectID(), isDayMode(), true);
+					ConflictHandler.getInstance().doAction(lights.get(i).getObjID(), isDayMode(), true);
 			timer.resetTimer(Type.LIGHT);	
 		} else {
 			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
@@ -136,7 +137,7 @@ public class AutomaticControl {
 			else if(!timer.isWorking(Type.LIGHT))
 				for(int j = 0; j < room.getLightsNum(); j++) 
 					if(lights.get(j).isActive() == true) 
-						ConflictHandler.getInstance().doAction(lights.get(j).getObjectID(), isDayMode(), false);
+						ConflictHandler.getInstance().doAction(lights.get(j).getObjID(), isDayMode(), false);
 		}
 	}
 	
@@ -191,5 +192,15 @@ public class AutomaticControl {
 
 	public void addSensor(Sensor sensor) {
 		sensors.add(sensor);
+	}
+	
+	public List<Sensor> searchSensorByID(SensorCategory sc){
+		List<Sensor> categorySensors = new ArrayList<Sensor>();
+		for(Sensor sensor: sensors) {
+			if(sensor.getCategory().equals(sc)) {
+				categorySensors.add(sensor);
+			}
+		}
+		return categorySensors;
 	}
 }

@@ -3,7 +3,7 @@ package domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.Object.ObjectType;
+import domain.Obj.ObjType;
 
 public class Sensor {
 
@@ -11,7 +11,7 @@ public class Sensor {
 	private String sensorID;
 	private double value;
 	private Room room;
-	private List<Object> publisherList;
+	private List<Obj> publisherList = new ArrayList<Obj>();
 	public enum SensorCategory {MOVEMENT, AIR, LIGHT, WINDOW, DOOR, TEMPERATURE, HEATER, ALARM, SHADER}
 	private SensorCategory category;
 	public enum AirState {POLLUTION, GAS}
@@ -23,15 +23,16 @@ public class Sensor {
 		this.category = category;
 		this.room = room;
 		this.airState = null;
-		publisherList = new ArrayList<Object>();
+		//publisherList = 
 	}
 
-	public void attach(Object object) {
-		publisherList.add(object);
+	public void attach(Obj obj) {
+		if(publisherList.add(obj))
+			;
 	}
 
-	public void deattach(Object object) {
-		publisherList.remove(object);
+	public void deattach(Obj obj) {
+		publisherList.remove(obj);
 	}
 
 	public void notifies(double newValue) { 
@@ -40,15 +41,15 @@ public class Sensor {
 		case MOVEMENT:
 			if(newValue == 1.00) {
 				for (int i = 0; i < publisherList.size(); i++) {
-					if(publisherList.get(i).getObjectType().equals(ObjectType.ALARM))
+					if(publisherList.get(i).getObjType().equals(ObjType.ALARM))
 						AutomaticControl.getInstance().checkAlarm();
-					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
+					if(publisherList.get(i).getObjType().equals(ObjType.LIGHT))
 						AutomaticControl.getInstance().checkLight(newValue, room);
 				}
 			}
 			else
 				for (int i = 0; i < publisherList.size(); i++)
-					if(publisherList.get(i).getObjectType().equals(ObjectType.LIGHT))
+					if(publisherList.get(i).getObjType().equals(ObjType.LIGHT))
 						AutomaticControl.getInstance().checkLight(newValue, room);
 			break;
 		case AIR:
@@ -97,11 +98,11 @@ public class Sensor {
 		this.value = value;
 	}
 	
-	public List<Object> getPublisherList() {
+	public List<Obj> getPublisherList() {
 		return publisherList;
 	}
 
-	public void setPublisherList(List<Object> publisherList) {
+	public void setPublisherList(List<Obj> publisherList) {
 		this.publisherList = publisherList;
 	}
 	
@@ -119,5 +120,13 @@ public class Sensor {
 
 	public void setAirState(AirState airState) {
 		this.airState = airState;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
 	}
 }

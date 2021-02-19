@@ -1,18 +1,18 @@
 package domain;
 
-public abstract class Object {
+public abstract class Obj {
 
 	private String name;
 	private boolean active;
-	private String objectID;
+	private String objID;
 	private Room room;
-	public enum ObjectType {ALARM, DOOR, HEATER, LIGHT, WINDOW, SHADER}
-	private ObjectType objectType;
+	public enum ObjType {ALARM, DOOR, HEATER, LIGHT, WINDOW, SHADER}
+	private ObjType objType;
 
-	public Object(String name, ObjectType objectType, Room room) {
+	public Obj(String name, ObjType objType, Room room) {
 		this.name = name;
 		this.active = false;
-		this.objectType = objectType;
+		this.objType = objType;
 		this.room = room;
 	}
 	
@@ -39,20 +39,20 @@ public abstract class Object {
 		this.active = state;
 	}
 
-	public String getObjectID() {
-		return objectID;
+	public String getObjID() {
+		return objID;
 	}
 
-	public void setObjectID(String objectID) {
-		this.objectID = objectID;
+	public void setObjID(String objID) {
+		this.objID = objID;
 	}
 	
-	public ObjectType getObjectType() {
-		return objectType;
+	public ObjType getObjType() {
+		return objType;
 	}
 
-	public void setObjectType(ObjectType objectType) {
-		this.objectType = objectType;
+	public void setObjType(ObjType objType) {
+		this.objType = objType;
 	}
 
 	public void update(double sensorValue) {

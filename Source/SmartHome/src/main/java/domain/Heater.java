@@ -2,12 +2,12 @@ package domain;
 
 import domain.Sensor.SensorCategory;
 
-public class Heater extends Object {
+public class Heater extends Obj {
 
 	private Sensor sensor;
 	
 	public Heater(String name, Room room) {
-		super(name, ObjectType.HEATER, room);
+		super(name, ObjType.HEATER, room);
 		sensor = new Sensor("sensorOf: ", SensorCategory.HEATER, room);
 		AutomaticControl.getInstance().addSensor(sensor);
 	}

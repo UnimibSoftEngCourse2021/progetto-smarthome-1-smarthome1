@@ -8,9 +8,9 @@ import java.util.List;
 public class ScenariosHandler {
 	
 	private List<Scenario> scenarios;
-	//private List<Object> objects; //non e' necessario (quindi neanche l'associazione nel modello di prog) 
-	//tanto lo scenario conosce gli objectID che poi passa al ConflictHandler
-	//cancellare quindi anceh getter e setter per objects
+	//private List<Obj> objs; //non e' necessario (quindi neanche l'associazione nel modello di prog) 
+	//tanto lo scenario conosce gli objID che poi passa al ConflictHandler
+	//cancellare quindi anceh getter e setter per objs
 	
 	public ScenariosHandler() {
 		scenarios = new ArrayList<Scenario>();
@@ -46,7 +46,7 @@ public class ScenariosHandler {
 			time = LocalTime.of(hour, minute);	
 		}
 		
-		List<String> objectIDs = new ArrayList<String>();
+		List<String> objIDs = new ArrayList<String>();
 		List<Boolean> actions = new ArrayList<Boolean>();
 		List<String> roomsIDs = new ArrayList<String>();
 		for(List<String[]> list: rooms) {
@@ -54,17 +54,17 @@ public class ScenariosHandler {
 				if(list.indexOf(couple) == 0) 
 					roomsIDs.add(couple[0]);
 				else {
-					objectIDs.add(couple[0]);
+					objIDs.add(couple[0]);
 					actions.add(Boolean.parseBoolean(couple[1]));
 				}	
 			}
 		}
-		Scenario scenario = new Scenario(scenarioID, time, objectIDs, actions, daysOfWeek, roomsIDs);
+		Scenario scenario = new Scenario(scenarioID, time, objIDs, actions, daysOfWeek, roomsIDs);
 		addScenario(scenario);
 		
 	}
 
-	public void changeAction(String scenarioID, String objectID, String action) {
+	public void changeAction(String scenarioID, String objID, String action) {
 		boolean isNotIterated = false;
 		boolean actn = false;
 		if(action.equalsIgnoreCase("true")
@@ -76,15 +76,15 @@ public class ScenariosHandler {
 			actn = false;
 		for(Scenario scenario: scenarios) {
 			if(scenario.getNameID().equals(scenarioID)) {
-				for(String id: scenario.getObjectIDs()) {
-					if(id.equals(objectID)) {
-						scenario.getActions().set(scenario.getObjectIDs().indexOf(id), actn);
+				for(String id: scenario.getObjIDs()) {
+					if(id.equals(objID)) {
+						scenario.getActions().set(scenario.getObjIDs().indexOf(id), actn);
 						isNotIterated = true;
 						break;
 					}
 				}
 				if(!isNotIterated) {
-					scenario.getObjectIDs().add(objectID);
+					scenario.getObjIDs().add(objID);
 					scenario.getActions().add(actn);
 				}
 				break;
@@ -92,7 +92,7 @@ public class ScenariosHandler {
 		}
 	}
 
-	public void deleteAction(String scenarioID, String objectID) {
+	public void deleteAction(String scenarioID, String objID) {
 		Scenario scenario = new Scenario();
 		for(Scenario s: scenarios) {
 			if(s.getNameID().equals(scenarioID)) {
@@ -100,10 +100,10 @@ public class ScenariosHandler {
 				break;
 			}
 		}
-		for(String id: scenario.getObjectIDs()) {
-			if(id.equals(objectID)) {
-				scenario.getActions().remove(scenario.getObjectIDs().indexOf(objectID));
-				scenario.getObjectIDs().remove(objectID);
+		for(String id: scenario.getObjIDs()) {
+			if(id.equals(objID)) {
+				scenario.getActions().remove(scenario.getObjIDs().indexOf(objID));
+				scenario.getObjIDs().remove(objID);
 				break;
 			}
 		}
@@ -156,7 +156,7 @@ public class ScenariosHandler {
 				if(list.indexOf(couple) == 0) 
 					scenario.getRoomsIDs().add(couple[0]);
 				else {
-					scenario.getObjectIDs().add(couple[0]);
+					scenario.getObjIDs().add(couple[0]);
 					scenario.getActions().add(Boolean.parseBoolean(couple[1]));						
 				}
 			}
@@ -166,7 +166,7 @@ public class ScenariosHandler {
 	public void deleteScenario(String nameID) {
 		for(Scenario scenario: scenarios) {
 			if(scenario.getNameID().equals(nameID)) {
-				scenario.getObjectIDs().clear();
+				scenario.getObjIDs().clear();
 				scenario.getActions().clear();
 				if(scenario.getStartTime() != null)
 					scenario.getThread().interrupt();
@@ -181,20 +181,20 @@ public class ScenariosHandler {
 			if(scenario.getNameID().equals(nameID))
 				if(scenario.isActive() == false) {
 					 scenario.setActive(true); 
-					 for(int i = 0; i < scenario.getObjectIDs().size(); i++) {
-						 ConflictHandler.getInstance().doAction(scenario.getObjectIDs().get(i), (boolean)scenario.getActions().get(i));
+					 for(int i = 0; i < scenario.getObjIDs().size(); i++) {
+						 ConflictHandler.getInstance().doAction(scenario.getObjIDs().get(i), (boolean)scenario.getActions().get(i));
 					 }
 				 }
 		}
 		
 	}
 
-	public List<String> getObjectsInScenario(String scenarioID) {
+	public List<String> getObjsInScenario(String scenarioID) {
 		Scenario s = new Scenario();
 		for(Scenario scenario: scenarios) 
 			if(scenario.getNameID().equals(scenarioID))
 				s = scenario;
-		return s.getObjectIDs();
+		return s.getObjIDs();
 	}
 	
 	public List<Scenario> getScenarios() {

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import domain.AutomaticControl.ChoosenMatrix;
-import domain.Object.ObjectType;
+import domain.Obj.ObjType;
 import domain.Sensor.SensorCategory;
 
 public class Config {
@@ -47,10 +47,10 @@ public class Config {
 						|| riga.equals(":DOOR")
 						|| riga.equals(":HEATER")) {
 					String name = inputStream.nextLine();
-					tempRoom.instantiateObject(ObjectType.valueOf(riga.substring(1)), name);	 
+					tempRoom.instantiateObj(ObjType.valueOf(riga.substring(1)), name);	 
 					if(riga.equals(":DOOR")) {
 						String code = inputStream.nextLine();
-						//Door door = (Door)room.getObjects(ObjectType.DOOR).get(0);
+						//Door door = (Door)room.getObjs(ObjType.DOOR).get(0);
 						tempRoom.setDoorCode(code);
 						//door.setCode(code);
 					}
@@ -63,7 +63,7 @@ public class Config {
 					String name = inputStream.nextLine();
 					String roomName = inputStream.nextLine();
 					for(Room sensorRoom: rooms) {
-						if(sensorRoom.getRoomID().equals(roomName)) {
+						if(sensorRoom.getRoomID().equalsIgnoreCase(roomName)) {
 							sensorRoom.instantiateSensor(SensorCategory.valueOf(riga.substring(1)), name);
 							break;
 						}
@@ -76,12 +76,12 @@ public class Config {
 					}
 					if(heatersIDs != null) {
 						for(Room singleRoom: rooms) {
-							List<Object> heaters = singleRoom.getObjects(ObjectType.HEATER);
-							for(Object object: heaters) {
-								Heater heater = (Heater)object;
-								if(heatersIDs.contains(heater.getObjectID())) 
-									tempRoom.getSensors(SensorCategory.TEMPERATURE).get(0).attach(heater);							
-							}					
+							List<Obj> heaters = singleRoom.getObjs(ObjType.HEATER);
+							for(Obj obj: heaters) {
+								Heater heater = (Heater)obj;
+								if(heatersIDs.contains(heater.getObjID())) 
+									tempRoom.getSensors(SensorCategory.TEMPERATURE).get(0).attach(heater);	
+							}								
 						}
 					}
 				} else if(riga.equals(":STARTDAYMODE")) {

@@ -2,13 +2,13 @@ package domain;
 
 import domain.Sensor.SensorCategory;
 
-public class Window extends Object {
+public class Window extends Obj {
 
 	private Shader shader;
 	private Sensor sensor;
 	
 	public Window(String name, Room room) {
-		super(name, ObjectType.WINDOW, room);
+		super(name, ObjType.WINDOW, room);
 		sensor = new Sensor("sensorOf: ", SensorCategory.WINDOW, room);
 		shader = new Shader("ShaderOf: " + name, room.getRoomID(), this, room);
 		if(Alarm.isCreated())
