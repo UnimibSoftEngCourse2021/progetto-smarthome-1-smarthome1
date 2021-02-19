@@ -12,7 +12,7 @@ public class Menu {
 
 	private ConfigView configView;
 	private ScenarioView scenarioView;
-	private ObjectStateView objectStateView;
+	private ObjStateView objStateView;
 	private ManualActionView manualActionView; 
 	private IsAtHomeView isAtHomeView;
 	private HSConfigView hsConfigView;
@@ -20,7 +20,7 @@ public class Menu {
 	public Menu(DataFacade df, GenericFacade gf, ScenarioFacade sf, HandlerFacade hf) {
 		configView = new ConfigView(df, gf);
 		scenarioView = new ScenarioView(df, sf);
-		objectStateView = new ObjectStateView(df);
+		objStateView = new ObjStateView(df);
 		manualActionView = new ManualActionView(df, hf);
 		isAtHomeView = new IsAtHomeView(hf, df);
 		hf.setIsAtHomeView(isAtHomeView);
@@ -51,7 +51,7 @@ public class Menu {
 				scenarioView.selectOperation();
 				break;
 			case "stati":
-				objectStateView.getObjectState();
+				objStateView.getObjState();
 				break;
 			case "azioni":
 				manualActionView.performAction();

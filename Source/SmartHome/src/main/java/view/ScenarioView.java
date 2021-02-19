@@ -14,7 +14,7 @@ public class ScenarioView {
 	private ScenarioFacade scenarioFacade;
 	
 	List<List<String[]>> rooms = new ArrayList<List<String[]>>();;
-	List<String[]> roomObjects = new ArrayList<String[]>(); // primo valore è nome stanza
+	List<String[]> roomObjs = new ArrayList<String[]>(); // primo valore è nome stanza
 	String[] roomName;
 	List<String> days = new ArrayList<String>();	
 	String time;
@@ -107,7 +107,7 @@ public class ScenarioView {
 			scenarioFacade.setDateTime(scenarioName, time, days);
 			break;
 		case "modify":
-			roomObjects.clear();
+			roomObjs.clear();
 			System.out.println("Lista delle stanze");
 			List<String> roomList = new ArrayList<String>();
 			roomList = dataFacade.getRooms();
@@ -117,7 +117,7 @@ public class ScenarioView {
 			System.out.println("Inserire il nome della stanza in cui eseguire le azioni");
 			roomName[0] = input.nextLine();
 			roomName[1] = null;
-			roomObjects.add(roomName);
+			roomObjs.add(roomName);
 			setAction(scenarioName);
 			// chiamata a controller solo se ha fatto create
 			if(createFlag)
@@ -140,15 +140,15 @@ public class ScenarioView {
 	
 	public void addRoom(String scenarioName) {
 		do {	
-			roomObjects.clear();
+			roomObjs.clear();
 			System.out.println("Inserire il nome della stanza in cui eseguire le azioni");
 			roomName[0] = input.nextLine();
 			roomName[1] = null;
-			roomObjects.add(roomName);
+			roomObjs.add(roomName);
 			setAction(scenarioName);
 			System.out.print("inserire altre stanze? (s/n)");
 		} while(!input.nextLine().equals("n"));
-		rooms.add(roomObjects);
+		rooms.add(roomObjs);
 	}
 	
 	public void setAction(String scenarioName) {
@@ -162,63 +162,63 @@ public class ScenarioView {
 				createFlag = true;
 				do {
 					System.out.println("Lista degli oggetti contenuti nella stanza: ");
-					List<String[]> objectsInRoom = new ArrayList<String[]>();
-					objectsInRoom = dataFacade.getObjectsInRoom(roomName[0]);
-					for(String[] objectInRoom: objectsInRoom) {
-						System.out.println(objectInRoom[0]);
+					List<String[]> objsInRoom = new ArrayList<String[]>();
+					objsInRoom = dataFacade.getObjsInRoom(roomName[0]);
+					for(String[] objInRoom: objsInRoom) {
+						System.out.println(objInRoom[0]);
 					}
-					String objectID = null;
+					String objID = null;
 					System.out.println("Selezionare l'oggetto");
-					String objectName = input.nextLine();	
-					for(String[] objectInRoom: objectsInRoom) {
-						if(objectName.equals(objectInRoom[0]))
-							objectID = objectInRoom[1];
+					String objName = input.nextLine();	
+					for(String[] objInRoom: objsInRoom) {
+						if(objName.equals(objInRoom[0]))
+							objID = objInRoom[1];
 					}					
 					System.out.println("Inserire lo stato desiderato per l'azione");
 					String newState = input.nextLine();	
-					String[] object = {objectID, newState};
-					roomObjects.add(object);
+					String[] obj = {objID, newState};
+					roomObjs.add(obj);
 					System.out.print("inserire altri oggetti? (s/n)");
 				} while(!input.nextLine().equals("n"));
-				rooms.add(roomObjects);
+				rooms.add(roomObjs);
 				break;
 			case "modify":
 				do {
 					System.out.println("Lista degli oggetti modificabili nella stanza: ");
-					List<String[]> objectsInRoomInScenario = new ArrayList<String[]>();
-					objectsInRoomInScenario = dataFacade.getObjectsInRoomInScenario(roomName[0], scenarioName);
-					for(String[] object: objectsInRoomInScenario) {
-						System.out.println(object[0]);
+					List<String[]> objsInRoomInScenario = new ArrayList<String[]>();
+					objsInRoomInScenario = dataFacade.getObjsInRoomInScenario(roomName[0], scenarioName);
+					for(String[] obj: objsInRoomInScenario) {
+						System.out.println(obj[0]);
 					}
 					System.out.println("Inserire il nome dell'oggetto da modificare");
-					String objectName = input.nextLine();
-					String objectID = null;
-					for(String[] objectInRoomInScenario: objectsInRoomInScenario) {
-						if(objectName.equals(objectInRoomInScenario[0]))
-							objectID = objectInRoomInScenario[1];
+					String objName = input.nextLine();
+					String objID = null;
+					for(String[] objInRoomInScenario: objsInRoomInScenario) {
+						if(objName.equals(objInRoomInScenario[0]))
+							objID = objInRoomInScenario[1];
 					}	
 					System.out.println("Inserire lo stato desiderato per l'azione");
 					String newState = input.nextLine();						
-					scenarioFacade.manageChangeAction(scenarioName, objectID, newState);
+					scenarioFacade.manageChangeAction(scenarioName, objID, newState);
 					System.out.print("modificare altri oggetti? (s/n)");
 				} while(!input.nextLine().equals("n"));
 				break;
 			case "delete":
 				do {
 					System.out.println("Lista degli oggetti eliminabili nella stanza: ");
-					List<String[]> objectsInRoomInScenario = new ArrayList<String[]>();
-					objectsInRoomInScenario = dataFacade.getObjectsInRoomInScenario(roomName[0], scenarioName);
-					for(String[] object: objectsInRoomInScenario) {
-						System.out.println(object[0]);
+					List<String[]> objsInRoomInScenario = new ArrayList<String[]>();
+					objsInRoomInScenario = dataFacade.getObjsInRoomInScenario(roomName[0], scenarioName);
+					for(String[] obj: objsInRoomInScenario) {
+						System.out.println(obj[0]);
 					}
 					System.out.println("Inserire il nome dell'oggetto da eliminare");
-					String objectName = input.nextLine();
-					String objectID = "";
-					for(String[] objectInRoomInScenario: objectsInRoomInScenario) {
-						if(objectName.equals(objectInRoomInScenario[0]))
-							objectID = objectInRoomInScenario[1];
+					String objName = input.nextLine();
+					String objID = "";
+					for(String[] objInRoomInScenario: objsInRoomInScenario) {
+						if(objName.equals(objInRoomInScenario[0]))
+							objID = objInRoomInScenario[1];
 					}	
-					scenarioFacade.manageDeleteAction(scenarioName, objectID);
+					scenarioFacade.manageDeleteAction(scenarioName, objID);
 					System.out.print("eliminare altri oggetti? (s/n)");
 				} while(!input.nextLine().equals("n"));
 				break;

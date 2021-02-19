@@ -5,30 +5,30 @@ import java.util.Scanner;
 
 import application.DataFacade;
 
-public class ObjectStateView {
+public class ObjStateView {
 	
 	DataFacade dataFacade;
 	Scanner input = new Scanner(System.in);
 
-	public ObjectStateView(DataFacade dataFacade) {
+	public ObjStateView(DataFacade dataFacade) {
 		this.dataFacade = dataFacade; 
 	}
-	public void getObjectState() {
+	public void getObjState() {
 		do {
 			System.out.println("Lista degli oggetti: ");
-			List<String[]> objects = dataFacade.getAllObjects();
-			for(String[] object: objects) {
-				System.out.println(object);
+			List<String[]> objs = dataFacade.getAllObjs();
+			for(String[] obj: objs) {
+				System.out.println(obj);
 			}
 			System.out.println("Selezionare l'oggetto");
-			String objectName = input.nextLine();
-			for(String[] object: objects) {
-				if(!object[0].contains(objectName)) {
+			String objName = input.nextLine();
+			for(String[] obj: objs) {
+				if(!obj[0].contains(objName)) {
 					System.out.println("Input non valido, riprovare");
 					break;
 				}
-				else if(object[0].equals(objectName))
-					System.out.println("Stato dell'oggetto: " + object[1]);
+				else if(obj[0].equals(objName))
+					System.out.println("Stato dell'oggetto: " + obj[1]);
 			}
 			System.out.print("inserire altri oggetti? (s/n)");
 		} while(!input.nextLine().equals("n"));

@@ -19,15 +19,15 @@ public class ManualActionView {
 	
 	public void performAction() {
 		System.out.println("Oggetti disponibili: ");
-		List<String[]> objectsList = dataFacade.getAllObjects();
-		for(String[] object: objectsList)
-			System.out.println(object[0]);
+		List<String[]> objsList = dataFacade.getAllObjs();
+		for(String[] obj: objsList)
+			System.out.println(obj[0]);
 		System.out.println("Selezionare l'oggetto");
-		String objectName = input.nextLine();
-		String objectID = "";
-		for(String[] object: objectsList)
-			if(object[0].contains(objectName))
-				objectID = object[1];		
-			handlerFacade.manageManualAction(objectID);
+		String objName = input.nextLine();
+		String objID = "";
+		for(String[] obj: objsList)
+			if(obj[0].contains(objName))
+				objID = obj[1];		
+			handlerFacade.manageManualAction(objID);
 	}
 }

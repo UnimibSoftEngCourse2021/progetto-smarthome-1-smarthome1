@@ -17,7 +17,7 @@ public class IsAtHomeView {
 		this.dataFacade = dataFaçade;
 	}
 	public void changeFlag() {
-		String doorID = dataFacade.getObjectsTypeID("DOOR").get(0);
+		String doorID = dataFacade.getObjsTypeID("DOOR").get(0);
 		System.out.println("Stai uscendo o entrando? (home/away)");
 		String state = input.nextLine();
 		if(state.equals("away"))
@@ -30,7 +30,7 @@ public class IsAtHomeView {
 	}
 	
 	public void wrongCode() {
-		String doorID = dataFacade.getObjectsTypeID("DOOR").get(0);
+		String doorID = dataFacade.getObjsTypeID("DOOR").get(0);
 		System.out.println("Codice errato. Reinserirlo");
 		handlerFacade.manageHomeFlagSettings("home", input.nextLine(), doorID);
 	}
