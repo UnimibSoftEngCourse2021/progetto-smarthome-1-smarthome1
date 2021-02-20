@@ -16,11 +16,13 @@ import domain.ConflictHandler;
 import domain.DataDescription;
 import domain.Door;
 import domain.Heater;
+import domain.Light;
 import domain.Obj.ObjType;
 import domain.Room;
 import domain.Sensor;
 import domain.Sensor.AirState;
 import domain.Sensor.SensorCategory;
+import domain.TimerOP.Type;
 import domain.Window;
 
 public class CommunicationTest {
@@ -37,6 +39,9 @@ public class CommunicationTest {
 	private Window w1R1;
 	private Window w2R1;
 	private Window w1R2;
+	private Light l1R1;
+	private Light l1R2;
+	private Sensor mR1;
 	
 	@Before
 	public void init() {
@@ -55,6 +60,9 @@ public class CommunicationTest {
 		//aggiunta oggetti:
 		//creazione allarme
 		Alarm.getInstance("alarm1");
+		Alarm.getInstance().getSensor().attach(Alarm.getInstance());
+		ConflictHandler.getInstance().addObj(Alarm.getInstance());
+		
 		//aggiunta porta alla prima stanza
 		r1.instantiateObj(ObjType.DOOR, "door1");
 		//aggiunta di due finestre alla stanza room1
@@ -108,10 +116,20 @@ public class CommunicationTest {
 		//dichiarazione sensore aria
 		aR1 = r1.getSensors(SensorCategory.AIR).get(0);
 		
+		//dichiarazione sensore movimento
+		mR1 = r1.getSensors(SensorCategory.MOVEMENT).get(0);
+		
 		//dichiarazione finestre
 		w1R1 = (Window)r1.getObjs(ObjType.WINDOW).get(0);
 		w2R1 = (Window)r1.getObjs(ObjType.WINDOW).get(1);
 		w1R2 = (Window)r2.getObjs(ObjType.WINDOW).get(0);
+		
+		//dichiarazione luci
+		l1R1 = (Light)r1.getObjs(ObjType.LIGHT).get(0);
+		l1R2 = (Light)r2.getObjs(ObjType.LIGHT).get(0);
+
+		//binding sensore di movimento con le rispettive luci
+		mR1.attach(l1R1);
 	}
 	
 	@Test
@@ -178,12 +196,26 @@ public class CommunicationTest {
 				assertEquals(false, h2R2.isActive());
 	}
 	
-	/*@Test
+	@Test
 	public void checkAirPollutionIsOkTest() {
+		aR1.setAirState(AirState.POLLUTION);
 		aR1.notifies(SensorCategory.AIR, 22.00);
 		assertEquals(false, w1R1.isActive());
 		assertEquals(false, w2R1.isActive());
-	}*/
+	}
+	
+	@Test
+	public void checkTimerIsDoneAirPollutionTest() {
+		//simulazione conclusione del timerThread
+		w1R1.setActive(true);
+		w2R1.setActive(true);
+		r1.getTimer().startTimer(Type.AIR, 300);
+		
+		//check
+		r1.getTimer().executeOperations(Type.AIR);
+		assertEquals(false, w1R1.isActive());
+		assertEquals(false, w2R1.isActive());
+	}
 	
 	@Test
 	public void checkAirPollutionIsNotOkTest() {
@@ -193,42 +225,122 @@ public class CommunicationTest {
 		assertEquals(true, w2R1.isActive());
 	}
 	
-	/*
+	
+	
+	
 	@Test
 	public void checkGasPollutionIsNotOkTest() {
 		aR1.setAirState(AirState.GAS);
 		aR1.notifies(SensorCategory.AIR, 55.00);
 		assertEquals(true, w1R1.isActive());
 		assertEquals(true, w2R1.isActive());
-	}*/
+	}
 	
 	
 	@Test
 	
 	public void checkAlarmTest() {
 		Alarm.getInstance().setArmed(true);
-		ConflictHandler.getInstance().addObj(Alarm.getInstance());
-		Alarm.getInstance().getSensor().attach(Alarm.getInstance());
-		/*Door door = (Door)r1.getObjs(ObjType.DOOR).get(0);
-		door.getSensor().notifies(SensorCategory.DOOR, 1.00);*/
-		
-		r1.getSensors(SensorCategory.MOVEMENT).get(0).notifies(SensorCategory.MOVEMENT, 1.00);
-		AutomaticControl.getInstance().checkAlarm();
+		mR1.notifies(SensorCategory.MOVEMENT, 1.00);
 		assertEquals(true, Alarm.getInstance().isActive());
 	}
 	
-	/*
+	
 	@Test
-	public void checkLightTest() {
-		AutomaticControl.getInstance().checkLight(1.00, r1);
-		assertEquals(true, r1.getObjs(ObjType.LIGHT).get(0));
-	}*/
+	public void checkNightLightOnTest() {
+		//
+		AutomaticControl.setStopDayMode("00:00");
+		AutomaticControl.setStopDayMode("01:00");
+		
+		mR1.notifies(SensorCategory.MOVEMENT, 1.00);
+		assertEquals(true, l1R1.isActive());
+	}
+	
+	@Test
+	public void checkDayLightOffTest() {
+		//inizializzazione dayMode
+		AutomaticControl.setStopDayMode("00:00");
+		AutomaticControl.setStopDayMode("23:59");
+		
+		//caso in cui gli shader sono abbassati
+		//la luce non si accende 
+		mR1.notifies(SensorCategory.MOVEMENT, 1.00);
+		assertEquals(false, l1R1.isActive());
+		
+		//shader non abbassati
+		//la luce si accende 
+		w1R1.getShader().setActive(true);
+		w2R1.getShader().setActive(true);
+		mR1.notifies(SensorCategory.MOVEMENT, 1.00);
+		assertEquals(true, l1R1.isActive());
+	}
+	
+	@Test 
+	public void startTimerTest() {
+		//inizializzazione dayMode + startTimer
+		AutomaticControl.setStopDayMode("00:00");
+		AutomaticControl.setStopDayMode("23:59");
+		l1R1.setActive(true);
+				
+		//check attivazione timer
+		//il timer aspetta che passino 5 minuti prima di spegnere le luci
+		mR1.notifies(SensorCategory.MOVEMENT, 0.00);
+		assertEquals(true, l1R1.isActive());
+	}
+	
+	@Test
+	public void switchOffLightTimerTest() {
+		//simulazione esecuzione timerThread
+		//inizializzazione dayMode + startTimer
+		AutomaticControl.setStopDayMode("00:00");
+		AutomaticControl.setStopDayMode("23:59");
+		l1R1.setActive(true);
+		r1.getTimer().startTimer(Type.LIGHT, 600);
+		
+		//check spegnimento/reset timer
+		//dopo 5 minuti le luci si spengono
+		r1.getTimer().executeOperations(Type.LIGHT);
+		assertEquals(false, l1R1.isActive());
+	}
+	
+	@Test
+	public void resetTimerTest() {
+		//simulazione esecuzione timerThread
+		//inizializzazione dayMode + startTimer
+		AutomaticControl.setStopDayMode("00:00");
+		AutomaticControl.setStopDayMode("23:59");
+		l1R1.setActive(true);
+		r1.getTimer().startTimer(Type.LIGHT, 600);
+		
+		//reset timer perche il sensore di movimento rileva qualcosa prima dello scadere del timer
+		//le luci rimangono accese
+		mR1.notifies(SensorCategory.MOVEMENT, 1.00);
+		assertEquals(true, l1R1.isActive());
+	}
 	
 	@Test
 	public void checkDayModeTest() {
 		AutomaticControl.setStartDayMode("08:00");
 		AutomaticControl.setStopDayMode("23.00");
 		assertEquals(true, AutomaticControl.getInstance().isDayMode());
+	}
+	
+	@Test 
+	public void checkGasAndAlarmConflictTest() {
+		//init locale al test
+		Alarm.getInstance().setArmed(false);
+		w1R1.getShader().setActive(true);
+		l1R1.setActive(true);
+		l1R2.setActive(true);
+		
+		//test
+		aR1.setAirState(AirState.GAS);
+		aR1.notifies(SensorCategory.AIR, 35.00);
+		assertEquals(true, w1R1.isActive());
+		assertEquals(true, w2R1.isActive());
+		assertEquals(false, w1R2.isActive());
+		assertEquals(false, l1R1.isActive());
+		assertEquals(true, l1R2.isActive());
 	}
 	
 	@After

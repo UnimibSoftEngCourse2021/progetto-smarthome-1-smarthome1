@@ -105,6 +105,16 @@ public class Config {
 				r.setHeatersNum();
 				r.setWindowsNum();
 			}
+			Sensor mSensor;
+			for(Room r: rooms) {
+				if(r.getSensors(SensorCategory.MOVEMENT) != null) {
+						mSensor = r.getSensors(SensorCategory.MOVEMENT).get(0);
+					if(r.getObjs(ObjType.LIGHT) != null)
+						for(Obj obj: r.getObjs(ObjType.LIGHT)) {
+							mSensor.attach(obj);
+						}
+				}
+			}
 		} catch (FileNotFoundException e) {
 			System.err.println("error");
 			System.exit(0);

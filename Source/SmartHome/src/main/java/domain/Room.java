@@ -33,7 +33,6 @@ public class Room {
 	}
 	public void createTimer() {
 		timer = new TimerOP(this);
-		timer.setRoom(this);
 	}
 	
 	public void instantiateSensor(SensorCategory category, String name) {
@@ -41,9 +40,6 @@ public class Room {
 		sensors.add(sensor);
 		AutomaticControl.getInstance().addSensor(sensor);
 		sensor.setSensorID(category.toString() + "_" + roomID.toUpperCase() + "_" + String.valueOf(floor));
-		if(category.equals(SensorCategory.MOVEMENT))
-			if(Alarm.isCreated())
-				Alarm.getInstance().setSensor(sensor);
 	}
 	
 	public void instantiateObj(ObjType type, String name) {
@@ -69,6 +65,7 @@ public class Room {
 			objs.add(shader);
 			shader.setObjID("SHADER_" + window.getObjID());
 			shader.getSensor().setSensorID("SHADER_" + shader.getObjID());
+			shader.getSensor().attach(shader);
 			ConflictHandler.getInstance().addObj(window);
 			ConflictHandler.getInstance().addObj(shader);
 			//ScenariosHandler.getInstance().addObj(window);
@@ -82,6 +79,7 @@ public class Room {
 			light.getSensor().concatName(light.getObjID());
 			light.getSensor().setSensorID("LIGHT_" + light.getObjID());
 			ConflictHandler.getInstance().addObj(light);
+			
 			//ScenariosHandler.getInstance().addObj(light);
 			break;
 		case HEATER:

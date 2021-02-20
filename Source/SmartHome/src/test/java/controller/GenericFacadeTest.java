@@ -48,7 +48,7 @@ public class GenericFacadeTest {
 		assertEquals((short)1, room.getFloor());
 		assertEquals(90, AutomaticControl.getInstance().getStartDayMode());
 		assertEquals(600, AutomaticControl.getInstance().getStopDayMode());
-		assertEquals("light1", ConflictHandler.getInstance().getObjs().get(0).getName());
+		assertEquals("light1", ConflictHandler.getInstance().getObjs().get(1).getName());
 		Sensor sTemp = room.getSensors(SensorCategory.TEMPERATURE).get(0);
 		Object[] heaters = sTemp.getPublisherList().toArray();
 		String[] heatersIDs = new String[2];
@@ -68,7 +68,7 @@ public class GenericFacadeTest {
 	}
 	
 	@Test
-	public void manageWriteOnHSCFile() {
+	public void manageWriteOnHSCFileTest() {
 		DataDescription dd = new DataDescription();
 		GenericFacade gf = new GenericFacade(dd);
 		Config.getInstance().setDataDescription(dd);

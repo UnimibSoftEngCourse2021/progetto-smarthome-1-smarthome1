@@ -108,15 +108,14 @@ public class AutomaticControl {
 		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION)) {
 			for(int i = 0; i < room.getWindowsNum(); i++)
 				ConflictHandler.getInstance().doAction(room.getObjs(ObjType.WINDOW).get(i).getObjID(), airState, true);
-			if(timer.getAirThread() != null)
-				timer.resetTimer(Type.AIR);
-		} else {
-			if(timer.getAirThread() != null & !timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
-				timer.startTimer(Type.LIGHT, 300);
-			else if(!timer.isWorking(Type.LIGHT))
+			timer.startTimer(Type.AIR, 300);				
+		} else if(airState.equals(AirState.POLLUTION)){
+			if(timer.isCreated(Type.AIR)) {			
 				for(int j = 0; j < room.getWindowsNum(); j++) 
-					if(windows.get(j).isActive() == true) 
-						ConflictHandler.getInstance().doAction(windows.get(j).getObjID(), airState, true);
+					if(windows.get(j).isActive()) 
+						ConflictHandler.getInstance().doAction(windows.get(j).getObjID(), airState, false);
+				timer.resetTimer(Type.AIR);	
+			}
 		}
 		if (currentPollutionValue > 30.00 && airState.equals(AirState.GAS))
 			for(int i = 0; i < room.getWindowsNum(); i++)
@@ -131,14 +130,16 @@ public class AutomaticControl {
 			for(int i = 0; i < room.getLightsNum(); i++) 
 				if(lights.get(i).isActive() == false) 
 					ConflictHandler.getInstance().doAction(lights.get(i).getObjID(), isDayMode(), true);
-			timer.resetTimer(Type.LIGHT);	
+			if(timer.isCreated(Type.LIGHT))
+				timer.resetTimer(Type.LIGHT);	
 		} else {
-			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
+			if(!timer.isCreated(Type.LIGHT)) 
 				timer.startTimer(Type.LIGHT, 300);
-			else if(!timer.isWorking(Type.LIGHT))
+			if(timer.getElapsedTimers()[0])
 				for(int j = 0; j < room.getLightsNum(); j++) 
 					if(lights.get(j).isActive() == true) 
 						ConflictHandler.getInstance().doAction(lights.get(j).getObjID(), isDayMode(), false);
+			
 		}
 	}
 	

@@ -193,12 +193,14 @@ public class ConflictHandler {
 							if(handler.userNotifies("C'è una fuga di gas.\nPerò l'allarme è armato.\nApro comunque le finestre?")) {
 								if(window.getShader().isActive())
 									adapter.triggerAction(window.getShader(), false);
-								adapter.triggerAction(window, true);			
+								adapter.triggerAction(window, true);
 							}
 						}
+						
 						break;
 					}
 				}
+				adapter.triggerAction(window, false);
 			}
 		}
 	}

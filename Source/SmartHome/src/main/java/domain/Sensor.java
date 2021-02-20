@@ -40,9 +40,8 @@ public class Sensor {
 		switch (category) {
 		case MOVEMENT:
 			if(newValue == 1.00) {
+				AutomaticControl.getInstance().checkAlarm();
 				for (int i = 0; i < publisherList.size(); i++) {
-					if(publisherList.get(i).getObjType().equals(ObjType.ALARM))
-						AutomaticControl.getInstance().checkAlarm();
 					if(publisherList.get(i).getObjType().equals(ObjType.LIGHT))
 						AutomaticControl.getInstance().checkLight(newValue, room);
 				}

@@ -28,6 +28,18 @@ public class TimerOP{
 			lightThread.start();
 		}
 	}
+	
+	public boolean isCreated(Type type) {
+		if(type.equals(Type.AIR)) {
+			if(airThread != null)
+				return true;
+			return false;
+		} else {
+			if((lightThread != null))
+				return true;
+			return false;
+		}
+	}
 
 	public void resetTimer(Type timerType) {
 		if(timerType.equals(Type.AIR)) {
@@ -43,29 +55,8 @@ public class TimerOP{
 		if(timerType.equals(Type.LIGHT)) {
 			elapsedTimers[0] = true;
 			AutomaticControl.getInstance().checkLight(0.00, room);
-		} else {
-			elapsedTimers[1] = true;
+		} else 
 			AutomaticControl.getInstance().checkAirPollution(0.00, room, AirState.POLLUTION);
-		}
-	}
-	
-	public boolean isWorking(Type timerType) {
-		if(timerType.equals(Type.AIR))
-			return airThread.isAlive();
-		else
-			return lightThread.isAlive();
-	}
-	
-	public boolean isFinished(Type timerType) {
-		if(timerType.equals(Type.AIR)) {
-			if(airThread == null) 
-				return true;
-			return false;
-		} else {
-			if(lightThread == null)
-				return true;
-			return false;
-		}
 	}
 	
 	public TimerThread getAirThread() {
