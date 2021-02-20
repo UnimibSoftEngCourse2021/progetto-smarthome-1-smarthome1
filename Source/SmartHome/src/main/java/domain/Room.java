@@ -23,8 +23,6 @@ public class Room {
 	public Room(String roomID, Short floor) {
 		this.roomID = roomID;
 		this.floor = floor;
-		timer = new TimerOP(this);
-		timer.setRoom(this);
 		sensors = new ArrayList<Sensor>();
 		objs = new ArrayList<Obj>();
 	}
@@ -32,6 +30,10 @@ public class Room {
 	public Room() {
 		sensors = new ArrayList<Sensor>();
 		objs = new ArrayList<Obj>();
+	}
+	public void createTimer() {
+		timer = new TimerOP(this);
+		timer.setRoom(this);
 	}
 	
 	public void instantiateSensor(SensorCategory category, String name) {
@@ -84,8 +86,11 @@ public class Room {
 			break;
 		case HEATER:
 			Heater heater= new Heater(name, this);
+			heater.getSensor().attach(heater);
 			objs.add(heater);
 			heater.setObjID("HEATER_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjs(ObjType.HEATER).indexOf(heater)));
+			heater.getSensor().concatName(heater.getObjID());
+			heater.getSensor().setSensorID("HEATER_" + heater.getObjID());
 			ConflictHandler.getInstance().addObj(heater);
 			//ScenariosHandler.getInstance().addObj(heater);
 			break;

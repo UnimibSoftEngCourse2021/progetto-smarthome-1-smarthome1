@@ -15,7 +15,7 @@ public class AutomaticControl {
 	private static double[][] userMatrix = new double[7][26];
 	private double[][] standardMatrix = new double[7][26];
 	public enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
-	private static ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
+	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
 	//private boolean activeLightControl = false;
 	//private boolean activeAirControl = false;
 	private static int startDayMode;
@@ -108,9 +108,10 @@ public class AutomaticControl {
 		if(currentPollutionValue > 50.00 && airState.equals(AirState.POLLUTION)) {
 			for(int i = 0; i < room.getWindowsNum(); i++)
 				ConflictHandler.getInstance().doAction(room.getObjs(ObjType.WINDOW).get(i).getObjID(), airState, true);
-			timer.resetTimer(Type.AIR);
+			if(timer.getAirThread() != null)
+				timer.resetTimer(Type.AIR);
 		} else {
-			if(!timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
+			if(timer.getAirThread() != null & !timer.isWorking(Type.LIGHT) && !timer.getElapsedTimers()[0]) 
 				timer.startTimer(Type.LIGHT, 300);
 			else if(!timer.isWorking(Type.LIGHT))
 				for(int j = 0; j < room.getWindowsNum(); j++) 
@@ -165,8 +166,8 @@ public class AutomaticControl {
 		return choosenMatrix;
 	}
 
-	public static void setChoosenMatrix(ChoosenMatrix choosenMatrix) {
-		AutomaticControl.choosenMatrix = choosenMatrix;
+	public  void setChoosenMatrix(ChoosenMatrix choosenMatrix) {
+		this.choosenMatrix = choosenMatrix;
 	}
 
 	public int getStartDayMode() {

@@ -94,14 +94,7 @@ public class GenericFacadeTest {
 				{0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 1.00, 0.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 18.00, 21.00}
 				
 		};
-		/*double[][] m = AutomaticControl.getInstance().getUserMatrix();
-		for(int i = 0; i < m.length; i++) {
-			for(int j = 0; j < m[i].length; j++) {
-				System.out.print(m[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();*/
+		
 		assertArrayEquals(expectedMatrix, AutomaticControl.getInstance().getUserMatrix());
 		
 	}

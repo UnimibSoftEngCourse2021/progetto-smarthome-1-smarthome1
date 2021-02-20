@@ -85,8 +85,8 @@ public class ConflictHandler {
 						 */
 						boolean windowOpen = false;	
 						List<Obj> windows = obj.getRoom().getObjs(ObjType.WINDOW);
-						for(Obj window: objs) {
-							if(window.isActive() == true) {							
+						for(Obj window: windows) {
+							if(window.isActive()) {							
 								windowOpen = true;
 								break;
 							}															
@@ -156,8 +156,9 @@ public class ConflictHandler {
 	public void doAction(String windowID, AirState airState, boolean changeState) {
 		// a seconda di airState azione ha priorità diversa
 		for(Obj obj: objs) {
-			Window window = (Window)obj;
-			if(window.getObjID().equals(windowID))
+			
+			if(obj.getObjID().equals(windowID)) {
+				Window window = (Window)obj;
 				if(changeState) {			
 					if(airState.equals(AirState.POLLUTION)) {
 						if(Alarm.isCreated() && !Alarm.getInstance().isArmed()) {
@@ -168,10 +169,10 @@ public class ConflictHandler {
 									userDecision = handler.userNotifies("L'aria è sporca.\nPerò i caloriferi sono accesi.\nVuoi comunque aprire le finestre?");
 									break;
 								}
-							if(window.getShader().isActive() && userDecision) {
-								adapter.triggerAction(window.getShader(), false);
-								adapter.triggerAction(window, true);
-							}							
+							if(window.getShader().isActive() && userDecision) 
+								adapter.triggerAction((Shader)window.getShader(), false);
+							adapter.triggerAction(window, true);
+													
 						}
 						break;
 					}
@@ -198,6 +199,7 @@ public class ConflictHandler {
 						break;
 					}
 				}
+			}
 		}
 	}
 
@@ -234,5 +236,13 @@ public class ConflictHandler {
 	
 	public void clean() {
 		conflictHandler = null;
+	}
+
+	public HandlerFacade getHandler() {
+		return handler;
+	}
+
+	public void setHandler(HandlerFacade handler) {
+		this.handler = handler;
 	}
 }

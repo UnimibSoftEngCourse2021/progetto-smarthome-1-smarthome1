@@ -23,19 +23,19 @@ public class Sensor {
 		this.category = category;
 		this.room = room;
 		this.airState = null;
-		publisherList = new ArrayList<Obj>();
+		publisherList = new ArrayList<>();
 	}
 
 	public void attach(Obj obj) {
-		if(publisherList.add(obj))
-			;
+		publisherList.add(obj);
+			
 	}
 
 	public void deattach(Obj obj) {
 		publisherList.remove(obj);
 	}
 
-	public void notifies(double newValue) { 
+	public void notifies(SensorCategory category, double newValue) { 
 		value = newValue;
 		switch (category) {
 		case MOVEMENT:

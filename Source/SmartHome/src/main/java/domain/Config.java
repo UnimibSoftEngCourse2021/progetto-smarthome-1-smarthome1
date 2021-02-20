@@ -37,6 +37,7 @@ public class Config {
 					String floor = inputStream.nextLine();
 					tempRoom = new Room(name, Short.parseShort(floor));
 					rooms.add(tempRoom);
+					tempRoom.createTimer();
 				}
 				else if(riga.equals(":ALARM")) {
 					String name = inputStream.nextLine();
@@ -79,8 +80,12 @@ public class Config {
 							List<Obj> heaters = singleRoom.getObjs(ObjType.HEATER);
 							for(Obj obj: heaters) {
 								Heater heater = (Heater)obj;
-								if(heatersIDs.contains(heater.getObjID())) 
+								if(heatersIDs.contains(heater.getObjID())) {
 									tempRoom.getSensors(SensorCategory.TEMPERATURE).get(0).attach(heater);	
+									heater.setTempSensor(tempRoom.getSensors(SensorCategory.TEMPERATURE).get(0));
+									//da rivedere bind heater con sensore di temp e viceversa
+									// un sensore della stanza A puo bindare con un heater della stanza B
+								}
 							}								
 						}
 					}
@@ -107,7 +112,7 @@ public class Config {
 	public void processFileHSC() {
 		try (Scanner inputStream = new Scanner(dataDescription.getFileHSC())) {
 			while(inputStream.hasNextLine()) {
-				AutomaticControl.setChoosenMatrix(ChoosenMatrix.USER);
+				AutomaticControl.getInstance().setChoosenMatrix(ChoosenMatrix.USER);
 				String riga = inputStream.nextLine();
 				if(riga.equals(":MONDAY")
 					|| riga.equals(":TUESDAY")
@@ -137,7 +142,7 @@ public class Config {
 	}
 
 	public void setRooms(Room room) {
-		this.rooms.add(room);
+		rooms.add(room);
 	}
 
 	public DataDescription getDataDescription() {

@@ -5,6 +5,7 @@ import domain.Sensor.SensorCategory;
 public class Heater extends Obj {
 
 	private Sensor sensor;
+	private Sensor tempSensor;
 	
 	public Heater(String name, Room room) {
 		super(name, ObjType.HEATER, room);
@@ -18,5 +19,13 @@ public class Heater extends Obj {
 
 	public void setSensor(Sensor sensor) {
 		this.sensor = sensor;
+	}
+
+	public Sensor getTempSensor() {
+		return tempSensor;
+	}
+
+	public void setTempSensor(Sensor tempSensor) {
+		this.tempSensor = tempSensor;
 	}
 }

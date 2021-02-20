@@ -36,7 +36,6 @@ public class DataFacadeTest {
 	public void getObjsInRoomTest() {
 		ScenariosHandler sh = new ScenariosHandler();
 		DataFacade df = new DataFacade(sh);
-		//init();
 		
 		assertEquals("light1", df.getObjsInRoom("room1").get(0)[0]);
 	}
@@ -45,7 +44,6 @@ public class DataFacadeTest {
 	public void getAllObjsTest() {
 		ScenariosHandler sh = new ScenariosHandler();
 		DataFacade df = new DataFacade(sh);
-		//init();
 		
 		assertEquals("light1", df.getAllObjs().get(0)[0]);
 		assertEquals("light2", df.getAllObjs().get(1)[0]);
@@ -56,7 +54,6 @@ public class DataFacadeTest {
 	public void getObjsType() {
 		ScenariosHandler sh = new ScenariosHandler();
 		DataFacade df = new DataFacade(sh);
-		//init();
 
 		assertEquals("LIGHT_ROOM1_1_0", df.getObjsTypeID("LIGHT").get(0));
 		assertEquals("LIGHT_ROOM2_1_0", df.getObjsTypeID("LIGHT").get(1));
@@ -67,7 +64,6 @@ public class DataFacadeTest {
 	public void getObjsInScenarioTest() {
 		ScenariosHandler sh = new ScenariosHandler();
 		DataFacade df = new DataFacade(sh);
-		//init();
 		
 		// creazione scenario
 		ScenarioFacade sf = new ScenarioFacade(sh);
@@ -90,7 +86,6 @@ public class DataFacadeTest {
 	public void getScenariosTest() {
 		ScenariosHandler sh = new ScenariosHandler();
 		DataFacade df = new DataFacade(sh);
-		//init();
 		
 		// creazione scenario
 		ScenarioFacade sf = new ScenarioFacade(sh);
@@ -124,7 +119,6 @@ public class DataFacadeTest {
 	public void getRoomsTest() {
 		ScenariosHandler sh = new ScenariosHandler();
 		DataFacade df = new DataFacade(sh);
-		//init();
 		
 		assertEquals("room1", df.getRooms().get(0));
 		assertEquals("room2", df.getRooms().get(1));
@@ -136,7 +130,6 @@ public class DataFacadeTest {
 	public void getObjsInRoomInScenario() {
 		ScenariosHandler sh = new ScenariosHandler();
 		DataFacade df = new DataFacade(sh);
-		//init();
 		
 		// creazione scenario
 		ScenarioFacade sf = new ScenarioFacade(sh);
