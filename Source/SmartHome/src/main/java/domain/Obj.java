@@ -9,7 +9,11 @@ public abstract class Obj {
 	public enum ObjType {ALARM, DOOR, HEATER, LIGHT, WINDOW, SHADER}
 	private ObjType objType;
 
-	public Obj(String name, ObjType objType, Room room) {
+	/*
+	 *  costruttore con visibilità protected in quanto classe astratta
+	 *  solo le sotto classi devono essere in grado di vederlo
+	 */
+	protected Obj(String name, ObjType objType, Room room) {
 		this.name = name;
 		this.active = false;
 		this.objType = objType;
@@ -56,10 +60,6 @@ public abstract class Obj {
 	}
 
 	public void update(double sensorValue) {
-		/*
-		 * potrebbe essere necessario aggiungere una gestione
-		 * delle eccezzioni per valori sballati dei sensori
-		 */
 			if(sensorValue == 0.00) 
 				active = false;
 			else if (sensorValue == 1.00)

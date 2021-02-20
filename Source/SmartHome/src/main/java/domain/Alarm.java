@@ -65,6 +65,9 @@ public class Alarm extends Obj {
 		return sensor;
 	}
 	
+	/*
+	 * metodo utilizzato durante i test per pulire l'istanza utilizzata
+	 */
 	public static void clean() {
 			alarm = null;
 	}

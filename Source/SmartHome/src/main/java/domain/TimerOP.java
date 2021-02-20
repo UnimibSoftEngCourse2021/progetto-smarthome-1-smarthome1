@@ -8,7 +8,7 @@ public class TimerOP{
 	private Room room;
 	private TimerThread airThread;
 	private TimerThread lightThread;
-	public enum Type {LIGHT, AIR};
+	public enum Type {LIGHT, AIR}
 	private boolean[] elapsedTimers = {false, false};
 	
 	public TimerOP(Room room) {

@@ -20,6 +20,10 @@ public class DataDescription {
 		return HSCFILENAME;
 	}
 
+	/*
+	 * metodo che permette di scrivere su un file, poi successivamente letto e interpretato dalla
+	 * classe Config, i valori inseriti dall'utente riguardanti le funzionalità della casa
+	 */
 	public void writeOnFileHC(String attribute, String value) {
 		try {
 			FileOutputStream f = new FileOutputStream(fileHC, true);
@@ -36,8 +40,7 @@ public class DataDescription {
 				outputStream.close();
 				Config.getInstance().processFileHC();
 				if(fileHC.delete());
-					fileHC = new File(HCFILENAME);
-				
+				fileHC = new File(HCFILENAME);				
 			}	
 			else {
 			//in generale per ogni attributo ho sempre il nome
@@ -52,6 +55,10 @@ public class DataDescription {
 		
 	}
 
+	/*
+	 * metodo che permette di scrivere su un file, poi successivamente letto e interpretato dalla
+	 * classe Config, i valori inseriti dall'utente riguardanti il sistema di riscaldamento
+	 */
 	public void writeOnFileHSC(String attribute, double[] values) {
 		try {
 			FileOutputStream f = new FileOutputStream(fileHSC, true);
@@ -60,7 +67,7 @@ public class DataDescription {
 				outputStream.close();
 				Config.getInstance().processFileHSC();
 				if(fileHSC.delete());
-					fileHSC = new File(HSCFILENAME);
+				fileHSC = new File(HSCFILENAME);
 			}
 			else{
 				outputStream.println(":" + attribute.toUpperCase());

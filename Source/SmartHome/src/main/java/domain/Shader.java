@@ -7,7 +7,7 @@ public class Shader extends Obj {
 	private Window window; 
 	private Sensor sensor;
 
-	public Shader(String name, String referencedRoomID, Window window, Room room) {
+	public Shader(String name, Window window, Room room) {
 		super(name, ObjType.SHADER, room);
 		sensor = new Sensor("sensorOf: ", SensorCategory.SHADER, room);
 		AutomaticControl.getInstance().addSensor(sensor);

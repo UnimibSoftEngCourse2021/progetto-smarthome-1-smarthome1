@@ -14,8 +14,6 @@ public class Room {
 	private short doorsNum;
 	private short heatersNum;
 	private short windowsNum;
-	//private boolean lightControlled = false;
-	//private boolean airControlled = false;
 	private List<Sensor> sensors;
 	private List<Obj> objs;
 	private TimerOP timer;
@@ -23,18 +21,21 @@ public class Room {
 	public Room(String roomID, Short floor) {
 		this.roomID = roomID;
 		this.floor = floor;
-		sensors = new ArrayList<Sensor>();
-		objs = new ArrayList<Obj>();
+		sensors = new ArrayList<>();
+		objs = new ArrayList<>();
 	}
 
 	public Room() {
-		sensors = new ArrayList<Sensor>();
-		objs = new ArrayList<Obj>();
+		sensors = new ArrayList<>();
+		objs = new ArrayList<>();
 	}
 	public void createTimer() {
 		timer = new TimerOP(this);
 	}
 	
+	/*
+	 * aggiunta del sensore passato alla lista e creazione del suo id
+	 */
 	public void instantiateSensor(SensorCategory category, String name) {
 		Sensor sensor = new Sensor(name, category, this);
 		sensors.add(sensor);
@@ -42,6 +43,9 @@ public class Room {
 		sensor.setSensorID(category.toString() + "_" + roomID.toUpperCase() + "_" + String.valueOf(floor));
 	}
 	
+	/*
+	 * aggiunta dei vari tipi di oggetti alla lista e creazione del loro id
+	 */
 	public void instantiateObj(ObjType type, String name) {
 		switch(type) {
 		case DOOR:
@@ -52,7 +56,6 @@ public class Room {
 			door.getSensor().concatName(door.getObjID());
 			door.getSensor().setSensorID("DOOR_" + door.getObjID());
 			ConflictHandler.getInstance().addObj(door);
-			//ScenariosHandler.getInstance().addObj(door);
 			break;
 		case WINDOW:
 			Window window = new Window(name, this);
@@ -68,8 +71,6 @@ public class Room {
 			shader.getSensor().attach(shader);
 			ConflictHandler.getInstance().addObj(window);
 			ConflictHandler.getInstance().addObj(shader);
-			//ScenariosHandler.getInstance().addObj(window);
-			//ScenariosHandler.getInstance().addObj(shader);
 			break;
 		case LIGHT:
 			Light light= new Light(name, this);
@@ -79,8 +80,6 @@ public class Room {
 			light.getSensor().concatName(light.getObjID());
 			light.getSensor().setSensorID("LIGHT_" + light.getObjID());
 			ConflictHandler.getInstance().addObj(light);
-			
-			//ScenariosHandler.getInstance().addObj(light);
 			break;
 		case HEATER:
 			Heater heater= new Heater(name, this);
@@ -90,7 +89,6 @@ public class Room {
 			heater.getSensor().concatName(heater.getObjID());
 			heater.getSensor().setSensorID("HEATER_" + heater.getObjID());
 			ConflictHandler.getInstance().addObj(heater);
-			//ScenariosHandler.getInstance().addObj(heater);
 			break;
 		default:
 			break;
@@ -108,7 +106,7 @@ public class Room {
 	}
 	
 	public List<Obj> getObjs(ObjType type) {
-		List<Obj> objList = new ArrayList<Obj>();	
+		List<Obj> objList = new ArrayList<>();	
 		for(Obj obj: objs) {
 			if(obj.getObjType().equals(type))
 				objList.add(obj);
@@ -117,7 +115,7 @@ public class Room {
 	}
 
 	public List<Sensor> getSensors(SensorCategory category){
-		List<Sensor> sensorList = new ArrayList<Sensor>();
+		List<Sensor> sensorList = new ArrayList<>();
 		for(Sensor sensor: sensors) {
 			if(sensor.getCategory().equals(category))
 				sensorList.add(sensor);
@@ -196,4 +194,5 @@ public class Room {
 				r++;
 		windowsNum = r;
 	}
+	
 }
