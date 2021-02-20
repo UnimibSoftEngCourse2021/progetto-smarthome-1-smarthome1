@@ -12,9 +12,9 @@ public class IsAtHomeView {
 	
 	Scanner input = new Scanner(System.in);
 
-	public IsAtHomeView(HandlerFacade handlerFaçade, DataFacade dataFaçade) {
-		this.handlerFacade = handlerFaçade;
-		this.dataFacade = dataFaçade;
+	public IsAtHomeView(HandlerFacade handlerFacade, DataFacade dataFacade) {
+		this.handlerFacade = handlerFacade;
+		this.dataFacade = dataFacade;
 	}
 	
 	public void changeFlag() {
@@ -36,7 +36,7 @@ public class IsAtHomeView {
 		handlerFacade.manageHomeFlagSettings("home", input.nextLine(), doorID);
 	}
 	
-	public void setHandlerFaçade(HandlerFacade handlerFacade) {
+	public void setHandlerFacade(HandlerFacade handlerFacade) {
 		this.handlerFacade = handlerFacade;		
 	}
 	

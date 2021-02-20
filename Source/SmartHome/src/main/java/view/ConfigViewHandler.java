@@ -8,6 +8,8 @@ import application.GenericFacade;
 
 public class ConfigViewHandler {
 	
+	private static final String continueMessage = "continuare? (s/n)";
+	private static final String heaterID = "heaterID";
 	private DataFacade df;
 	private GenericFacade gf;
 	private Scanner input = new Scanner(System.in);
@@ -50,7 +52,7 @@ public class ConfigViewHandler {
 			System.out.println("Inserire il nome della luce che si intende creare: (premere invio per non inserire luci)");
 			lightName = input.nextLine();
 			gf.manageWriteOnHCFile("light", lightName);
-			System.out.print("continuare? (s/n)");
+			System.out.print(continueMessage);
 		} while (!input.nextLine().equals("n"));
 	}
 	
@@ -60,7 +62,7 @@ public class ConfigViewHandler {
 			System.out.println("Inserire il nome della finestra che si intende creare: (premere invio per non inserire finestre)");
 			windowName = input.nextLine();
 			gf.manageWriteOnHCFile("window", windowName);
-			System.out.print("continuare? (s/n)");
+			System.out.print(continueMessage);
 		} while (!input.nextLine().equals("n"));
 	}
 	
@@ -74,7 +76,7 @@ public class ConfigViewHandler {
 			doorCode = input.nextLine();
 			gf.manageWriteOnHCFile("door", doorName);
 			gf.manageWriteOnHCFile("code", doorCode);
-			System.out.print("continuare? (s/n)");
+			System.out.print(continueMessage);
 		} while (!input.nextLine().equals("n"));
 	}
 	
@@ -87,8 +89,8 @@ public class ConfigViewHandler {
 			String id = "HEATER_" + roomName +"_" + roomFloor + "_" + n;
 			String[] temp = {heaterName, id};
 			heaterNotBinded.add(temp);
-			gf.manageWriteOnHCFile("heaterID", id);
-			System.out.print("continuare? (s/n)");
+			gf.manageWriteOnHCFile(heaterID, id);
+			System.out.print(continueMessage);
 		} while (!input.nextLine().equals("n"));
 		return heaterNotBinded;
 	}
@@ -153,7 +155,7 @@ public class ConfigViewHandler {
 									heaterId= heater[1];
 									break;
 								}
-							gf.manageWriteOnHCFile("heaterID", heaterId);
+							gf.manageWriteOnHCFile(heaterID, heaterId);
 							String[] temp = {config, heaterId};
 							numHeaterNotBinded.remove(temp);
 							if(!numHeaterNotBinded.isEmpty()) {
@@ -162,7 +164,7 @@ public class ConfigViewHandler {
 							}
 						}							
 					} while(config.equalsIgnoreCase("s") || !numHeaterNotBinded.isEmpty());
-					gf.manageWriteOnHCFile("heaterID", "");
+					gf.manageWriteOnHCFile(heaterID, "");
 				}
 		}
 	}

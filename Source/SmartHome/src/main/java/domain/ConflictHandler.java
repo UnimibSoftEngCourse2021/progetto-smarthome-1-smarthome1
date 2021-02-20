@@ -126,10 +126,10 @@ public class ConflictHandler {
 					case WINDOW:
 						if(Alarm.isCreated() && !Alarm.getInstance().isArmed())							
 							adapter.triggerAction(obj, true);
-						else if(handler.userNotifies("L'allarme è armato.\nVuoi comunque aprire le finestre?"))
-							if(handler.userNotifies("Sei sicuro?"))
-								if(handler.userNotifies("Sei proprio sicuro?"))
-									adapter.triggerAction(obj, true);
+						else if(handler.userNotifies("L'allarme è armato.\nVuoi comunque aprire le finestre?") &&
+								(handler.userNotifies("Sei sicuro?")) &&
+								(handler.userNotifies("Sei proprio sicuro?")))
+							adapter.triggerAction(obj, true);
 						break;
 					default:
 						break;
@@ -192,7 +192,7 @@ public class ConflictHandler {
 									break;
 								}
 							if(window.getShader().isActive() && userDecision) 
-								adapter.triggerAction((Shader)window.getShader(), false);
+								adapter.triggerAction(window.getShader(), false);
 							adapter.triggerAction(window, true);													
 						}
 						break;
@@ -210,9 +210,9 @@ public class ConflictHandler {
 							adapter.triggerAction(window, true);
 						}
 						else if(Alarm.isCreated()) {
-							if(handler.userNotifies("C'è una fuga di gas.\nPerò l'allarme è armato.\nApro comunque le finestre?")) {
-								if(window.getShader().isActive())
-									adapter.triggerAction(window.getShader(), false);
+							if(handler.userNotifies("C'è una fuga di gas.\nPerò l'allarme è armato.\nApro comunque le finestre?") &&
+									window.getShader().isActive()) {
+								adapter.triggerAction(window.getShader(), false);
 								adapter.triggerAction(window, true);
 							}
 						}						

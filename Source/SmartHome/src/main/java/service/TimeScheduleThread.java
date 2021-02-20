@@ -12,11 +12,12 @@ public class TimeScheduleThread extends Thread {
 	
 	private Scenario scenario;
 	
+	@Override
 	public void run() {
 		while(true) {
 			if(!(scenario.getDays().contains(LocalDateTime.now().getDayOfWeek()))) {
 				try {
-					TimeScheduleThread.sleep((24*3600*1000) - getMilliseconds(LocalTime.now()));
+					Thread.sleep((24*3600*1000) - getMilliseconds(LocalTime.now()));
 				} catch (InterruptedException e) {
 					this.interrupt();
 					break;
@@ -24,7 +25,7 @@ public class TimeScheduleThread extends Thread {
 			}
 			else {
 				try {
-					TimeScheduleThread.sleep(sleepTime);
+					Thread.sleep(sleepTime);
 				} catch (InterruptedException e) {
 					this.interrupt();
 					break;
@@ -32,7 +33,7 @@ public class TimeScheduleThread extends Thread {
 				scenario.activateScenario();
 				sleepTime = getMilliseconds(scenario.getStartTime());
 				try {
-					TimeScheduleThread.sleep(waitTime);					
+					Thread.sleep(waitTime);					
 				} catch (InterruptedException e) {
 					this.interrupt();
 					break;

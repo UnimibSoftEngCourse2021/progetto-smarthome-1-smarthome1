@@ -7,8 +7,8 @@ import java.io.PrintWriter;
 
 public class DataDescription {
 
-	private final String HCFILENAME = "homeConfig.txt";
-	private final String HSCFILENAME = "heatSystemConfig.txt";
+	private static final String HCFILENAME = "homeConfig.txt";
+	private static final String HSCFILENAME = "heatSystemConfig.txt";
 	private File fileHC = new File(HCFILENAME);
 	private File fileHSC = new File(HSCFILENAME);
 	

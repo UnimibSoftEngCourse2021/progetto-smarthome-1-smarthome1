@@ -24,7 +24,7 @@ public class Menu {
 		manualActionView = new ManualActionView(df, hf);
 		isAtHomeView = new IsAtHomeView(hf, df);
 		hf.setIsAtHomeView(isAtHomeView);
-		isAtHomeView.setHandlerFaçade(hf);
+		isAtHomeView.setHandlerFacade(hf);
 		ConflictHandler.getInstance().setHandlerFacade(hf);
 		hsConfigView = new HSConfigView(gf);
 	}

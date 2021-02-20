@@ -40,7 +40,7 @@ public class Room {
 		Sensor sensor = new Sensor(name, category, this);
 		sensors.add(sensor);
 		AutomaticControl.getInstance().addSensor(sensor);
-		sensor.setSensorID(category.toString() + "_" + roomID.toUpperCase() + "_" + String.valueOf(floor));
+		sensor.setSensorID(category.toString() + "_" + roomID.toUpperCase() + "_" + floor);
 	}
 	
 	/*
@@ -52,7 +52,7 @@ public class Room {
 			Door door= new Door(name, this);
 			door.getSensor().attach(door);
 			objs.add(door);
-			door.setObjID("DOOR_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjs(ObjType.DOOR).indexOf(door)));
+			door.setObjID("DOOR_" + roomID.toUpperCase() + "_" + floor + "_" + getObjs(ObjType.DOOR).indexOf(door));
 			door.getSensor().concatName(door.getObjID());
 			door.getSensor().setSensorID("DOOR_" + door.getObjID());
 			ConflictHandler.getInstance().addObj(door);
@@ -61,7 +61,7 @@ public class Room {
 			Window window = new Window(name, this);
 			window.getSensor().attach(window);
 			objs.add(window);
-			window.setObjID("WINDOW_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjs(ObjType.WINDOW).indexOf(window)));
+			window.setObjID("WINDOW_" + roomID.toUpperCase() + "_" + floor + "_" + getObjs(ObjType.WINDOW).indexOf(window));
 			window.getSensor().concatName(window.getObjID());
 			window.getSensor().setSensorID("WINDOW_" + window.getObjID());
 			Shader shader = window.getShader();
@@ -76,7 +76,7 @@ public class Room {
 			Light light= new Light(name, this);
 			light.getSensor().attach(light);
 			objs.add(light);
-			light.setObjID("LIGHT_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjs(ObjType.LIGHT).indexOf(light)));
+			light.setObjID("LIGHT_" + roomID.toUpperCase() + "_" + floor + "_" + getObjs(ObjType.LIGHT).indexOf(light));
 			light.getSensor().concatName(light.getObjID());
 			light.getSensor().setSensorID("LIGHT_" + light.getObjID());
 			ConflictHandler.getInstance().addObj(light);
@@ -85,7 +85,7 @@ public class Room {
 			Heater heater= new Heater(name, this);
 			heater.getSensor().attach(heater);
 			objs.add(heater);
-			heater.setObjID("HEATER_" + roomID.toUpperCase() + "_" + String.valueOf(floor) + "_" + String.valueOf(getObjs(ObjType.HEATER).indexOf(heater)));
+			heater.setObjID("HEATER_" + roomID.toUpperCase() + "_" + floor + "_" + getObjs(ObjType.HEATER).indexOf(heater));
 			heater.getSensor().concatName(heater.getObjID());
 			heater.getSensor().setSensorID("HEATER_" + heater.getObjID());
 			ConflictHandler.getInstance().addObj(heater);

@@ -14,6 +14,8 @@ public class TimerThread extends Thread{
 		this.time = time;
 		this.timerType = timerType;
 	}
+	
+	@Override
 	public boolean isInterrupted() {
 		return interrupted;
 	}
@@ -25,10 +27,12 @@ public class TimerThread extends Thread{
 	public Type getTimerType() {
 		return timerType;
 	}
+	
 	public void setTimerType(Type timerType) {
 		this.timerType = timerType;
 	}
 
+	@Override
 	public void run() {
 		try {
 			Thread.sleep((long)time * 1000);

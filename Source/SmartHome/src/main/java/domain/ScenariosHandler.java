@@ -13,12 +13,12 @@ public class ScenariosHandler {
 	//cancellare quindi anceh getter e setter per objs
 	
 	public ScenariosHandler() {
-		scenarios = new ArrayList<Scenario>();
+		scenarios = new ArrayList<>();
 	}
 	
 	public void createScenario(String scenarioID, String dateTime, List<String> days, List<List<String[]>> rooms) {
 		
-		List<DayOfWeek> daysOfWeek = new ArrayList<DayOfWeek>();
+		List<DayOfWeek> daysOfWeek = new ArrayList<>();
 		if(days != null) {
 			for(String day: days) {
 				if(day.equalsIgnoreCase("LUNEDI"))
@@ -46,9 +46,9 @@ public class ScenariosHandler {
 			time = LocalTime.of(hour, minute);	
 		}
 		
-		List<String> objIDs = new ArrayList<String>();
-		List<Boolean> actions = new ArrayList<Boolean>();
-		List<String> roomsIDs = new ArrayList<String>();
+		List<String> objIDs = new ArrayList<>();
+		List<Boolean> actions = new ArrayList<>();
+		List<String> roomsIDs = new ArrayList<>();
 		for(List<String[]> list: rooms) {
 			for(String[] couple: list) {
 				if(list.indexOf(couple) == 0) 
@@ -113,7 +113,7 @@ public class ScenariosHandler {
 		int hour = Integer.parseInt(time.substring(0, 2));
 		int minute = Integer.parseInt(time.substring(3));
 		LocalTime localTime = LocalTime.of(hour, minute);	
-		List<DayOfWeek> daysOfWeek = new ArrayList<DayOfWeek>();
+		List<DayOfWeek> daysOfWeek = new ArrayList<>();
 		
 		for(Scenario scenario: scenarios) {
 			if(scenario.getNameID().equals(scenarioID)) {
@@ -137,14 +137,10 @@ public class ScenariosHandler {
 				scenario.setDays(daysOfWeek);
 				scenario.handleDateEvent();
 				break;
-			}
-			
-			
-			
-		}
-		
-		
+			}			
+		}		
 	}
+	
 	public void addRoomToScenario(String scenarioID, List<List<String[]>> rooms) {
 
 		Scenario scenario = new Scenario();

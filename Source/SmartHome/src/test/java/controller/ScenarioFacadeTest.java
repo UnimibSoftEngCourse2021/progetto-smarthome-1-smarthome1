@@ -80,7 +80,6 @@ public class ScenarioFacadeTest {
 		String hour = "00";
 		String minute = "00";
 		
-		//
 		sf.manageCreateScenario("scenario2", hour + ":" + minute, rooms, days);
 		Scenario s2 = sh.getScenarios().get(1);
 		assertEquals(true, sh.getScenarios().contains(s2));
@@ -88,20 +87,6 @@ public class ScenarioFacadeTest {
 	
 	@Test 
 	public void activateAutomaticScenarioTest() {
-		//inizializzazione dell'orario di attivazione dello scenario
-		
-		
-		/*
-		//inizializzazione dayMode 
-		AutomaticControl.getInstance();
-		AutomaticControl.setStartDayMode("23:59");
-		AutomaticControl.setStopDayMode("00:00");
-		
-		/*settando orario e giorni lo scenario viene gestito dal thread specifico
-		 *che lo attiva al'orario specificato 
-		 */
-		//scenario.getActions().set(0, true);
-		
 		//attivazione manuale della chiamata del thread
 		scenario.activateScenario();
 		assertEquals(false, w1.isActive());
@@ -111,7 +96,8 @@ public class ScenarioFacadeTest {
 	@Test
 	public void activateScenarioTest() {
 		sf.manageActivateScenario("scenario1");
-		//assertEquals(true, scenario.isActive());
+		assertEquals(false, w1.isActive());
+		assertEquals(true, l1.isActive());
 	}
 	
 	@Test
