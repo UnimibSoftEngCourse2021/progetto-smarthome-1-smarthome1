@@ -1,5 +1,5 @@
 ISTRUZIONI INSTALLAZIONE
-aprire installer.exe
+aprire SmartHome_windows-x64_1_0.exe
 seguire le istruzioni
 cliccare sull'icona creata sul desktop per avviare il programma
 
