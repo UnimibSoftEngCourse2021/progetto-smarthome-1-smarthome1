@@ -14,6 +14,7 @@ public class Door extends Obj {
 		if(Alarm.isCreated())
 			Alarm.getInstance().setSensor(sensor);
 	}
+	
 	public String getCode() {
 		return code;
 	}
@@ -21,9 +22,11 @@ public class Door extends Obj {
 	public void setCode(String code) {
 		this.code = code;
 	}
+	
 	public Sensor getSensor() {
 		return sensor;
 	}
+	
 	public void setSensor(Sensor sensor) {
 		this.sensor = sensor;
 	}

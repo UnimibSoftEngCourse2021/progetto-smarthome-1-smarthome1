@@ -14,22 +14,30 @@ public class ConflictHandler {
 	private HandlerFacade handler;
 	
 	private static ConflictHandler conflictHandler = null; //singleton instance
-	private boolean atHome = true;
+	private boolean atHome = true; // flag per indicare la presenza o meno dell'utente a casa
 	
 	private List<Obj> objs;
 	private ObjCommunicationSystem adapter;
 	
 	private ConflictHandler() {
-		objs = new ArrayList<Obj>();
+		objs = new ArrayList<>();
 		adapter = new ObjCommunicationSystem();
 	}
 	
+	/*
+	 * metodo che restituisce l'istanza dell'oggetto, se necessario viene anche creato l'oggetto
+	 * questo metodo è l'applicazione del pattern singleton
+	 */
 	public static ConflictHandler getInstance() {
 		if(conflictHandler == null)
 			conflictHandler = new ConflictHandler();
 		return conflictHandler;
 	}
 
+	/*
+	 * metodo per impostare lo stato ad away, armare l'allarme e bloccare la porta
+	 * il codice inserito non è influente
+	 */
 	public void isAway(String doorID) {
 		if(atHome) {
 			atHome = false;
@@ -47,6 +55,10 @@ public class ConflictHandler {
 		}
 	}
 
+	/*
+	 * metodo per impostare lo stato ad home, disarmare l'allarme e sbloccare la porta
+	 * verifica se il codice d'ingresso è valido
+	 */
 	public void isHome(String doorID, String code) {
 		if(!atHome) {
 				for(Obj obj: objs) {	
@@ -69,6 +81,10 @@ public class ConflictHandler {
 		}
 	}
 
+	/*
+	 * metodo per effettuare l'azione su un oggetto
+	 * l'azione è specifica in base al tipo di oggetto, considerando i possibili conflitti generati
+	 */
 	public void doAction(String objID, boolean changeState) {
 		for(Obj obj: objs) {
 			if(obj.getObjID().equals(objID)) { 
@@ -113,7 +129,7 @@ public class ConflictHandler {
 						else if(handler.userNotifies("L'allarme è armato.\nVuoi comunque aprire le finestre?"))
 							if(handler.userNotifies("Sei sicuro?"))
 								if(handler.userNotifies("Sei proprio sicuro?"))
-								adapter.triggerAction(obj, true);
+									adapter.triggerAction(obj, true);
 						break;
 					default:
 						break;
@@ -126,6 +142,10 @@ public class ConflictHandler {
 		}
 	}
 	
+	/*
+	 * metodo per eseguire accensione e spegnimento di luci e shader in modo automatico
+	 * a seconda della dayMode 
+	 */
 	public void doAction(String lightID, boolean dayMode, boolean changeState) {
 		for(Obj obj: objs) {
 			if(obj.getObjID().equals(lightID)) { 
@@ -153,10 +173,12 @@ public class ConflictHandler {
 		}
 	}
 
+	/*
+	 * metodo per aprire le finestre quando reso necessario dal valore del sensore di pulizia dell'aria
+	 */
 	public void doAction(String windowID, AirState airState, boolean changeState) {
-		// a seconda di airState azione ha priorità diversa
-		for(Obj obj: objs) {
-			
+		// a seconda del valore di airState l'azione ha priorità diversa
+		for(Obj obj: objs) {			
 			if(obj.getObjID().equals(windowID)) {
 				Window window = (Window)obj;
 				if(changeState) {			
@@ -171,15 +193,13 @@ public class ConflictHandler {
 								}
 							if(window.getShader().isActive() && userDecision) 
 								adapter.triggerAction((Shader)window.getShader(), false);
-							adapter.triggerAction(window, true);
-													
+							adapter.triggerAction(window, true);													
 						}
 						break;
 					}
 					else if(airState.equals(AirState.GAS)) {
 						/*
-						 * nel caso ci sia una fuga di gas aprire sempre le finestre
-						 * considerare un possibile comportamento diverso per allarme
+						 * nel caso ci sia una fuga di gas vengono sempre aperte le finestre
 						 */
 						List<Obj> lights = window.getRoom().getObjs(ObjType.LIGHT);
 						for(Obj light: lights)
@@ -195,8 +215,7 @@ public class ConflictHandler {
 									adapter.triggerAction(window.getShader(), false);
 								adapter.triggerAction(window, true);
 							}
-						}
-						
+						}						
 						break;
 					}
 				}
@@ -205,6 +224,9 @@ public class ConflictHandler {
 		}
 	}
 
+	/*
+	 * metodo per gestire un'azione manuale voluta dall'utente
+	 */
 	public void doManualAction(String objID) {
 		for(Obj obj: objs) {
 			if(obj.getObjID().equals(objID))
@@ -238,10 +260,6 @@ public class ConflictHandler {
 	
 	public static void clean() {
 		conflictHandler = null;
-	}
-
-	public HandlerFacade getHandler() {
-		return handler;
 	}
 
 	public void setHandler(HandlerFacade handler) {

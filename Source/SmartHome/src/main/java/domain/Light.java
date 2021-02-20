@@ -19,4 +19,5 @@ public class Light extends Obj {
 	public void setSensor(Sensor sensor) {
 		this.sensor = sensor;
 	}
+	
 }

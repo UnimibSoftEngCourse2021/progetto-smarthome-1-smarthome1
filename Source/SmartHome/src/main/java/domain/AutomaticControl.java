@@ -16,17 +16,23 @@ public class AutomaticControl {
 	private double[][] standardMatrix = new double[7][26];
 	public enum ChoosenMatrix {STANDARD, USER} // flag per selezionare matrice standard o user defined (0 standard, 1 user)
 	private ChoosenMatrix choosenMatrix = ChoosenMatrix.STANDARD;
-	//private boolean activeLightControl = false;
-	//private boolean activeAirControl = false;
 	private static int startDayMode;
 	private static int stopDayMode;
 	private List<Sensor> sensors;
 	
+	/*
+	 * alla creazione dell'oggetto viene anche inizializzata la matrice standard relativa alle
+	 * temperature per i caloriferi
+	 */
 	private AutomaticControl() {
 		initStandardMatrix();
-		sensors = new ArrayList<Sensor>();
+		sensors = new ArrayList<>();
 	}
 	
+	/*
+	 * metodo che restituisce l'istanza dell'oggetto, se necessario viene anche creato l'oggetto
+	 * questo metodo è l'applicazione del pattern singleton
+	 */
 	public static AutomaticControl getInstance() {
 		if(automaticControl == null)
 			automaticControl = new AutomaticControl();
@@ -37,8 +43,12 @@ public class AutomaticControl {
 		userMatrix[i][j] = value;
 	}
 	
+	/*
+	 * i valori delle colonne da 0 a 23 corrispondono alla scelta della temperatura attiva/passiva per ogni ora del giorno
+	 * le ultime due caselle sono i valori delle temperature attive/passive
+	 * le righe corrispondono ai sette giorni della settimana
+	 */
 	private void initStandardMatrix() {
-
 		for(int i = 0; i <= 6; i++) {
 			standardMatrix[i][24] = 16.00;
 			standardMatrix[i][25] = 20.00;
@@ -53,7 +63,10 @@ public class AutomaticControl {
 			}
 		}
 	}
-	
+	/*
+	 * metodo per verificare la necessità o meno di accendere i caloriferi
+	 * a seconda dell'oraio e della temperatura correnti
+	 */
 	public void checkTempTresholds(double currentTemp, List<Obj> publisherList) {
 		int i = LocalDateTime.now().getDayOfWeek().getValue() - 1; // giorno della settimana
 		int j = LocalDateTime.now().getHour(); // ora attuale
@@ -89,6 +102,10 @@ public class AutomaticControl {
 		}
 	}
 
+	/*
+	 * metodo per controllare se l'allarme deve suonare in caso sia armato e uno dei sensori
+	 * interessati si attivi
+	 */
 	public void checkAlarm() {
 		if (Alarm.isCreated() && Alarm.getInstance().isArmed()) 
 			for(Sensor sensor: sensors) 
@@ -101,7 +118,15 @@ public class AutomaticControl {
 				}
 	}
 	
-	//controllare la logica del timer
+	/*
+	 * metodo per controllare se si debba attivare il ri-circolo dell'aria in seguito ad un eccessivo
+	 * inquinamento interno, oppure ad una fuga di gas
+	 * nel primo caso vengono aperte le finestre se non sono accesi i caloriferi per evitare sprechi
+	 * altrimenti si chiede l'intervento dell'utente tramite una notifica
+	 * nel secondo caso vengono spente le luci per evitare esplosioni ed aperte le finestre qualunque
+	 * sia lo stato degli oggetti in quant osi tratta di una situazione critica
+	 * i valori relativi all'inquinamento e alla fuga di gas sono dei valori forfait assegnati da noi
+	 */
 	public void checkAirPollution(double currentPollutionValue, Room room, AirState airState) {
 		List<Obj> windows = room.getObjs(ObjType.WINDOW);
 		TimerOP timer = room.getTimer();
@@ -109,26 +134,27 @@ public class AutomaticControl {
 			for(int i = 0; i < room.getWindowsNum(); i++)
 				ConflictHandler.getInstance().doAction(room.getObjs(ObjType.WINDOW).get(i).getObjID(), airState, true);
 			timer.startTimer(Type.AIR, 300);				
-		} else if(airState.equals(AirState.POLLUTION)){
-			if(timer.isCreated(Type.AIR)) {			
+		} else if(airState.equals(AirState.POLLUTION) && (timer.isCreated(Type.AIR))) {					
 				for(int j = 0; j < room.getWindowsNum(); j++) 
 					if(windows.get(j).isActive()) 
 						ConflictHandler.getInstance().doAction(windows.get(j).getObjID(), airState, false);
-				timer.resetTimer(Type.AIR);	
-			}
+				timer.resetTimer(Type.AIR);		
 		}
 		if (currentPollutionValue > 30.00 && airState.equals(AirState.GAS))
 			for(int i = 0; i < room.getWindowsNum(); i++)
 				ConflictHandler.getInstance().doAction(room.getObjs(ObjType.WINDOW).get(i).getObjID(), airState, true);
-
 	}
 
+	/*
+	 * metodo per accendere le luci qualora l'utente entri nella stanza interessata oppure
+	 * spegnerle qualora sia uscito da cinque minuti
+	 */
 	public void checkLight(double movementValue, Room room) {
 		List<Obj> lights = room.getObjs(ObjType.LIGHT);
 		TimerOP timer = room.getTimer();
 		if(movementValue == 1.00) {
 			for(int i = 0; i < room.getLightsNum(); i++) 
-				if(lights.get(i).isActive() == false) 
+				if(!lights.get(i).isActive()) 
 					ConflictHandler.getInstance().doAction(lights.get(i).getObjID(), isDayMode(), true);
 			if(timer.isCreated(Type.LIGHT))
 				timer.resetTimer(Type.LIGHT);	
@@ -137,18 +163,16 @@ public class AutomaticControl {
 				timer.startTimer(Type.LIGHT, 300);
 			if(timer.getElapsedTimers()[0])
 				for(int j = 0; j < room.getLightsNum(); j++) 
-					if(lights.get(j).isActive() == true) 
-						ConflictHandler.getInstance().doAction(lights.get(j).getObjID(), isDayMode(), false);
-			
+					if(lights.get(j).isActive()) 
+						ConflictHandler.getInstance().doAction(lights.get(j).getObjID(), isDayMode(), false);		
 		}
 	}
-	
-	public boolean isDayMode() {
-		if(LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() >= startDayMode &&
-				LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() < stopDayMode) 
-			return true;
-		else
-			return false;
+	/*
+	 * verifica se la modalità attuale è quella giorno, a seconda dell'orario
+	 */
+	public boolean isDayMode() {		
+		return(LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() >= startDayMode &&
+				LocalDateTime.now().getHour()*60 + LocalDateTime.now().getMinute() < stopDayMode);
 	}
 	
 	public double[][] getUserMatrix() {
@@ -195,20 +219,9 @@ public class AutomaticControl {
 	public void addSensor(Sensor sensor) {
 		sensors.add(sensor);
 	}
-	
-	//prob da eliminare
 	/*
-	public List<Sensor> searchSensorByID(SensorCategory sc){
-		List<Sensor> categorySensors = new ArrayList<Sensor>();
-		for(Sensor sensor: sensors) {
-			if(sensor.getCategory().equals(sc)) {
-				categorySensors.add(sensor);
-			}
-		}
-		
-		return categorySensors;
-	}*/
-	
+	 * metodo utilizzato durante i test per pulire l'istanza utilizzata
+	 */
 	public static void clean() {
 		automaticControl = null;
 	}

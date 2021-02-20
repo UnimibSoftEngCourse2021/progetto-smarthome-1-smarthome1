@@ -30,4 +30,5 @@ public class ManualActionView {
 				objID = obj[1];		
 			handlerFacade.manageManualAction(objID);
 	}
+	
 }

@@ -16,6 +16,7 @@ public class IsAtHomeView {
 		this.handlerFacade = handlerFaçade;
 		this.dataFacade = dataFaçade;
 	}
+	
 	public void changeFlag() {
 		String doorID = dataFacade.getObjsTypeID("DOOR").get(0);
 		System.out.println("Stai uscendo o entrando? (home/away)");

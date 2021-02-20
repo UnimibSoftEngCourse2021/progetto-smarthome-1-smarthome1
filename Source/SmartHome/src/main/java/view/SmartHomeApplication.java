@@ -11,8 +11,7 @@ import domain.ScenariosHandler;
 public class SmartHomeApplication {
 	
 	public static void main(String[] args) {	
-		Menu menu;
-		
+		Menu menu;		
 		//inizializzazione oggetti di dominio singoli
 		DataDescription dd = new DataDescription();
 		ScenariosHandler sh = new ScenariosHandler();
@@ -23,8 +22,7 @@ public class SmartHomeApplication {
 		ScenarioFacade sf = new ScenarioFacade(sh);
 		HandlerFacade hf = new HandlerFacade();
 		menu = new Menu(df, gf, sf, hf);
-		menu.start();
-		
-		
-	}				
+		menu.start();		
+	}	
+	
 }

@@ -10,26 +10,23 @@ import application.GenericFacade;
 public class ConfigView {
 	
 // aggiungere a tutte i metodi controllo di roomconfig
-	
+
+	Scanner input = new Scanner(System.in);
 
 	private ConfigViewHandler ch;
 	
 	public ConfigView(DataFacade df, GenericFacade gf) {
 		ch = new ConfigViewHandler(df, gf);
  	}
-	Scanner input = new Scanner(System.in);
-
-	public void config() {
-		
+	
+	public void config() {		
 		String config;
-		List<String[]> numHeaterNotBinded = new ArrayList<String[]>();
-		List<String[]> sensorList = new ArrayList<String[]>();		
+		List<String[]> numHeaterNotBinded = new ArrayList<>();
+		List<String[]> sensorList = new ArrayList<>();		
 		ch.alarmConfig();
 		ch.dayMode();
-		System.out.println("Configurazione iniziale del sistema");
-	
-		do {
-						
+		System.out.println("Configurazione iniziale del sistema");	
+		do {						
 			String room = ch.roomConfig();
 			String floor = ch.floorConfig();
 			do {	
@@ -60,21 +57,16 @@ public class ConfigView {
 				case "temperature":
 					sensorList = ch.temperatureSensorConfig(room, sensorList);
 					break;
+				default:
+					break;
 				}
 				System.out.println("Inserire altre tipologie di oggetti/sensori nella stanza "+ room +" ? (s/n)");
 				config = input.nextLine();
-				
 			} while(config.equalsIgnoreCase("s"));
-			
 			System.out.println("Inserire altre stanze? (s/n)");
 			config = input.nextLine();
-			
-		}while(config.equalsIgnoreCase("s"));
+		} while(config.equalsIgnoreCase("s"));
 		ch.endConfig();
 	}
-	
-	
-	
-	
 	
 }

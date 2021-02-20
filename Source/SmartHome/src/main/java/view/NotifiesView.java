@@ -10,10 +10,7 @@ public class NotifiesView {
 		System.out.println("E' arrivata una notifica! \n");
 		System.out.println("\t" + message);
 		String answer = input.nextLine();
-		if(answer.equalsIgnoreCase("si"))
-			return true;
-		else
-			return false;
+		return answer.equalsIgnoreCase("si");
 	}
 	
 }

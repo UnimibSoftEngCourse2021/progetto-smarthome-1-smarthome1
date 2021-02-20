@@ -14,7 +14,7 @@ public class Config {
 	
 	private static Config config = null;
 	private DataDescription dataDescription;
-	private List<Room> rooms = new ArrayList<Room>();
+	private List<Room> rooms = new ArrayList<>();
 	private Room tempRoom;
 
 	
@@ -22,13 +22,21 @@ public class Config {
 		
 	}
 	
+	/*
+	 * metodo che restituisce l'istanza dell'oggetto, se necessario viene anche creato l'oggetto
+	 * questo metodo è l'applicazione del pattern singleton
+	 */
 	public static Config getInstance() {
 		if(config == null)
 			config = new Config();
 		return config;
 	}
 	
-	public void processFileHC() {  //home config		
+	/*
+	 * metodo che permette di processare il file creato durante la configurazione
+	 * istanziando gli oggetti, le stanze, i sensori e altri parametri necessari al funzionamento del sistema
+	 */
+	public void processFileHC() {  		
 		try (Scanner inputStream = new Scanner(dataDescription.getFileHC())){					
 			while(inputStream.hasNextLine()) {
 				String riga = inputStream.nextLine();
@@ -53,9 +61,7 @@ public class Config {
 					tempRoom.instantiateObj(ObjType.valueOf(riga.substring(1)), name);	 
 					if(riga.equals(":DOOR")) {
 						String code = inputStream.nextLine();
-						//Door door = (Door)room.getObjs(ObjType.DOOR).get(0);
 						tempRoom.setDoorCode(code);
-						//door.setCode(code);
 					}
 				} else if(riga.equals(":AIR")
 						|| riga.equals(":MOVEMENT")) {			
@@ -72,7 +78,7 @@ public class Config {
 						}
 					}
 					String nuovaRiga = inputStream.nextLine();
-					List<String> heatersIDs = new ArrayList<String>();
+					List<String> heatersIDs = new ArrayList<>();
 					while(!nuovaRiga.equals("")) {
 						heatersIDs.add(nuovaRiga);
 						nuovaRiga = inputStream.nextLine();
@@ -85,8 +91,6 @@ public class Config {
 								if(heatersIDs.contains(heater.getObjID())) {
 									tempRoom.getSensors(SensorCategory.TEMPERATURE).get(0).attach(heater);	
 									heater.setTempSensor(tempRoom.getSensors(SensorCategory.TEMPERATURE).get(0));
-									//da rivedere bind heater con sensore di temp e viceversa
-									// un sensore della stanza A puo bindare con un heater della stanza B
 								}
 							}								
 						}
@@ -121,6 +125,9 @@ public class Config {
 		}		
 	}
 
+	/*
+	 * metodo che permette di processare i dati relativi alla configuraazione del sistema di riscaldamento
+	 */
 	public void processFileHSC() {
 		try (Scanner inputStream = new Scanner(dataDescription.getFileHSC())) {
 			while(inputStream.hasNextLine()) {
@@ -165,6 +172,9 @@ public class Config {
 		this.dataDescription = dataDescription;
 	}
 	
+	/*
+	 * metodo utilizzato durante i test per pulire l'istanza utilizzata
+	 */
 	public static void clean() {
 		config = null;
 	}
