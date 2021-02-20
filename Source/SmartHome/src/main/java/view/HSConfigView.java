@@ -6,12 +6,10 @@ import application.GenericFacade;
 public class HSConfigView {
 	
 	private GenericFacade gf;
-	
-	
+		
 	public HSConfigView(GenericFacade gf) {
 		this.gf = gf;
 	}
-
 
 	public void heatSystemConfig() {
 		Scanner input = new Scanner(System.in);
@@ -19,20 +17,18 @@ public class HSConfigView {
 		int tempAttiva;
 		String giorno;
 		double sceltaTemp = 0.00;
-		//double[][] matrix = new double[7][23];
 		double[] setProgDay = new double[26];
 		// controlla che l'utente ha inserito almeno la tempAttiva Passiva di tutti i giorni
 		boolean[] checkProgDay = new boolean[7];		
 		for(int i=0; i < checkProgDay.length; i++)
 			checkProgDay[i] = false;				
-			boolean fine = false;
-			boolean notAllProg;
-			while(!fine) {
+		boolean fine = false;
+		boolean notAllProg;
+		while(!fine) {
 				do {
 				notAllProg = false;				
 				System.out.println("Scegliere il giorno della settimana che si vuole programmare: ");
-				giorno = input.nextLine();			
-			
+				giorno = input.nextLine();						
 					do {
 						System.out.println("Inserire la temperatura passiva: ");
 						tempPassiva = input.nextInt();
@@ -81,14 +77,16 @@ public class HSConfigView {
 					case "domenica":
 						checkProgDay[6] = true;
 						break;
+					default:
+						break;
 					}					
 					for(int i = 0; i < checkProgDay.length; i++) {
-						if(checkProgDay[i] == false) {
+						if(!checkProgDay[i]) {
 							notAllProg = true;
 							break;
 						}
 					}
-					if(notAllProg == true)
+					if(notAllProg)
 						System.out.println("Inserire i giorni rimanenti");									
 				} while(!notAllProg);				
 				System.out.print("continuare con la programmazione dei giorni? (s/n)");

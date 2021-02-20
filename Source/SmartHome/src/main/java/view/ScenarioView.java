@@ -13,10 +13,10 @@ public class ScenarioView {
 	private DataFacade dataFacade;
 	private ScenarioFacade scenarioFacade;
 	
-	List<List<String[]>> rooms = new ArrayList<List<String[]>>();;
-	List<String[]> roomObjs = new ArrayList<String[]>(); // primo valore è nome stanza
+	List<List<String[]>> rooms = new ArrayList<>();;
+	List<String[]> roomObjs = new ArrayList<>(); // primo valore è nome stanza
 	String[] roomName;
-	List<String> days = new ArrayList<String>();	
+	List<String> days = new ArrayList<>();	
 	String time;
 	private boolean createFlag = false; 
 	
@@ -51,7 +51,7 @@ public class ScenarioView {
 	
 	public void activateScenario() {
 		System.out.println("Lista degli scenari: ");
-		List<String> scenarios = new ArrayList<String>();
+		List<String> scenarios = new ArrayList<>();
 		scenarios = dataFacade.getScenarios();
 		for(String scenario: scenarios) {
 			System.out.println(scenario);
@@ -109,7 +109,7 @@ public class ScenarioView {
 		case "modify":
 			roomObjs.clear();
 			System.out.println("Lista delle stanze");
-			List<String> roomList = new ArrayList<String>();
+			List<String> roomList = new ArrayList<>();
 			roomList = dataFacade.getRooms();
 			for(String room: roomList) {
 				System.out.println(room);
@@ -122,14 +122,15 @@ public class ScenarioView {
 			// chiamata a controller solo se ha fatto create
 			if(createFlag)
 				scenarioFacade.manageAddRoomsToScenario(scenarioName, rooms);
-			//a liv di scenario non ho bisogno di sapere dove stanno le coppie
-			//azioni - objcetID quindi posso riusare il metodo sopra - d.barzio
+			break;
+		default:
+			break;
 		}
 	}
 	
 	public void deleteScenario() {
 		System.out.println("Lista degli scenari");
-		List<String> scenariosList = new ArrayList<String>();
+		List<String> scenariosList = new ArrayList<>();
 		scenariosList = dataFacade.getScenarios();
 		for(String scenario: scenariosList) {
 			System.out.println(scenario);
@@ -162,7 +163,7 @@ public class ScenarioView {
 				createFlag = true;
 				do {
 					System.out.println("Lista degli oggetti contenuti nella stanza: ");
-					List<String[]> objsInRoom = new ArrayList<String[]>();
+					List<String[]> objsInRoom = new ArrayList<>();
 					objsInRoom = dataFacade.getObjsInRoom(roomName[0]);
 					for(String[] objInRoom: objsInRoom) {
 						System.out.println(objInRoom[0]);
@@ -185,7 +186,7 @@ public class ScenarioView {
 			case "modify":
 				do {
 					System.out.println("Lista degli oggetti modificabili nella stanza: ");
-					List<String[]> objsInRoomInScenario = new ArrayList<String[]>();
+					List<String[]> objsInRoomInScenario = new ArrayList<>();
 					objsInRoomInScenario = dataFacade.getObjsInRoomInScenario(roomName[0], scenarioName);
 					for(String[] obj: objsInRoomInScenario) {
 						System.out.println(obj[0]);
@@ -206,7 +207,7 @@ public class ScenarioView {
 			case "delete":
 				do {
 					System.out.println("Lista degli oggetti eliminabili nella stanza: ");
-					List<String[]> objsInRoomInScenario = new ArrayList<String[]>();
+					List<String[]> objsInRoomInScenario = new ArrayList<>();
 					objsInRoomInScenario = dataFacade.getObjsInRoomInScenario(roomName[0], scenarioName);
 					for(String[] obj: objsInRoomInScenario) {
 						System.out.println(obj[0]);
@@ -221,6 +222,8 @@ public class ScenarioView {
 					scenarioFacade.manageDeleteAction(scenarioName, objID);
 					System.out.print("eliminare altri oggetti? (s/n)");
 				} while(!input.nextLine().equals("n"));
+				break;
+			default:
 				break;
 			}
 			System.out.println("Effettuare altre operazioni?");

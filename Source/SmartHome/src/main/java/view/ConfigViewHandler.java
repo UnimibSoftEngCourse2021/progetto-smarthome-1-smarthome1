@@ -17,8 +17,7 @@ public class ConfigViewHandler {
 	}
 	
 	public String roomConfig() {
-		String roomName;
-		
+		String roomName;		
 		do {
 			System.out.println("Inserire il nome della stanza che si intende creare: ");
 			roomName = input.nextLine();
@@ -120,7 +119,6 @@ public class ConfigViewHandler {
 	public void dayMode() {
 		String startDayMode;
 		String stopDayMode;
-		// aggiungere controlli su formato ora inserito dall'utente
 		do {
 			System.out.println("Inserire l'ora di inizio della modalità giorno (hh:mm): ");
 			startDayMode = input.nextLine();
@@ -136,10 +134,7 @@ public class ConfigViewHandler {
 	public void bindHeaterSensor(List<String[]> numHeaterNotBinded, List<String[]> sensorList) {
 		String config = "";
 		if(!numHeaterNotBinded.isEmpty()) {
-			// questo controllo lo fa alla fine dell'inserimento di ogni stanza
-			System.out.print("Associare i sensori temp creati con gli oggetti heater: ");
-			// se ho ancora caloriferi da associare
-			
+			System.out.print("Associare i sensori temp creati con gli oggetti heater: ");			
 				for(String[] sensor: sensorList) {
 					gf.manageWriteOnHCFile("temperature", sensor[0]);
 					gf.manageWriteOnHCFile("roomNameSensor", sensor[1]);						
