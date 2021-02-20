@@ -1,0 +1,9 @@
+ISTRUZIONI INSTALLAZIONE
+aprire installer.exe
+seguire le istruzioni
+cliccare sull'icona creata sul desktop per avviare il programma
+
+ISTRUZIONI ANALISI SONAR
+dalla root del progetto:
+cd Source\SmartHome
+mvn jacoco:prepare-agent install jacoco:report sonar:sonar

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updateDescriptor baseUrl="">
+  <entry targetMediaFileId="26" updatableVersionMin="" updatableVersionMax="" fileName="SmartHome_windows-x64_1_0.exe" newVersion="1.0" newMediaFileId="26" fileSize="54277632" md5Sum="b00f6194f15cf85fd55d6b533909d592" sha256Sum="7ca817718cf8ef290ea8faa5cb9fb74ae77576e2bd01f328f46916c35b7828a4" bundledJre="windows-amd64-11.0.10.tar.gz" archive="false" singleBundle="false">
+    <comment language="it" />
+  </entry>
+</updateDescriptor>
