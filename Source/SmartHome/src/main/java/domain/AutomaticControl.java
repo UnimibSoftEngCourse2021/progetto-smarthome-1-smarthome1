@@ -196,6 +196,7 @@ public class AutomaticControl {
 	}
 	
 	//prob da eliminare
+	/*
 	public List<Sensor> searchSensorByID(SensorCategory sc){
 		List<Sensor> categorySensors = new ArrayList<Sensor>();
 		for(Sensor sensor: sensors) {
@@ -205,7 +206,7 @@ public class AutomaticControl {
 		}
 		
 		return categorySensors;
-	}
+	}*/
 	
 	public void clean() {
 		automaticControl = null;

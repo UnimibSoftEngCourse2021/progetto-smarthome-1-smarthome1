@@ -14,6 +14,7 @@ import domain.AutomaticControl.ChoosenMatrix;
 import domain.Config;
 import domain.ConflictHandler;
 import domain.DataDescription;
+import domain.Door;
 import domain.Heater;
 import domain.Obj.ObjType;
 import domain.Room;
@@ -70,6 +71,7 @@ public class CommunicationTest {
 		r1.instantiateObj(ObjType.LIGHT, "light1");
 		r2.instantiateObj(ObjType.LIGHT, "light1");
 		
+		
 		//setting numero oggetti delle stanze
 		r1.setWindowsNum();
 		r2.setWindowsNum();
@@ -86,6 +88,9 @@ public class CommunicationTest {
 		//aggiunta di un sensore di temperatura a ciascuna stanza
 		r1.instantiateSensor(SensorCategory.TEMPERATURE, "temp1");
 		r2.instantiateSensor(SensorCategory.TEMPERATURE, "temp2");
+		//aggiunta di un sensore di movimento nella prima stanza
+		r1.instantiateSensor(SensorCategory.MOVEMENT, "mov1");
+		r1.getSensors(SensorCategory.MOVEMENT).get(0).attach(Alarm.getInstance());
 		
 		//binding caloriferi con i rispettivi sensori di temperatura
 		sR1 = r1.getSensors(SensorCategory.TEMPERATURE).get(0);
@@ -186,6 +191,44 @@ public class CommunicationTest {
 		aR1.notifies(SensorCategory.AIR, 55.00);
 		assertEquals(true, w1R1.isActive());
 		assertEquals(true, w2R1.isActive());
+	}
+	
+	/*
+	@Test
+	public void checkGasPollutionIsNotOkTest() {
+		aR1.setAirState(AirState.GAS);
+		aR1.notifies(SensorCategory.AIR, 55.00);
+		assertEquals(true, w1R1.isActive());
+		assertEquals(true, w2R1.isActive());
+	}*/
+	
+	
+	@Test
+	
+	public void checkAlarmTest() {
+		Alarm.getInstance().setArmed(true);
+		ConflictHandler.getInstance().addObj(Alarm.getInstance());
+		Alarm.getInstance().getSensor().attach(Alarm.getInstance());
+		/*Door door = (Door)r1.getObjs(ObjType.DOOR).get(0);
+		door.getSensor().notifies(SensorCategory.DOOR, 1.00);*/
+		
+		r1.getSensors(SensorCategory.MOVEMENT).get(0).notifies(SensorCategory.MOVEMENT, 1.00);
+		AutomaticControl.getInstance().checkAlarm();
+		assertEquals(true, Alarm.getInstance().isActive());
+	}
+	
+	/*
+	@Test
+	public void checkLightTest() {
+		AutomaticControl.getInstance().checkLight(1.00, r1);
+		assertEquals(true, r1.getObjs(ObjType.LIGHT).get(0));
+	}*/
+	
+	@Test
+	public void checkDayModeTest() {
+		AutomaticControl.setStartDayMode("08:00");
+		AutomaticControl.setStopDayMode("23.00");
+		assertEquals(true, AutomaticControl.getInstance().isDayMode());
 	}
 	
 	@After

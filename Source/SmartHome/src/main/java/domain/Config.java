@@ -42,6 +42,8 @@ public class Config {
 				else if(riga.equals(":ALARM")) {
 					String name = inputStream.nextLine();
 					Alarm.getInstance(name);
+					ConflictHandler.getInstance().addObj(Alarm.getInstance());
+					Alarm.getInstance().getSensor().attach(Alarm.getInstance());
 				}
 				else if(riga.equals(":LIGHT")
 						|| riga.equals(":WINDOW")
