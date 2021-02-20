@@ -20,8 +20,8 @@ public class DataFacade {
 	}
 	
 	public List<String[]> getObjsInRoom(String roomName) {
-		List<Obj> objs = new ArrayList<Obj>();
-		List<String[]> objsInRoom = new ArrayList<String[]>();
+		List<Obj> objs = new ArrayList<>();
+		List<String[]> objsInRoom = new ArrayList<>();
 		for(Room r: Config.getInstance().getRooms()) {
 			if(roomName.equals(r.getRoomID())) {
 				objs = r.getObjList();
@@ -40,7 +40,7 @@ public class DataFacade {
 
 	public List<String[]> getAllObjs() {
 		List<Obj> objs = ConflictHandler.getInstance().getObjs();
-		List<String[]> allObjs = new ArrayList<String[]>();
+		List<String[]> allObjs = new ArrayList<>();
 		String name;
 		String id;
 		for(Obj obj: objs) {
@@ -53,7 +53,7 @@ public class DataFacade {
 	}
 	
 	public List<String> getObjsTypeID(String objType) {
-		List<String> allObjs = new ArrayList<String>();
+		List<String> allObjs = new ArrayList<>();
 		List<Room> rooms = Config.getInstance().getRooms();
 		for(Room room: rooms) {
 			for(Obj obj: room.getObjs(ObjType.valueOf(objType))) {
@@ -65,7 +65,7 @@ public class DataFacade {
 
 	public List<String[]> getObjsInScenario(String scenarioName) {		
 		List<String> objsIDsInScenario = scenariosHandler.getObjsInScenario(scenarioName);
-		List<String[]> objsInScenario = new ArrayList<String[]>();
+		List<String[]> objsInScenario = new ArrayList<>();
 		String name = "";
 		String id = "";
 		List<Obj> objs = ConflictHandler.getInstance().getObjs();
@@ -84,7 +84,7 @@ public class DataFacade {
 	}
 
 	public List<String> getScenarios() {
-		List<String> allScenarios = new ArrayList<String>();
+		List<String> allScenarios = new ArrayList<>();
 		for(Scenario scenario: scenariosHandler.getScenarios()) {
 			allScenarios.add(scenario.getNameID());
 		}
@@ -94,7 +94,7 @@ public class DataFacade {
 	public List<String> getRooms() {
 		// cicla sulle stanze
 		List<Room> rooms =Config.getInstance().getRooms();
-		List<String> allRoomsIDs = new ArrayList<String>();
+		List<String> allRoomsIDs = new ArrayList<>();
 		if(rooms != null) {
 			for(Room room: rooms) {
 				allRoomsIDs.add(room.getRoomID());
@@ -106,7 +106,7 @@ public class DataFacade {
 	public List<String[]> getObjsInRoomInScenario(String roomName, String scenarioName) {
 		List<String[]> allObjsInScenario = getObjsInScenario(scenarioName);
 		List<String[]> objsInRoom = getObjsInRoom(roomName); 
-		List<String[]> allObjsInRoomInScenario = new ArrayList<String[]>();
+		List<String[]> allObjsInRoomInScenario = new ArrayList<>();
 		for(String[] obj: objsInRoom) {
 			if(!allObjsInScenario.contains(obj))
 				allObjsInRoomInScenario.add(obj);
