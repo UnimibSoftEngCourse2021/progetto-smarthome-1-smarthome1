@@ -11,7 +11,6 @@ public class Scenario {
 
 	private String nameID;
 	private LocalTime startTime;
-	private boolean active = false;
 	private List<String> objIDs;
 	private List<Boolean> actions;
 	private List<DayOfWeek> days;
@@ -35,12 +34,8 @@ public class Scenario {
 	}
 
 	public void activateScenario() {
-		if(isActive() == false) {
-			active = false; 
-			 for(int i = 0; i < getObjIDs().size(); i++) {
-				 ConflictHandler.getInstance().doAction(getObjIDs().get(i), (boolean)getActions().get(i));
-			 }
-		 }
+		 for(int i = 0; i < getObjIDs().size(); i++) 
+			 ConflictHandler.getInstance().doAction(getObjIDs().get(i), getActions().get(i));
 	}
 
 	public void handleDateEvent() {
@@ -72,14 +67,6 @@ public class Scenario {
 
 	public void setStartTime(LocalTime startTime) {
 		this.startTime = startTime;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	public List<String> getObjIDs() {

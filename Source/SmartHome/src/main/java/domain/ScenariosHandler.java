@@ -135,8 +135,11 @@ public class ScenariosHandler {
 						daysOfWeek.add(DayOfWeek.SUNDAY);
 				}
 				scenario.setDays(daysOfWeek);
+				scenario.handleDateEvent();
 				break;
 			}
+			
+			
 			
 		}
 		
@@ -178,13 +181,9 @@ public class ScenariosHandler {
 	
 	public void activateScenario(String nameID) {
 		for(Scenario scenario: scenarios) {
-			if(scenario.getNameID().equals(nameID))
-				if(scenario.isActive() == false) {
-					 scenario.setActive(true); 
-					 for(int i = 0; i < scenario.getObjIDs().size(); i++) {
-						 ConflictHandler.getInstance().doAction(scenario.getObjIDs().get(i), (boolean)scenario.getActions().get(i));
-					 }
-				 }
+			if(scenario.getNameID().equals(nameID))			
+				 for(int i = 0; i < scenario.getObjIDs().size(); i++) 
+					 ConflictHandler.getInstance().doAction(scenario.getObjIDs().get(i), (boolean)scenario.getActions().get(i)); 
 		}
 		
 	}

@@ -30,6 +30,7 @@ public class TimeScheduleThread extends Thread {
 					break;
 				}
 				scenario.activateScenario();
+				sleepTime = getMilliseconds(scenario.getStartTime());
 				try {
 					TimeScheduleThread.sleep(waitTime);					
 				} catch (InterruptedException e) {
@@ -41,8 +42,12 @@ public class TimeScheduleThread extends Thread {
 	}
 	
 	public void init(LocalTime startTime) {
-		sleepTime = getMilliseconds(startTime) - getMilliseconds(LocalTime.now());
-		waitTime = (24*3600*1000) - sleepTime;
+		waitTime = (24*3600*1000) - getMilliseconds(startTime);
+		if(LocalTime.now().compareTo(startTime) < 0)
+			sleepTime = getMilliseconds(startTime);
+		else
+			sleepTime = waitTime;
+		
 		
 	}
 	
