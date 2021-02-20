@@ -236,7 +236,7 @@ public class ConflictHandler {
 		this.handler = handlerFacade;
 	}
 	
-	public void clean() {
+	public static void clean() {
 		conflictHandler = null;
 	}
 

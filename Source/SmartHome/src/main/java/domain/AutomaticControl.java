@@ -209,7 +209,7 @@ public class AutomaticControl {
 		return categorySensors;
 	}*/
 	
-	public void clean() {
+	public static void clean() {
 		automaticControl = null;
 	}
 }

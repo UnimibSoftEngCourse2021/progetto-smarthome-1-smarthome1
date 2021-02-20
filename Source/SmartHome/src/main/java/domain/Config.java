@@ -165,7 +165,7 @@ public class Config {
 		this.dataDescription = dataDescription;
 	}
 	
-	public void clean() {
+	public static void clean() {
 		config = null;
 	}
 
